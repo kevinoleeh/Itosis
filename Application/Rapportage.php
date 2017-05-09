@@ -64,16 +64,48 @@
         <h1>Rapportage</h1>
     </div>
 
-
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-3">
             <div class="input-group">
-                <span class="input-group-addon">Projectnr</span>
+                <span class="input-group-addon">Projectnr.</span>
+                <input type="text" class="form-control" placeholder="1" aria-describedby="basic-addon1">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-addon">Projectomschrijving</span>
                 <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
             </div>
         </div>
-    </div>
+        <div class="col-md-4 pull right">
+            <div class="input-group">
+                <span class="input-group-addon">Projecttemplate</span>
+                    <select class="form-control">
+                        <option>Visuele beoordeling</option>
+                        <option>RIE</option>
+                        <option>HAZOP</option>
+                        <option>Atex</option>
+                    </select>
 
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default">Regel toevoegen</button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default">PvA toevoegen</button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default">F&K toevoegen</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <footer class="footer navbar-fixed-bottom">
