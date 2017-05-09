@@ -51,61 +51,52 @@
     <hr>
 
     <div class="row table-responsive">
-        <table id="table" class="table table-striped table-bordered">
-            <thead>
-            <tr>
-                <th>Regelnummer</th>
-                <th>Aspect</th>
-                <th>Effect</th>
-                <th>Proces</th>
-                <th>Machineonderdeel</th>
-                <th>Huidige beheersmaatregel</th>
-                <th>Voorgestelde actie/maatregel</th>
-                <th>Afwijkende actie ter uitvoering</th>
-                <th>Rest Risico</th>
-            </tr>
-            </thead>
-
-            <?php
-            //even als dummydata 8 rows geprint
-            for ($i = 1; $i <= 8; $i++) {
-                ?>
+        <div class="col-md-12">
+            <table id="table" class="table table-striped table-bordered">
+                <thead>
                 <tr>
-                    <td><?php echo $i; ?></td>
-                    <td>Arbobeleid</td>
-                    <td>Risicobeheersing</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>Geen bijzonderheden</td>
-                    <td>Stel Arbobeleid op</td>
-                    <td>n.v.t.</td>
-                    <td>Geen</td>
+                    <th>Regelnummer</th>
+                    <th>Aspect</th>
+                    <th>Effect</th>
+                    <th>Proces</th>
+                    <th>Machineonderdeel</th>
+                    <th>Huidige beheersmaatregel</th>
+                    <th>Voorgestelde actie/maatregel</th>
+                    <th>Afwijkende actie ter uitvoering</th>
+                    <th>Rest Risico</th>
                 </tr>
-            <?php } ?>
+                </thead>
 
-            <tfoot>
-            <tr>
-                <th>Regelnummer</th>
-                <th>Aspect</th>
-                <th>Effect</th>
-                <th>Proces</th>
-                <th>Machineonderdeel</th>
-                <th>Huidige beheersmaatregel</th>
-                <th>Voorgestelde actie/maatregel</th>
-                <th>Afwijkende actie ter uitvoering</th>
-                <th>Rest Risico</th>
-            </tr>
-            </tfoot>
-        </table>
+                <?php
+                //even als dummydata 8 rows geprint
+                for ($i = 1; $i <= 8; $i++) {
+                    ?>
+                    <tr>
+                        <td><?php echo $i; ?></td>
+                        <td>Arbobeleid</td>
+                        <td>Risicobeheersing</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>Geen bijzonderheden</td>
+                        <td>Stel Arbobeleid op</td>
+                        <td>n.v.t.</td>
+                        <td>Geen</td>
+                    </tr>
+                <?php } ?>
+
+            </table>
+        </div>
     </div>
     <div class="row">
-        <ul class="pagination">
-            <li class="active"><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-        </ul>
+        <div class="col-md-12">
+            <ul class="pagination">
+                <li class="active"><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+            </ul>
+        </div>
     </div>
 
 <?php include_once('footer.php');
