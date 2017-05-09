@@ -8,13 +8,13 @@
         <div class=" col-sm-2 col-md-3">
             <div class="input-group">
                 <span class="input-group-addon">Projectnr.</span>
-                <input type="text" class="form-control" placeholder="1" aria-describedby="basic-addon1" disabled>
+                <input type="text" class="form-control" value="1" aria-describedby="basic-addon1" disabled>
             </div>
         </div>
         <div class=" col-sm-2 col-md-4">
             <div class="input-group">
                 <span class="input-group-addon">Projectomschrijving</span>
-                <input type="text" class="form-control" placeholder="Inspectie HAN" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" value="Inspectie HAN" aria-describedby="basic-addon1" disabled>
             </div>
         </div>
         <div class="col-sm-2 col-md-4 pull right">
