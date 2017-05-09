@@ -1,0 +1,10 @@
+h1 {
+  color: black;
+}
+table {
+  background-color: gray;
+}
+:active {
+  background-color: black;
+  color: white;
+}
