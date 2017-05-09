@@ -2,6 +2,8 @@
 include("header.php");
 
 ?>
+<div class="col-md-1">
+</div>
 <h1>Bedrijven en projecten beheren.</h2>
     <div class="col-md-12">
         <div class="col-md-6">
