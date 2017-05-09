@@ -51,7 +51,7 @@
     <hr>
 
     <div class="row table-responsive">
-        <table class="table table-striped table-bordered">
+        <table id="table" class="table table-striped table-bordered">
             <thead>
             <tr>
                 <th>Regelnummer</th>
