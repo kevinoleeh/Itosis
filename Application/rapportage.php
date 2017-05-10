@@ -1,5 +1,5 @@
 <?php include_once('header.php') ?>
-  <div class="container">
+<div class="container">
     <div class="page-header">
         <h1>Rapportage</h1>
     </div>
