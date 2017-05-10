@@ -61,6 +61,7 @@ input[type=search] {
 }
 
 .btn-right {
+<<<<<<< HEAD
     float: right;
     margin-bottom: 1%;
     width: 20%;
@@ -70,4 +71,19 @@ input[type=search] {
 
 .widInTable {
     float: right;
+=======
+  float: right;
+  margin-bottom: 1%;
+  width: 20%;
+  border-top: 3px;
+  border-bottom: 3px;
+}
+.widintable {
+  float: right;
+  margin-right: 5px;
+  cursor: pointer;
+}
+.red {
+  color: red;
+>>>>>>> c34e44abcd7d86cd23dbf29bd23248b36e8a4619
 }
