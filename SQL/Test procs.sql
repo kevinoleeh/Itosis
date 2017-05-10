@@ -16,26 +16,9 @@ CREATE PROCEDURE _begin AS BEGIN
 
 		--TESTDATA
 		BEGIN TRY
-			DECLARE @tabel VARCHAR(10)
-			SET @tabel = 'Passagier'
-			/*INSERT INTO Passagier
-				VALUES(1200, 'Kevin', 'M', '1998-04-06'),
-					  (1300, 'Harm',  'M', '1993-06-06'),
-					  (1400, 'Sjaak', 'M', '1984-09-17');
-
-			SET @tabel = 'Vliegtuig'
-			INSERT INTO Vliegtuig VALUES('Zweefvliegtuig');
-
-			SET @tabel = 'Vlucht'
-			INSERT Vlucht(vluchtnummer,luchthavencode,vliegtuigtype,gatecode,max_aantal_psgrs,max_totaalgewicht,max_ppgewicht,vertrektijdstip, aankomsttijdstip, maatschappijcode)
-			  VALUES ( 9997,  'NZA', 'Zweefvliegtuig',  'F',   2, 300,  150, '2004-02-09 11:23', '2004-02-09 21:23', 'NZ'),
-				     ( 9998,  'NZA', 'Zweefvliegtuig',  'F',   2, 300,  150, '2005-02-09 11:23', '2004-02-09 21:23', 'NZ'),
-				     ( 9999, 'DUB', 'Boeing 747',  'C',  120, 2500,  20, '2004-01-30 11:30', '2004-01-30 23:30',  'KL');
-
-			SET @tabel = 'PassagierVoorVlucht'
-			INSERT INTO PassagierVoorVlucht(passagiernummer, vluchtnummer, balienummer)
-				VALUES(1400, 9997, 3)
-			*/
+			DECLARE @tabel VARCHAR(255) = 'BEDRIJF'
+			INSERT INTO BEDRIJF
+				VALUES('HAN','Arnhem');
 		END TRY
 		BEGIN CATCH
 			DECLARE
@@ -74,19 +57,9 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 		SELECT Test + ' #'+ CONVERT(VARCHAR, Number) AS Test, IIF(success = 1, 'OK', 'ERROR') AS Status, message AS Melding FROM testData ORDER BY Success, id, Number
 
 	BEGIN TRY
-		DECLARE @tabel VARCHAR(10)
-		SET @tabel = 'PassagierVoorVlucht'
-		/*
-		DELETE FROM PassagierVoorVlucht WHERE vluchtnummer = 9999 OR vluchtnummer = 9997 OR vluchtnummer = 9998
-
-		SET @tabel = 'Vlucht'
-		DELETE FROM Vlucht  WHERE vluchtnummer = 9999 OR vluchtnummer = 9997 OR vluchtnummer = 9998
-
-		DELETE FROM Vliegtuig WHERE vliegtuigtype = 'zweefvliegtuig'
-
-		SET @tabel = 'Passagier'
-		DELETE FROM Passagier WHERE passagiernummer = 1200 OR passagiernummer = 1300 OR Passagier.passagiernummer = 1400
-		*/
+		DECLARE @tabel VARCHAR(255) = 'BEDRIJF'
+		DELETE FROM BEDRIJF
+		WHERE BEDRIJFSNAAM = 'HAN' AND LOCATIE = 'Arnhem'
 	END TRY
 	BEGIN CATCH
 		RAISERROR ('Fout bij verwijderen van testdata in tabel %s!', 16, 1, @tabel)
@@ -94,4 +67,37 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 	DROP TABLE testData
 	SET NOCOUNT OFF
 END
+GO
+
+-- Voorbeeld van een execute
+-- Succes
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC insertProject @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem', @ProjectOmschrijving = 'Project voor de han'
+	ROLLBACK TRANSACTION
+	EXEC _result 'insertProject', 1, ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'insertProject', 0, @msg
+END CATCH
+EXEC _end 0
+GO
+-- Fail
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC insertProject @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem', @ProjectOmschrijving = 'Project voor de han'
+		EXEC insertProject @Bedrijfsnaam = 'HANMMMMM', @Locatie = 'Arnhem', @ProjectOmschrijving = 'Project voor de han'
+	ROLLBACK TRANSACTION
+	EXEC _result 'insertProject', 0, ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'insertProject', 1, @msg
+END CATCH
+EXEC _end 1
 GO
