@@ -53,6 +53,11 @@ input[type=search] {
   border-top: 3px;
   border-bottom: 3px;
 }
-.widInTable{
+.widintable {
   float: right;
+  margin-right: 5px;
+  cursor: pointer;
+}
+.red {
+  color: red;
 }
