@@ -20,7 +20,7 @@
         <div class="col-sm-2 col-md-4 pull right">
             <div class="input-group">
                 <span class="input-group-addon">Projecttemplate</span>
-                <select class="form-control">
+                <select class="form-control" disabled>
                     <option>Visuele beoordeling</option>
                     <option>RIE</option>
                     <option>HAZOP</option>
