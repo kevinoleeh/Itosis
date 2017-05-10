@@ -1,9 +1,5 @@
 <?php include_once('header.php') ?>
-<<<<<<< HEAD
 <div class="container">
-=======
-  <div class="container">
->>>>>>> c34e44abcd7d86cd23dbf29bd23248b36e8a4619
     <div class="page-header">
         <h1>Rapportage</h1>
     </div>

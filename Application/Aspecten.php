@@ -12,7 +12,7 @@
 
             </div>
             <div class="row table-responsive">
-                <table id="table" class="table table-striped table-bordered">
+                <table id="table" class="table table-striped table-bordered marginTop">
                     <thead>
                         <tr class="borderwhite">
                             <th>Nr.</th>
@@ -42,7 +42,7 @@
             <div class="row">
             </div>
             <div class="row table-responsive">
-                <table id="table" class="table table-striped table-bordered">
+                <table id="table" class="table table-striped table-bordered marginTop">
                     <thead>
                         <tr class="borderwhite">
                             <th>Nr.</th>

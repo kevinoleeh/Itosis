@@ -12,7 +12,7 @@ include("header.php");
         <div class="row">
         </div>
         <div class="row table-responsive">
-            <table id="table" class="table table-striped table-bordered">
+            <table id="table" class="table table-striped table-bordered marginTop">
                 <thead>
                     <tr>
                         <th>Bedrijf</th>
@@ -36,7 +36,7 @@ include("header.php");
         <div class="row">
         </div>
         <div class="row table-responsive">
-            <table id="table" class="table table-striped table-bordered">
+            <table id="table" class="table table-striped table-bordered marginTop">
                 <thead>
                     <tr>
                         <th>Project</th>
