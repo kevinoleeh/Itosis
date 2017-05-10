@@ -1,5 +1,5 @@
 <?php include_once('header.php') ?>
-
+<div class="container">
     <div class="page-header">
         <h1>Rapportage</h1>
     </div>
@@ -20,7 +20,7 @@
         <div class="col-sm-2 col-md-4 pull right">
             <div class="input-group">
                 <span class="input-group-addon">Projecttemplate</span>
-                <select class="form-control" disabled>
+                <select class="form-control">
                     <option>Visuele beoordeling</option>
                     <option>RIE</option>
                     <option>HAZOP</option>
@@ -107,5 +107,5 @@
             <li><a href="#">5</a></li>
         </ul>
     </div>
-
+</div>
 <?php include_once('footer.php');
