@@ -5,7 +5,7 @@ GO
 CREATE PROCEDURE _begin AS BEGIN
 	SET NOCOUNT ON
 	IF NOT EXISTS(SELECT * FROM sysobjects WHERE name = 'testData') BEGIN
-		CREATE TABLE gelre_airport.dbo.testData(
+		CREATE TABLE Euratex.dbo.testData(
 			Id      INT IDENTITY,
 			Number  INT,
 			Test    VARCHAR(50),
@@ -18,7 +18,7 @@ CREATE PROCEDURE _begin AS BEGIN
 		BEGIN TRY
 			DECLARE @tabel VARCHAR(10)
 			SET @tabel = 'Passagier'
-			INSERT INTO Passagier
+			/*INSERT INTO Passagier
 				VALUES(1200, 'Kevin', 'M', '1998-04-06'),
 					  (1300, 'Harm',  'M', '1993-06-06'),
 					  (1400, 'Sjaak', 'M', '1984-09-17');
@@ -35,7 +35,7 @@ CREATE PROCEDURE _begin AS BEGIN
 			SET @tabel = 'PassagierVoorVlucht'
 			INSERT INTO PassagierVoorVlucht(passagiernummer, vluchtnummer, balienummer)
 				VALUES(1400, 9997, 3)
-
+			*/
 		END TRY
 		BEGIN CATCH
 			DECLARE
@@ -76,6 +76,7 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 	BEGIN TRY
 		DECLARE @tabel VARCHAR(10)
 		SET @tabel = 'PassagierVoorVlucht'
+		/*
 		DELETE FROM PassagierVoorVlucht WHERE vluchtnummer = 9999 OR vluchtnummer = 9997 OR vluchtnummer = 9998
 
 		SET @tabel = 'Vlucht'
@@ -85,6 +86,7 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 
 		SET @tabel = 'Passagier'
 		DELETE FROM Passagier WHERE passagiernummer = 1200 OR passagiernummer = 1300 OR Passagier.passagiernummer = 1400
+		*/
 	END TRY
 	BEGIN CATCH
 		RAISERROR ('Fout bij verwijderen van testdata in tabel %s!', 16, 1, @tabel)
