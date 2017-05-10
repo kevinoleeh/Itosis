@@ -1,5 +1,5 @@
 <?php include_once('header.php') ?>
-  <div class="container">
+
     <div class="page-header">
         <h1>Rapportage</h1>
     </div>
@@ -107,5 +107,5 @@
             <li><a href="#">5</a></li>
         </ul>
     </div>
-</div>
+
 <?php include_once('footer.php');

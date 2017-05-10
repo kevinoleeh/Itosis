@@ -7,7 +7,7 @@ include("header.php");
         <h1>Bedrijven en projecten beheren.</h1>
     </div>
     <div class="col-md-5">
-        <input type="search" style="" value="vul een bedrijfsnaam in.">
+        <input type="search" style="">
         <button href="?new=1" class="btn btn-justified btn-right">Toevoegen</button>
         <div class="row">
         </div>
@@ -22,8 +22,8 @@ include("header.php");
                 <tr>
                     <td>Bedrijf</td>
                     <td>Locatie
-                        <a href="?remove=1"><span class="glyphicon glyphicon-remove widintable red"></span></a>
-                        <a href="?edit=1"><span class="glyphicon glyphicon-pencil widintable"></span></a>
+                        <span class="glyphicon glyphicon-remove widInTable"></span>
+                        <span class="glyphicon glyphicon-pencil widInTable"></span>
                     </td>
                 </tr>
             </table>
@@ -39,16 +39,13 @@ include("header.php");
             <table id="table" class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th>Project</th>
-                        <th>Omschrijving</th>
+                        <th>Bedrijf</th>
+                        <th>Locatie</th>
                     </tr>
                 </thead>
                 <tr>
-                    <td>Project 1</td>
-                    <td>Omschrijving 1
-                        <a href="?remove=1"><span class="glyphicon glyphicon-remove widintable red"></span></a>
-                        <a href="?edit=1"><span class="glyphicon glyphicon-pencil widintable"></span></a>
-                    </td>
+                    <td>Bedrijf</td>
+                    <td>Locatie</td>
                 </tr>
                 <tfoot>
                 </tfoot>
