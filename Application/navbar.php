@@ -15,9 +15,10 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="#">Bedrijven</a></li>
-                <li><a href="#">Aspecten</a></li>
-                <li><a href="#">Beheer</a></li>
+                <li><a href="bedrijfproject.php">Bedrijven</a></li>
+                <li><a href="aspecten.php">Aspecten</a></li>
+                <li><a href="rapportage.php">Rapportages</a></li>
+                <li><a href="beheer.php">Beheer</a></li>
             </ul>
 
             <!--      <ul class="nav navbar-nav navbar-right">-->
