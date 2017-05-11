@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php include_once('include/header.php') ?>
 
 <?php
@@ -18,6 +19,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              :NA_ERNST_VAN_ONGEVAL,
              :NA_KANS_OP_BLOOTSTELLING,
              :NA_KANS_OP_WAARSCHIJNLIJKHEID";
+=======
+<?php include_once('header.php') ?>
+
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $hostname = "(local)\SQLEXPRESS";
+    $dbname = "Euratex";
+    $username = "sa";
+    $password = "P@ssw0rd";
+    $dbh = new PDO("sqlsrv:Server=$hostname;Database=$dbname", "$username", "$password");
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $query = "EXEC dbo.InsertOrganisatieRisicoregel
+             :projectnummer,
+             :rapportnummer,
+             19,
+             :aspect,
+             :effect,
+             :arboOnderwerp,
+             :huidigeBeheersmaatregel,
+             :voorgesteldeActieTerUitvoering,
+             :afwijkendeActieTerUitvoering,
+             :restRisico,
+             :voorErnstVanOngeval,
+             :voorKansOpBlootstelling,
+             :voorKansOpWaarschijnlijkheid,
+             :naErnstVanOngeval,
+             :naKansOpBlootstelling,
+             :naKansOpWaarschijnlijkheid";
+>>>>>>> origin/development
     $stmt = $dbh->prepare($query);
     $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
     $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
@@ -126,4 +156,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <br>
 </div>
 
+<<<<<<< HEAD
 <?php include_once('include/footer.php'); ?>
+=======
+<?php include_once('footer.php'); ?>
+>>>>>>> origin/development

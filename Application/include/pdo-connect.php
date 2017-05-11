@@ -5,7 +5,7 @@ try {
     $hostname = "(local)\SQLEXPRESS";
     $dbname = "Euratex";
     $username = "sa";
-    $password = "P@ssw0rd";
+    $password = "fiets123";
     $dbh = new PDO("sqlsrv:Server=$hostname;Database=$dbname", "$username", "$password");
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
