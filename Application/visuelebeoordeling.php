@@ -2,7 +2,7 @@
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $query = "EXEC dbo.INSERT_ORGANISATIE_RISICOREGEL 
+    $query = "EXEC dbo.INSERT_VISUELE_BEOORDELING_RISICOREGEL 
              :PROJECTNUMMER,
              :RAPPORTNUMMER,
              :ASPECT,
@@ -17,7 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              :VOOR_KANS_OP_WAARSCHIJNLIJKHEID,
              :NA_ERNST_VAN_ONGEVAL,
              :NA_KANS_OP_BLOOTSTELLING,
-             :NA_KANS_OP_WAARSCHIJNLIJKHEID";
+             :NA_KANS_OP_WAARSCHIJNLIJKHEID,
+             :PROCES,
+	         :MACHINE_ONDERDEEL,
+	         :AFDELING";
     $stmt = $dbh->prepare($query);
     $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
     $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
@@ -34,6 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':NA_ERNST_VAN_ONGEVAL', $_POST['NA_ERNST_VAN_ONGEVAL']);
     $stmt->bindParam(':NA_KANS_OP_BLOOTSTELLING', $_POST['NA_KANS_OP_BLOOTSTELLING']);
     $stmt->bindParam(':NA_KANS_OP_WAARSCHIJNLIJKHEID', $_POST['NA_KANS_OP_WAARSCHIJNLIJKHEID']);
+    $stmt->bindParam(':PROCES', $_POST['PROCES']);
+    $stmt->bindParam(':MACHINE_ONDERDEEL', $_POST['MACHINE_ONDERDEEL']);
+    $stmt->bindParam(':AFDELING', $_POST['AFDELING']);
 
     try {
         $stmt->execute();
@@ -51,13 +57,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="container">
     <div class="page-header">
-        <h1>Organisatieregel toevoegen</h1>
+        <h1>Visuele beoordelingregel toevoegen</h1>
     </div>
 
     <?php include_once('include/melding.php') ?>
 
-    <form action="organisatie.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" method="post">
+    <form action="visuelebeoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" method="post" enctype="multipart/form-data">
         <h3>Risico inventarisatie</h3>
+        <div class="form-group">
+            <label for="PROCES">Proces</label>
+            <input type="text" class="form-control" name="PROCES">
+        </div>
+        <div class="form-group">
+            <label for="AFDELING">Afdeling</label>
+            <input type="text" class="form-control" name="AFDELING">
+        </div>
+        <div class="form-group">
+            <label for="MACHINE_ONDERDEEL">Machine(onderdeel)</label>
+            <input type="text" class="form-control" name="MACHINE_ONDERDEEL">
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label>Afbeeldingen</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="radio">
+                    <label><input type="radio" name="afbeelding1type" checked="checked">Detailfoto</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="afbeelding1type">Overzichtsfoto</label>
+                </div>
+                <input type="file" name="afbeelding" id="afbeelding1">
+                <br>
+            </div>
+            <div class="col-md-4">
+                <div class="radio">
+                    <label><input type="radio" name="afbeelding2type" checked="checked">Detailfoto</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="afbeelding2type">Overzichtsfoto</label>
+                </div>
+                <input type="file" name="afbeelding" id="afbeelding2">
+                <br>
+            </div>
+            <div class="col-md-4">
+                <div class="radio">
+                    <label><input type="radio" name="afbeelding3type" checked="checked">Detailfoto</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="afbeelding3type">Overzichtsfoto</label>
+                </div>
+                <input type="file" name="afbeelding" id="afbeelding3">
+                <br>
+            </div>
+        </div>
         <div class="form-group">
             <label for="ASPECT">Aspect</label>
             <input type="text" class="form-control" name="ASPECT">
