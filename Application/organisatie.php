@@ -1,4 +1,4 @@
-<?php include_once('include/pdo-connect.php') ?>
+<?php include_once('include/header.php') ?>
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<?php include_once('header.php') ?>
+
 
 <div class="container">
     <div class="page-header">
@@ -126,5 +126,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <br>
 </div>
 
-<?php include_once('footer.php'); ?>
-<?php include_once('include/pdo-disconnect.php') ?>
+<?php include_once('include/footer.php'); ?>

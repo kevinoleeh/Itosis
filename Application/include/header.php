@@ -23,3 +23,4 @@
 
 <body>
     <?php include_once('navbar.php') ?>
+    <?php include_once('include/pdo-connect.php') ?>

@@ -1,4 +1,4 @@
-<?php include_once('header.php') ?>
+<?php include_once('include/header.php') ?>
 <div class="container">
     <div class="page-header">
         <h1>Rapportage</h1>
@@ -110,4 +110,4 @@
         </ul>
     </div>
 </div>
-<?php include_once('footer.php');
+<?php include_once('include/footer.php');
