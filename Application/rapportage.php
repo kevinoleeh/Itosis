@@ -54,15 +54,23 @@
         <table id="table" class="table table-striped table-bordered">
             <thead>
             <tr>
-                <th>Regelnummer</th>
+                <th>#</th>
                 <th>Aspect</th>
                 <th>Effect</th>
-                <th>Proces</th>
-                <th>Machineonderdeel</th>
+                <th>Arbo onderwerp</th>
                 <th>Huidige beheersmaatregel</th>
-                <th>Voorgestelde actie/maatregel</th>
+                <th>Ernst van ongeval</th>
+                <th>Kans op blootstelling</th>
+                <th>Kans op waarschijnlijk</th>
+                <th>Risico</th>
+                <th>Prioriteit</th>
+                <th>Voorgestelde actie/verbetermaatregel</th>
                 <th>Afwijkende actie ter uitvoering</th>
-                <th>Rest Risico</th>
+                <th>Ernst van ongeval</th>
+                <th>Kans op blootstelling</th>
+                <th>Kans op waarschijnlijk</th>
+                <th>Risico</th>
+                <th>Prioriteit</th>
             </tr>
             </thead>
 
@@ -72,30 +80,24 @@
                 ?>
                 <tr>
                     <td><?php echo $i; ?></td>
-                    <td>Arbobeleid</td>
-                    <td>Risicobeheersing</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>Geen bijzonderheden</td>
-                    <td>Stel Arbobeleid op</td>
-                    <td>n.v.t.</td>
-                    <td>Geen</td>
+                    <td>Brandgevaar</td>
+                    <td>Verbranding</td>
+                    <td>Brandveiligheid</td>
+                    <td>Brandblusser op de grond</td>
+                    <td>10</td>
+                    <td>10</td>
+                    <td>10</td>
+                    <td>360</td>
+                    <td>P 1</td>
+                    <td>Brandblusser ophangen</td>
+                    <td></td>
+                    <td>8</td>
+                    <td>6</td>
+                    <td>6</td>
+                    <td>400</td>
+                    <td>P 4</td>
                 </tr>
             <?php } ?>
-
-            <tfoot>
-            <tr>
-                <th>Regelnummer</th>
-                <th>Aspect</th>
-                <th>Effect</th>
-                <th>Proces</th>
-                <th>Machineonderdeel</th>
-                <th>Huidige beheersmaatregel</th>
-                <th>Voorgestelde actie/maatregel</th>
-                <th>Afwijkende actie ter uitvoering</th>
-                <th>Rest Risico</th>
-            </tr>
-            </tfoot>
         </table>
     </div>
     <div class="row">
