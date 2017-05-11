@@ -1,22 +1,80 @@
-
-
-
 /* Sticky footer styles
 -------------------------------------------------- */
+
 html {
     position: relative;
     min-height: 100%;
 }
+
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
 }
+
 .footer {
     position: absolute;
-    padding-top:10px;
+    padding-top: 10px;
     bottom: 0;
     width: 100%;
     /* Set the fixed height of the footer here */
     height: 60px;
     background-color: #f5f5f5;
+}
+
+td.numberwidth {
+    width: 50px;
+}
+
+h1 {
+    color: black;
+}
+
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:hover,
+.navbar-default .navbar-nav>.active>a:focus {
+    background-color: black;
+    color: white;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:hover {
+    pointer-events: none;
+    cursor: default;
+    background-color: orange;
+    color: black;
+    font-weight: bold;
+}
+
+.table-responsive {
+    overflow: auto;
+    height: 500px;
+}
+
+input[type=search] {
+    margin-left: -15px;
+    margin-top: 5px;
+    width: 70%;
+}
+
+.btn-right {
+
+    float: right;
+    margin-bottom: 1%;
+    width: 20%;
+    border-top: 3px;
+    border-bottom: 3px;
+}
+
+
+.widintable {
+  float: right;
+  margin-right: 5px;
+  cursor: pointer;
+}
+.red {
+  color: red;
+}
+
+.marginTop{
+  margin-top: 25px;
 }
