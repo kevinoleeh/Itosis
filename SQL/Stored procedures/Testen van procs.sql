@@ -51,7 +51,7 @@ EXEC _begin
 BEGIN TRY
 	BEGIN TRANSACTION test
 		EXEC insertBedrijf @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem'
-		EXEC insertBedrijf @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem'
+		EXEC insertBedrijf @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem    '
 	ROLLBACK TRANSACTION
 	EXEC _result 'insertBedrijf', 0, ''
 END TRY

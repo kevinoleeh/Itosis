@@ -36,7 +36,7 @@ try {
                 <tbody>
                 <?php foreach ($result as &$value) { ?>
                     <tr>
-                        <td><?= $value['REGELNUMMER'] ?></td>
+                        <td><a href="organisatie.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $value['RAPPORTNUMMER'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"><?= $value['REGELNUMMER'] ?></td>
                         <td><?= $value['ASPECTNAAM'] ?></td>
                         <td><?= $value['EFFECTNAAM'] ?></td>
                         <td><?= $value['ARBO_ONDERWERP'] ?></td>

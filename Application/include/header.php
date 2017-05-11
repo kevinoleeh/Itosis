@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Euratex</title>
-
+    <?php include_once('include/pdo-connect.php') ?>
     <!-- Bootstrap own style sheet-->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -23,4 +23,3 @@
 
 <body>
     <?php include_once('navbar.php') ?>
-    <?php include_once('include/pdo-connect.php') ?>
