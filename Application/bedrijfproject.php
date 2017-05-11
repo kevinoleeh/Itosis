@@ -19,12 +19,20 @@ include("header.php");
                         <th>Locatie</th>
                     </tr>
                 </thead>
-                <tr>
-                    <td>Bedrijf</td>
-                    <td>Locatie
-                        <a href="?remove=1"><span class="glyphicon glyphicon-remove widintable red"></span></a>
-                        <a href="?edit=1"><span class="glyphicon glyphicon-pencil widintable"></span></a>
-                    </td>
+
+                  <?php   $rs = $dbh->query("SELECT * FROM BEDRIJF");
+                  $bedrijven = $rs->fetchAll();
+                  foreach ($bedrijven as $bedrijf){
+                    echo '<tr>';
+                    echo '<td>'.$bedrijf["BEDRIJFSNAAM"].'</td>';
+                    echo '<td>'.$bedrijf["LOCATIE"].'
+                    <a href="?remove='.$bedrijf["BEDRIJFSNAAM"].'"><span class="glyphicon glyphicon-remove widintable red"></span></a>
+                    <a href="?edit='.$bedrijf["BEDRIJFSNAAM"].'"><span class="glyphicon glyphicon-pencil widintable"></span></a>
+                    </td>';
+                    echo '</tr>';
+                  }
+
+                 ?>
                 </tr>
             </table>
         </div>
@@ -60,3 +68,6 @@ include("header.php");
 <form method="GET" id="bedrijfForm" action="Zoeken">
     <input type="hidden" id="inputBedrijf" name="bedrijf" />
 </form>
+
+
+<?php include_once('include/footer.php');
