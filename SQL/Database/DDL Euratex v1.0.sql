@@ -893,7 +893,7 @@ go
 /* Table: PROJECT                                               */
 /*==============================================================*/
 create table PROJECT (
-   PROJECTNUMMER        PROJECTNUMMER        not null,
+   PROJECTNUMMER        PROJECTNUMMER   IDENTITY (1,1)    not null,
    BEDRIJFSNAAM         BEDRIJFSNAAM         not null,
    LOCATIE              LOCATIE              not null,
    PROJECTOMSCHRIJVING  PROJECTOMSCHRIJVING  not null,

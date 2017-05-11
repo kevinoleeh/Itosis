@@ -1,4 +1,4 @@
-<?php include_once('include/pdo-connect.php') ?>
+<?php include_once('header.php') ?>
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -8,9 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = "P@ssw0rd";
     $dbh = new PDO("sqlsrv:Server=$hostname;Database=$dbname", "$username", "$password");
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $query = "EXEC dbo.InsertOrganisatieRisicoregel 
+    $query = "EXEC dbo.InsertOrganisatieRisicoregel
              :projectnummer,
-             :rapportnummer, 
+             :rapportnummer,
              19,
              :aspect,
              :effect,
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<?php include_once('header.php') ?>
+
 
 <div class="container">
     <div class="page-header">
@@ -134,4 +134,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <?php include_once('footer.php'); ?>
-<?php include_once('include/pdo-disconnect.php') ?>
