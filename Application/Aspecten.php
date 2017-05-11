@@ -1,4 +1,4 @@
-<?php include_once('header.php') ?>
+<?php include_once('include/header.php'); ?>
 <div class="container">
     <div class="page-header">
         <h1>Aspecten</h1>
@@ -21,14 +21,19 @@
                     </thead>
 
                     <?php
-            for ($i = 1; $i <= 8; $i++) {
+
+                    $rs = $dbh->query("SELECT * FROM ASPECT");
+                    $bedrijven = $rs->fetchAll();
+                    $i = 1;
+                    foreach ($bedrijven as $bedrijf) {
+
               // hier komt query zooi
             ?>
                         <tr>
                             <td class="numberwidth">
-                                <?php echo $i; ?>
+                                <?php echo $i++; ?>
                             </td>
-                            <td>Brandrisico</td>
+                            <td><?php echo $bedrijf["ASPECTNAAM"] ?></td>
                         </tr>
                         <?php } ?>
                 </table>
@@ -70,4 +75,4 @@
     </div>
 </div>
 
-<?php include_once('footer.php');?>
+<?php include_once('include/footer.php');?>
