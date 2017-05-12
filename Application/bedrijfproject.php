@@ -3,24 +3,25 @@ include("include/header.php");
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  if (isset($_GET["new"])){
-    $query = 'EXEC dbo.insertBedrijf
+    if (isset($_GET["new"])) {
+        $query = 'EXEC dbo.insertBedrijf
               :BEDRIJFSNAAM,
               :LOCATIE';
-    $stmt = $dbh->prepare($query);
-    $stmt->bindParam(':BEDRIJFSNAAM', $_POST['BEDRIJFSNAAM']);
-    $stmt->bindParam(':LOCATIE', $_POST['LOCATIE']);
+        $stmt = $dbh->prepare($query);
+        $stmt->bindParam(':BEDRIJFSNAAM', $_POST['BEDRIJFSNAAM']);
+        $stmt->bindParam(':LOCATIE', $_POST['LOCATIE']);
 
-    try {
-        $stmt->execute();
+        try {
+            $stmt->execute();
 
-        $meldingStatus = true;
-        $melding = "Regel opgeslagen.";
-    }   catch (PDOException $e) {
-        $meldingStatus = false;
-        $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
+            $meldingStatus = true;
+            $melding = "Regel opgeslagen.";
+        } catch (PDOException $e) {
+            $meldingStatus = false;
+            $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
+        }
+        $stmt->release();
     }
-  }
 }
 if (isset($_GET["remove"])){
   $query = 'EXEC dbo.deleteBedrijf
@@ -47,16 +48,18 @@ if (isset($_GET["remove"])){
         <?php include_once('include/melding.php') ?>
         <div class="col-md-5">
             <input type="search" style="" value="vul een bedrijfsnaam in.">
-            <a href="?new=1"><button class="btn btn-justified btn-right">Toevoegen</button></a>
+            <a href="?new=1">
+                <button class="btn btn-justified btn-right">Toevoegen</button>
+            </a>
             <div class="row">
             </div>
             <div class="row table-responsive">
                 <table id="table" class="table table-striped table-bordered marginTop">
                     <thead>
-                        <tr>
-                            <th>Bedrijf</th>
-                            <th>Locatie</th>
-                        </tr>
+                    <tr>
+                        <th>Bedrijf</th>
+                        <th>Locatie</th>
+                    </tr>
                     </thead>
                     <?php
                 if(isset($_GET["new"])){
@@ -67,22 +70,16 @@ if (isset($_GET["remove"])){
                   echo '</tr>';
                   echo '</form>';
                 }
-                 ?>
-                        <tr>
-                            <?php   $rs = $dbh->query("SELECT * FROM BEDRIJF");
+                  $rs = $dbh->query("SELECT * FROM BEDRIJF");
                   $bedrijven = $rs->fetchAll();
                   foreach ($bedrijven as $bedrijf){
                     echo '<tr>';
                     echo '<td>'.$bedrijf["BEDRIJFSNAAM"].'</td>';
                     echo '<td>'.$bedrijf["LOCATIE"].'
                     <a href="?remove='.$bedrijf["BEDRIJFSNAAM"].'&LOCATIE='.$bedrijf["LOCATIE"].'"><span class="glyphicon glyphicon-remove widintable red"></span></a>
-                    <a href="?edit='.$bedrijf["BEDRIJFSNAAM"].'&LOCATIE='.$bedrijf["LOCATIE"].'"><span class="glyphicon glyphicon-pencil widintable"></span></a>
-                    </td>';
-                    echo '</tr>';
+                    <a href="?edit='.$bedrijf["BEDRIJFSNAAM"].'&LOCATIE='.$bedrijf["LOCATIE"].'"><span class="glyphicon glyphicon-pencil widintable"></span></a>';
                   }
-
-                 ?>
-                        </tr>
+                    ?>
                 </table>
             </div>
         </div>
@@ -95,10 +92,10 @@ if (isset($_GET["remove"])){
             <div class="row table-responsive">
                 <table id="table" class="table table-striped table-bordered marginTop">
                     <thead>
-                        <tr>
-                            <th>Project</th>
-                            <th>Omschrijving</th>
-                        </tr>
+                    <tr>
+                        <th>Project</th>
+                        <th>Omschrijving</th>
+                    </tr>
                     </thead>
                     <tr>
                         <td>Project 1</td>
@@ -114,8 +111,8 @@ if (isset($_GET["remove"])){
         </div>
     </div>
     <form method="GET" id="bedrijfForm" action="Zoeken">
-        <input type="hidden" id="inputBedrijf" name="bedrijf" />
+        <input type="hidden" id="inputBedrijf" name="bedrijf"/>
     </form>
 
 
-    <?php include_once('include/footer.php');
+<?php include_once('include/footer.php'); ?>

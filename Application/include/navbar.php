@@ -16,8 +16,12 @@
             <ul class="nav navbar-nav">
                 <li><a href="bedrijfproject.php">Bedrijven</a></li>
                 <li><a href="aspecten.php">Aspecten</a></li>
-                <li><a href="rapportage.php">Rapportages</a></li>
-                <li><a href="beheer.php">Beheer</a></li>
+                <li><a href="rapportages.php">Rapportages</a></li>
+                <li><a href="index.php">indextest</a></li>
+                <li><a href="login.php">login</a></li>
+                <li><a href="risicoregels.php">risicooo</a></li>
+                <li><a href="visuelebeoordeling.php">visbeoordeling</a></li>
+    
             </ul>
 
             <!--      <ul class="nav navbar-nav navbar-right">-->
