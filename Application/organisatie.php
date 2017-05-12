@@ -2,7 +2,7 @@
 
 <?php
 if (isset($_GET['regelnummer'])) {
-    $query = "EXEC dbo.SELECT_RISICOREGEL
+    $query = "EXEC dbo.SELECT_RISICOREGEL 
              :PROJECTNUMMER,
              :RAPPORTNUMMER,
              :REGELNUMMER";
@@ -37,7 +37,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              :NA_ERNST_VAN_HET_ONGEVAL,
              :NA_KANS_OP_BLOOTSTELLING,
              :NA_KANS_OP_WAARSCHIJNLIJKHEID";
+<<<<<<< HEAD
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $hostname = "(local)\SQLEXPRESS";
+    $dbname = "Euratex";
+    $username = "sa";
+    $password = "P@ssw0rd";
+    $dbh = new PDO("sqlsrv:Server=$hostname;Database=$dbname", "$username", "$password");
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $query = "EXEC dbo.InsertOrganisatieRisicoregel
+             :projectnummer,
+             :rapportnummer,
+             19,
+             :aspect,
+             :effect,
+             :arboOnderwerp,
+             :huidigeBeheersmaatregel,
+             :voorgesteldeActieTerUitvoering,
+             :afwijkendeActieTerUitvoering,
+             :restRisico,
+             :voorErnstVanOngeval,
+             :voorKansOpBlootstelling,
+             :voorKansOpWaarschijnlijkheid,
+             :naErnstVanOngeval,
+             :naKansOpBlootstelling,
+             :naKansOpWaarschijnlijkheid";
+>>>>>>> origin/development
+=======
+>>>>>>> 6f788abaa943df42415921e645b0ff955de59230
     $stmt = $dbh->prepare($query);
     $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
     $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);

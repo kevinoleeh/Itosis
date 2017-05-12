@@ -27,6 +27,7 @@
                     $i = 1;
                     foreach ($bedrijven as $bedrijf) {
 
+              // hier komt query zooi
             ?>
                         <tr>
                             <td class="numberwidth">
@@ -55,20 +56,15 @@
                     </thead>
 
                     <?php
-
-                    $rs = $dbh->query("SELECT * FROM EFFECT");
-                    $bedrijven = $rs->fetchAll();
-                    $i = 1;
-                    foreach ($bedrijven as $bedrijf) {
-
+              // hier komt query zooi
+            for ($i = 1; $i <= 8; $i++) {
                 ?>
-
 
                         <tr>
                             <td class="numberwidth">
-                                <?php echo $i++; ?>
+                                <?php echo $i; ?>
                             </td>
-                            <td><?php echo $bedrijf["EFFECTNAAM"] ?> </td>
+                            <td>Verbranding</td>
                         </tr>
                         <?php } ?>
 

@@ -2,10 +2,10 @@
 session_start();
 
 try {
-    $hostname = "DESKTOP-GDLT0GF";
+    $hostname = "(local)\SQLEXPRESS";
     $dbname = "Euratex";
     $username = "sa";
-    $password = "fiets123";
+    $password = "P@ssw0rd";
     $dbh = new PDO("sqlsrv:Server=$hostname;Database=$dbname", "$username", "$password");
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
