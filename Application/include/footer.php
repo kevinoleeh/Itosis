@@ -1,4 +1,4 @@
-</div>
+
 <footer class="footer">
     <div class="container">
         <p class="text-muted">© Euratex 2017 Alle rechten voorbehouden</p>

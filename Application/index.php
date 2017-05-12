@@ -1,11 +1,8 @@
 <?php include_once('include/header.php') ?>
     <div class="container">
-        <div class="row">
-            <div class="page-header">
-                <h1>Welkom, Willem</h1>
-            </div>
+        <div class="page-header">
+            <h1>Welkom, Willem</h1>
         </div>
-
 
         <div class="row">
             <div class="col-md-2">
