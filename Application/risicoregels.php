@@ -36,6 +36,8 @@ try {
                     <th>Aspect</th>
                     <th>Effect</th>
                     <th>Arbo onderwerp</th>
+                    <th>Risico voor maatregel</th>
+                    <th>Prioriteit voor maatregel</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -45,6 +47,8 @@ try {
                         <td><?= $value['ASPECTNAAM'] ?></td>
                         <td><?= $value['EFFECTNAAM'] ?></td>
                         <td><?= $value['ARBO_ONDERWERP'] ?></td>
+                        <td><?= $value['VOOR_RISICO'] ?></td>
+                        <td><?= $value['VOOR_PRIORITEIT'] ?></td>
                     </tr>
                 <?php } ?>
                 </tbody>
