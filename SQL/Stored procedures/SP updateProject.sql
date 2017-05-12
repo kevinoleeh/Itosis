@@ -1,6 +1,5 @@
 CREATE PROCEDURE updateProject
-		@Bedrijfsnaam        VARCHAR(255),
-		@Locatie             VARCHAR(255),
+		@Projectnummer        VARCHAR(255),
 		@ProjectOmschrijving VARCHAR(255)
 AS
 	BEGIN
@@ -18,7 +17,7 @@ AS
 		--1. Project update
 		UPDATE PROJECT
 		SET PROJECTOMSCHRIJVING = @ProjectOmschrijving
-		WHERE BEDRIJFSNAAM = @Bedrijfsnaam AND LOCATIE = @Locatie 
+		WHERE PROJECTNUMMER = @Projectnummer  
 
 		IF @TranCounter = 0 AND XACT_STATE() = 1
 			COMMIT TRANSACTION;
@@ -38,4 +37,3 @@ AS
 		END CATCH
 	END
 GO
-
