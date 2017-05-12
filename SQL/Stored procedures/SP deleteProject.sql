@@ -1,6 +1,5 @@
 CREATE PROCEDURE deleteProject
-		@Bedrijfsnaam        VARCHAR(255),
-		@Locatie             VARCHAR(255)
+		@PROJECTNUMMER as INT
 AS
 	BEGIN
 		SET NOCOUNT, XACT_ABORT ON
@@ -16,7 +15,7 @@ AS
 
 		--1. Delete project
 		DELETE from PROJECT
-		WHERE BEDRIJFSNAAM = @Bedrijfsnaam AND LOCATIE = @Locatie 
+		WHERE PROJECTNUMMER = @PROJECTNUMMER
 
 		IF @TranCounter = 0 AND XACT_STATE() = 1
 			COMMIT TRANSACTION;

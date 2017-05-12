@@ -34,10 +34,25 @@ if (isset($_GET["remove"])){
       $stmt->execute();
 
       $meldingStatus = true;
-      $melding = "Regel opgeslagen.";
+      $melding = "Bedrijf verwijderd.";
   }   catch (PDOException $e) {
       $meldingStatus = false;
-      $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
+      $melding = "Bedrijf niet verwijderd. Foutmelding: " . $e->getMessage();
+  }
+}
+if (isset($_GET["removeProject"])){
+  $query = 'EXEC dbo.deleteProject
+            :PROJECTNUMMER';
+  $stmt = $dbh->prepare($query);
+  $stmt->bindParam(':PROJECTNUMMER', $_GET['removeProject']);
+  try {
+      $stmt->execute();
+
+      $meldingStatus = true;
+      $melding = "Project verwijderd.";
+  }   catch (PDOException $e) {
+      $meldingStatus = false;
+      $melding = "Project niet verwijderd. Foutmelding: " . $e->getMessage();
   }
 }
 ?>
@@ -48,7 +63,7 @@ if (isset($_GET["remove"])){
         <?php include_once('include/melding.php') ?>
         <div class="col-md-5">
             <input type="search" style="" value="vul een bedrijfsnaam in.">
-            <a href="?new=1">
+            <a class="no-link" href="?new=1">
                 <button class="btn btn-justified btn-right">Toevoegen</button>
             </a>
             <div class="row">
@@ -56,10 +71,10 @@ if (isset($_GET["remove"])){
             <div class="row table-responsive">
                 <table id="table" class="table table-striped table-bordered marginTop">
                     <thead>
-                    <tr>
-                        <th>Bedrijf</th>
-                        <th>Locatie</th>
-                    </tr>
+                        <tr>
+                            <th>Bedrijf</th>
+                            <th>Locatie</th>
+                        </tr>
                     </thead>
                     <?php
                 if(isset($_GET["new"])){
@@ -74,7 +89,7 @@ if (isset($_GET["remove"])){
                   $bedrijven = $rs->fetchAll();
                   foreach ($bedrijven as $bedrijf){
                     echo '<tr>';
-                    echo '<td>'.$bedrijf["BEDRIJFSNAAM"].'</td>';
+                    echo '<td><a class="no-link" href="?project='.$bedrijf["BEDRIJFSNAAM"].'">'.$bedrijf["BEDRIJFSNAAM"].'</a></td>';
                     echo '<td>'.$bedrijf["LOCATIE"].'
                     <a href="?remove='.$bedrijf["BEDRIJFSNAAM"].'&LOCATIE='.$bedrijf["LOCATIE"].'"><span class="glyphicon glyphicon-remove widintable red"></span></a>
                     <a href="?edit='.$bedrijf["BEDRIJFSNAAM"].'&LOCATIE='.$bedrijf["LOCATIE"].'"><span class="glyphicon glyphicon-pencil widintable"></span></a>';
@@ -86,24 +101,33 @@ if (isset($_GET["remove"])){
         <div class="col-md-2">
         </div>
         <div class="col-md-5">
-            <button href="?new=1" class="btn btn-justified btn-right">Toevoegen</button>
+          <a class="no-link" href="?newProject=1">
+              <button class="btn btn-justified btn-right">Toevoegen</button>
+          </a>
             <div class="row">
             </div>
             <div class="row table-responsive">
                 <table id="table" class="table table-striped table-bordered marginTop">
                     <thead>
-                    <tr>
-                        <th>Project</th>
-                        <th>Omschrijving</th>
-                    </tr>
+                        <tr>
+                            <th>Project</th>
+                            <th>Omschrijving</th>
+                        </tr>
                     </thead>
-                    <tr>
-                        <td>Project 1</td>
-                        <td>Omschrijving 1
-                            <a href="?remove=1"><span class="glyphicon glyphicon-remove widintable red"></span></a>
-                            <a href="?edit=1"><span class="glyphicon glyphicon-pencil widintable"></span></a>
-                        </td>
-                    </tr>
+                    <?php
+                    if(isset($_GET['project'])) {
+                    $stmt = $dbh->prepare("SELECT * FROM PROJECT WHERE BEDRIJFSNAAM = :BEDRIJFSNAAM");
+                    $stmt->execute(array(':BEDRIJFSNAAM'=>$_GET['project']));
+                    $projecten = $stmt->fetchAll();
+                    foreach ($projecten as $project) {
+                      echo '<tr>';
+                      echo '<td>'.$project["PROJECTNUMMER"].'</td>';
+                      echo '<td>'.$project["PROJECTOMSCHRIJVING"].'
+                      <a href="?removeProject='.$project["PROJECTNUMMER"].'&project='.$_GET['project'].'"><span class="glyphicon glyphicon-remove widintable red"></span></a>
+                      <a href="?editProject='.$project["PROJECTNUMMER"].'&project='.$_GET['project'].'"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
+                    }
+                  }
+                    ?>
                     <tfoot>
                     </tfoot>
                 </table>
@@ -111,8 +135,8 @@ if (isset($_GET["remove"])){
         </div>
     </div>
     <form method="GET" id="bedrijfForm" action="Zoeken">
-        <input type="hidden" id="inputBedrijf" name="bedrijf"/>
+        <input type="hidden" id="inputBedrijf" name="bedrijf" />
     </form>
 
 
-<?php include_once('include/footer.php'); ?>
+    <?php include_once('include/footer.php'); ?>
