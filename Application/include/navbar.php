@@ -14,14 +14,11 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
+                <li><a href="index.php">Startpagina</a></li>
+                <li><a href="projecten.php">Projecten</a></li>
                 <li><a href="bedrijfproject.php">Bedrijven</a></li>
                 <li><a href="aspecten.php">Aspecten</a></li>
-                <li><a href="rapportages.php">Rapportages</a></li>
-                <li><a href="index.php">indextest</a></li>
-                <li><a href="login.php">login</a></li>
-                <li><a href="risicoregels.php">risicooo</a></li>
-                <li><a href="visuelebeoordeling.php">visbeoordeling</a></li>
-    
+                <li><a href="login.php">Login</a></li>
             </ul>
 
             <!--      <ul class="nav navbar-nav navbar-right">-->

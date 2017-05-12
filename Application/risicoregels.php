@@ -1,9 +1,10 @@
 <?php include_once('include/header.php') ?>
 
 <?php
-$query = "EXEC dbo.SELECT_ALLE_RISICOREGELS 
-         :PROJECTNUMMER, 
-         :RAPPORTNUMMER";
+$query = "SELECT *
+         FROM RISICOREGEL
+         WHERE PROJECTNUMMER = :PROJECTNUMMER
+         AND RAPPORTNUMMER = :RAPPORTNUMMER";
 $stmt = $dbh->prepare($query);
 $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
 $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
@@ -19,11 +20,15 @@ try {
 
 <div class="container">
     <div class="page-header">
-        <h1>Rapportage</h1>
+        <h1>Regels</h1>
+        <h4>Projectnummer <?= $_GET['projectnummer'] ?>, rapportnummer <?= $_GET['rapportnummer'] ?></h4>
     </div>
 
     <div class="row">
         <div class="col-md-12">
+            <a href="organisatie.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" class="btn btn-block btn-primary">Regel toevoegen</a>
+            <br>
+
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
@@ -45,16 +50,6 @@ try {
                 </tbody>
             </table>
         </div>
-    </div>
-
-    <div class="row">
-        <ul class="pagination">
-            <li class="active"><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-        </ul>
     </div>
 </div>
 <?php include_once('include/footer.php');

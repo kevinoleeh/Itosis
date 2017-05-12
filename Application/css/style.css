@@ -56,6 +56,17 @@ input[type=search] {
     width: 70%;
 }
 
+
+/* Buttons */
+
+.btn-huge{
+    padding-top:20px;
+    padding-bottom:20px;
+}
+.glyphicon-big
+{
+    font-size:30px;
+}
 .btn-right {
 
     float: right;
@@ -77,4 +88,20 @@ input[type=search] {
 
 .marginTop{
   margin-top: 25px;
+}
+.buttonlink {
+     background:none!important;
+     color:inherit;
+     border:none;
+     padding:0!important;
+     font: inherit;
+     cursor: pointer;
+}
+.green {
+  color: green;
+}
+.no-link{
+  cursor: text;
+  text-decoration: none;
+  color: black;
 }
