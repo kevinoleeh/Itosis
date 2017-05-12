@@ -20,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $meldingStatus = false;
         $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
     }
-    $stmt->release();
   }
 }
 if (isset($_GET["remove"])){
@@ -64,7 +63,7 @@ if (isset($_GET["remove"])){
                   echo '<form action="bedrijfproject.php?new=1" method="post">';
                   echo '<tr>';
                   echo '<td><input type="text" name="BEDRIJFSNAAM"></td>';
-                  echo '<td><input type="text" name="LOCATIE"><button type="submit"><span class="glyphicon glyphicon-ok widintable"></button></td>';
+                  echo '<td><input type="text" name="LOCATIE"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
                   echo '</tr>';
                   echo '</form>';
                 }
