@@ -68,12 +68,10 @@ input[type=search] {
     font-size:30px;
 }
 .btn-right {
-
+    margin-top: 5px;
     float: right;
     margin-bottom: 1%;
-    width: 20%;
-    border-top: 3px;
-    border-bottom: 3px;
+    font-size: 1.2em;
 }
 
 

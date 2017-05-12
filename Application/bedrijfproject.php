@@ -81,9 +81,9 @@ if (isset($_GET["removeProject"])){
         </div>
         <?php include_once('include/melding.php') ?>
         <div class="col-md-5">
-            <input type="search" style="" value="vul een bedrijfsnaam in.">
+            <input type="search" style="" value="vul een zoekterm in.">
             <a class="no-link" href="?new=1">
-                <button class="btn btn-justified btn-right">Toevoegen</button>
+                <span class="glyphicon glyphicon-plus btn-right green"></span>
             </a>
             <div class="row">
             </div>
@@ -122,7 +122,7 @@ if (isset($_GET["removeProject"])){
         <div class="col-md-5">
           <?php if(isset($_GET['project'])){
             echo '<a class="no-link" href="?newProject=1&project='.$_GET['project'].'&locatie='.$_GET['locatie'].'">
-                  <button class="btn btn-justified btn-right">Toevoegen</button>
+                  <span class="glyphicon glyphicon-plus btn-right green"></span>
                   </a>';
           }
           ?>
