@@ -28,8 +28,8 @@ if (isset($_GET["remove"])){
             :BEDRIJFSNAAM,
             :LOCATIE';
   $stmt = $dbh->prepare($query);
-  $stmt->bindParam(':BEDRIJFSNAAM', $dbh->quote($_GET['remove']));
-  $stmt->bindParam(':LOCATIE', $dbh->quote($_GET['LOCATIE']));  
+  $stmt->bindParam(':BEDRIJFSNAAM', $_GET['remove']);
+  $stmt->bindParam(':LOCATIE', $_GET['LOCATIE']);
   try {
       $stmt->execute();
 
