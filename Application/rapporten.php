@@ -24,7 +24,7 @@ try {
 
     <div class="row">
         <div class="col-md-12">
-            <a href="bedrijfproject.php" class="btn btn-block btn-primary">Rapport toevoegen</a>
+            <a href="rapporttoevoegen.php?projectnummer=<?= $_GET['projectnummer'] ?>" class="btn btn-block btn-primary">Rapport toevoegen</a>
             <br>
 
             <table class="table table-striped table-bordered">
