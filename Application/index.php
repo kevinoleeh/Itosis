@@ -9,15 +9,15 @@
 
         <div class="row">
             <div class="col-md-2">
-                <a href="bedrijfproject.php" class="btn btn-warning btn-lg btn-block btn-huge">
-                    <span class="glyphicon glyphicon-briefcase glyphicon-big"></span>
-                    <p>Bedrijven</p>
+                <a href="projecten.php" class="btn btn-warning btn-lg btn-block btn-huge">
+                    <span class="glyphicon glyphicon-list-alt glyphicon-big"></span>
+                    <p>Projecten</p>
                 </a>
             </div>
             <div class="col-md-2">
-                <a href="rapportages.php" class="btn btn-warning btn-lg btn-block btn-huge">
-                    <span class="glyphicon glyphicon-list-alt glyphicon-big"></span>
-                    <p>Rapportages</p>
+                <a href="bedrijfproject.php" class="btn btn-warning btn-lg btn-block btn-huge">
+                    <span class="glyphicon glyphicon-briefcase glyphicon-big"></span>
+                    <p>Bedrijven</p>
                 </a>
             </div>
             <div class="col-md-2">

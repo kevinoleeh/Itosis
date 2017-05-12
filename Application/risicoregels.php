@@ -20,7 +20,8 @@ try {
 
 <div class="container">
     <div class="page-header">
-        <h1>Rapportage</h1>
+        <h1>Regels</h1>
+        <h4>Projectnummer <?= $_GET['projectnummer'] ?>, rapportnummer <?= $_GET['rapportnummer'] ?></h4>
     </div>
 
     <div class="row">

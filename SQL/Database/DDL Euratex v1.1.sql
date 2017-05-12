@@ -1,14 +1,18 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2014                    */
-/* Created on:     10-5-2017 12:54:05                           */
+/* Created on:     12-5-2017 10:58:05                           */
 /*==============================================================*/
 
-use master
-
-if db_id('Euratex') is not null 
+if exists (
+	select 1
+	from sys.databases 
+	where name='Euratex'
+) begin
 	drop database Euratex
+end
 
 create database Euratex
+
 use Euratex
 
 if exists (select 1
@@ -34,13 +38,6 @@ go
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('FINE_EN_KINNEY') and o.name = 'FK_FINE_EN__RISICOREG_RISICORE')
-alter table FINE_EN_KINNEY
-   drop constraint FK_FINE_EN__RISICOREG_RISICORE
-go
-
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
    where r.fkeyid = object_id('PERIODIEKE_BEOORDELING') and o.name = 'FK_PERIODIE_PLAN_VAN__PLAN_VAN')
 alter table PERIODIEKE_BEOORDELING
    drop constraint FK_PERIODIE_PLAN_VAN__PLAN_VAN
@@ -48,9 +45,9 @@ go
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('PLAN_VAN_AANPAK') and o.name = 'FK_PLAN_VAN_RISICOMAA_RISICOMA')
+   where r.fkeyid = object_id('PLAN_VAN_AANPAK') and o.name = 'FK_PLAN_VAN_RISICOREG_RISICORE')
 alter table PLAN_VAN_AANPAK
-   drop constraint FK_PLAN_VAN_RISICOMAA_RISICOMA
+   drop constraint FK_PLAN_VAN_RISICOREG_RISICORE
 go
 
 if exists (select 1
@@ -65,13 +62,6 @@ if exists (select 1
    where r.fkeyid = object_id('RAPPORT') and o.name = 'FK_RAPPORT_PROJECT_R_PROJECT')
 alter table RAPPORT
    drop constraint FK_RAPPORT_PROJECT_R_PROJECT
-go
-
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('RISICOMAATREGEL') and o.name = 'FK_RISICOMA_RISICOREG_RISICORE')
-alter table RISICOMAATREGEL
-   drop constraint FK_RISICOMA_RISICOREG_RISICORE
 go
 
 if exists (select 1
@@ -165,22 +155,6 @@ if exists (select 1
 go
 
 if exists (select 1
-            from  sysindexes
-           where  id    = object_id('FINE_EN_KINNEY')
-            and   name  = 'RISICOREGEL_FINEY_EN_KENNY_FK'
-            and   indid > 0
-            and   indid < 255)
-   drop index FINE_EN_KINNEY.RISICOREGEL_FINEY_EN_KENNY_FK
-go
-
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('FINE_EN_KINNEY')
-            and   type = 'U')
-   drop table FINE_EN_KINNEY
-go
-
-if exists (select 1
             from  sysobjects
            where  id = object_id('PERIODIEKE_BEOORDELING')
             and   type = 'U')
@@ -224,13 +198,6 @@ if exists (select 1
            where  id = object_id('RAPPORT')
             and   type = 'U')
    drop table RAPPORT
-go
-
-if exists (select 1
-            from  sysobjects
-           where  id = object_id('RISICOMAATREGEL')
-            and   type = 'U')
-   drop table RISICOMAATREGEL
 go
 
 if exists (select 1
@@ -314,10 +281,6 @@ if exists(select 1 from systypes where name='EINDVERANTWOORDELIJKE')
    drop type EINDVERANTWOORDELIJKE
 go
 
-if exists(select 1 from systypes where name='ERNST_VAN_ONGEVAL')
-   drop type ERNST_VAN_ONGEVAL
-go
-
 if exists(select 1 from systypes where name='FINE_EN_KINNEY_TYPE')
    drop type FINE_EN_KINNEY_TYPE
 go
@@ -330,20 +293,32 @@ if exists(select 1 from systypes where name='INSPECTIE_IS_DE_ACTIE_UITGEVOERD')
    drop type INSPECTIE_IS_DE_ACTIE_UITGEVOERD
 go
 
-if exists(select 1 from systypes where name='KANS_OP_BLOOTSTELLING')
-   drop type KANS_OP_BLOOTSTELLING
-go
-
-if exists(select 1 from systypes where name='KANS_OP_WAARSCHIJNLIJKHEID')
-   drop type KANS_OP_WAARSCHIJNLIJKHEID
-go
-
 if exists(select 1 from systypes where name='LOCATIE')
    drop type LOCATIE
 go
 
 if exists(select 1 from systypes where name='MACHINE_ONDERDEEL')
    drop type MACHINE_ONDERDEEL
+go
+
+if exists(select 1 from systypes where name='NA_ERNST_VAN_ONGEVAL')
+   drop type NA_ERNST_VAN_ONGEVAL
+go
+
+if exists(select 1 from systypes where name='NA_KANS_OP_BLOOTSTELLING')
+   drop type NA_KANS_OP_BLOOTSTELLING
+go
+
+if exists(select 1 from systypes where name='NA_KANS_OP_WAARSCHIJNLIJKHEID')
+   drop type NA_KANS_OP_WAARSCHIJNLIJKHEID
+go
+
+if exists(select 1 from systypes where name='NA_PRIORITEIT')
+   drop type NA_PRIORITEIT
+go
+
+if exists(select 1 from systypes where name='NA_RISICO')
+   drop type NA_RISICO
 go
 
 if exists(select 1 from systypes where name='OPMERKING_STAND_VAN_ZAKEN')
@@ -360,10 +335,6 @@ go
 
 if exists(select 1 from systypes where name='PLAATS')
    drop type PLAATS
-go
-
-if exists(select 1 from systypes where name='PRIORITEIT')
-   drop type PRIORITEIT
 go
 
 if exists(select 1 from systypes where name='PROCES')
@@ -394,8 +365,8 @@ if exists(select 1 from systypes where name='RESTRISICO')
    drop type RESTRISICO
 go
 
-if exists(select 1 from systypes where name='RISICO')
-   drop type RISICO
+if exists(select 1 from systypes where name='RISICO_OMSCHRIJVING_OF_BEVINDING')
+   drop type RISICO_OMSCHRIJVING_OF_BEVINDING
 go
 
 if exists(select 1 from systypes where name='SCORE')
@@ -424,6 +395,26 @@ go
 
 if exists(select 1 from systypes where name='VOORLICHTING')
    drop type VOORLICHTING
+go
+
+if exists(select 1 from systypes where name='VOOR_ERNST_VAN_ONGEVAL')
+   drop type VOOR_ERNST_VAN_ONGEVAL
+go
+
+if exists(select 1 from systypes where name='VOOR_KANS_OP_BLOOTSTELLING')
+   drop type VOOR_KANS_OP_BLOOTSTELLING
+go
+
+if exists(select 1 from systypes where name='VOOR_KANS_OP_WAARSCHIJNLIJKHEID')
+   drop type VOOR_KANS_OP_WAARSCHIJNLIJKHEID
+go
+
+if exists(select 1 from systypes where name='VOOR_PRIORITEIT')
+   drop type VOOR_PRIORITEIT
+go
+
+if exists(select 1 from systypes where name='VOOR_RISICO')
+   drop type VOOR_RISICO
 go
 
 if exists(select 1 from systypes where name='WERKINSTRUCTIE_PROCEDURE')
@@ -501,13 +492,6 @@ create type EINDVERANTWOORDELIJKE
 go
 
 /*==============================================================*/
-/* Domain: ERNST_VAN_ONGEVAL                                    */
-/*==============================================================*/
-create type ERNST_VAN_ONGEVAL
-   from numeric(9,2)
-go
-
-/*==============================================================*/
 /* Domain: FINE_EN_KINNEY_TYPE                                  */
 /*==============================================================*/
 create type FINE_EN_KINNEY_TYPE
@@ -529,20 +513,6 @@ create type INSPECTIE_IS_DE_ACTIE_UITGEVOERD
 go
 
 /*==============================================================*/
-/* Domain: KANS_OP_BLOOTSTELLING                                */
-/*==============================================================*/
-create type KANS_OP_BLOOTSTELLING
-   from numeric(9,2)
-go
-
-/*==============================================================*/
-/* Domain: KANS_OP_WAARSCHIJNLIJKHEID                           */
-/*==============================================================*/
-create type KANS_OP_WAARSCHIJNLIJKHEID
-   from numeric(9,2)
-go
-
-/*==============================================================*/
 /* Domain: LOCATIE                                              */
 /*==============================================================*/
 create type LOCATIE
@@ -554,6 +524,41 @@ go
 /*==============================================================*/
 create type MACHINE_ONDERDEEL
    from varchar(255)
+go
+
+/*==============================================================*/
+/* Domain: NA_ERNST_VAN_ONGEVAL                                 */
+/*==============================================================*/
+create type NA_ERNST_VAN_ONGEVAL
+   from numeric(9,2)
+go
+
+/*==============================================================*/
+/* Domain: NA_KANS_OP_BLOOTSTELLING                             */
+/*==============================================================*/
+create type NA_KANS_OP_BLOOTSTELLING
+   from numeric(9,2)
+go
+
+/*==============================================================*/
+/* Domain: NA_KANS_OP_WAARSCHIJNLIJKHEID                        */
+/*==============================================================*/
+create type NA_KANS_OP_WAARSCHIJNLIJKHEID
+   from numeric(9,2)
+go
+
+/*==============================================================*/
+/* Domain: NA_PRIORITEIT                                        */
+/*==============================================================*/
+create type NA_PRIORITEIT
+   from numeric(9,2)
+go
+
+/*==============================================================*/
+/* Domain: NA_RISICO                                            */
+/*==============================================================*/
+create type NA_RISICO
+   from numeric(9,2)
 go
 
 /*==============================================================*/
@@ -582,13 +587,6 @@ go
 /*==============================================================*/
 create type PLAATS
    from varchar(255)
-go
-
-/*==============================================================*/
-/* Domain: PRIORITEIT                                           */
-/*==============================================================*/
-create type PRIORITEIT
-   from numeric(9,2)
 go
 
 /*==============================================================*/
@@ -641,10 +639,10 @@ create type RESTRISICO
 go
 
 /*==============================================================*/
-/* Domain: RISICO                                               */
+/* Domain: RISICO_OMSCHRIJVING_OF_BEVINDING                     */
 /*==============================================================*/
-create type RISICO
-   from numeric(9,2)
+create type RISICO_OMSCHRIJVING_OF_BEVINDING
+   from varchar(255)
 go
 
 /*==============================================================*/
@@ -694,6 +692,41 @@ go
 /*==============================================================*/
 create type VOORLICHTING
    from varchar(255)
+go
+
+/*==============================================================*/
+/* Domain: VOOR_ERNST_VAN_ONGEVAL                               */
+/*==============================================================*/
+create type VOOR_ERNST_VAN_ONGEVAL
+   from numeric(9,2)
+go
+
+/*==============================================================*/
+/* Domain: VOOR_KANS_OP_BLOOTSTELLING                           */
+/*==============================================================*/
+create type VOOR_KANS_OP_BLOOTSTELLING
+   from numeric(9,2)
+go
+
+/*==============================================================*/
+/* Domain: VOOR_KANS_OP_WAARSCHIJNLIJKHEID                      */
+/*==============================================================*/
+create type VOOR_KANS_OP_WAARSCHIJNLIJKHEID
+   from numeric(9,2)
+go
+
+/*==============================================================*/
+/* Domain: VOOR_PRIORITEIT                                      */
+/*==============================================================*/
+create type VOOR_PRIORITEIT
+   from numeric(9,2)
+go
+
+/*==============================================================*/
+/* Domain: VOOR_RISICO                                          */
+/*==============================================================*/
+create type VOOR_RISICO
+   from numeric(9,2)
 go
 
 /*==============================================================*/
@@ -788,72 +821,6 @@ create table EFFECT (
 go
 
 /*==============================================================*/
-/* Table: FINE_EN_KINNEY                                        */
-/*==============================================================*/
--- Geeft het risico terug op basis van ERNST_VAN_HET_ONGEVAL, KANS_OP_BLOOTSTELLING en KANS_OP_WAARSCHIJNLIJKHEID.
-GO
-CREATE FUNCTION dbo.fnGetRisico(@ERNST_VAN_HET_ONGEVAL NUMERIC(9, 2), @KANS_OP_BLOOTSTELLING NUMERIC(9, 2), @KANS_OP_WAARSCHIJNLIJKHEID NUMERIC(9, 2))
-RETURNS NUMERIC(9, 2)
-AS
-BEGIN
-	RETURN (@ERNST_VAN_HET_ONGEVAL * @KANS_OP_BLOOTSTELLING * @KANS_OP_WAARSCHIJNLIJKHEID)
-END
-GO
-
--- Geeft de prioriteit van een risico terug.
-GO
-CREATE FUNCTION dbo.fnGetPrioriteit(@Risico NUMERIC(9, 2))
-RETURNS VARCHAR(255)
-AS
-BEGIN
-	DECLARE @Prioriteit VARCHAR(255)
-
-	IF(@Risico <= 20) BEGIN
-		SET @Prioriteit = 'P 5'
-	END ELSE IF(@Risico >= 21 AND @Risico <= 75) BEGIN
-		SET @Prioriteit = 'P 4'
-	END ELSE IF(@Risico >= 76 AND @Risico <= 200) BEGIN
-		SET @Prioriteit = 'P 3'
-	END ELSE IF(@Risico >= 201 AND @Risico <= 400) BEGIN
-		SET @Prioriteit = 'P 2'
-	END ELSE BEGIN
-		SET @Prioriteit = 'P 1'
-	END
-
-	RETURN @Prioriteit
-END
-GO
-
-create table FINE_EN_KINNEY (
-   PROJECTNUMMER        PROJECTNUMMER        not null,
-   RAPPORTNUMMER        RAPPORTNUMMER        not null,
-   REGELNUMMER          REGELNUMMER          not null,
-   FINE_EN_KINNEY_TYPE  FINE_EN_KINNEY_TYPE  not null,
-   ERNST_VAN_HET_ONGEVAL ERNST_VAN_ONGEVAL    not null 
-      constraint CKC_ERNST_VAN_HET_ONG_FINE_EN_ check (ERNST_VAN_HET_ONGEVAL in (100,40,15,7,3,1)),
-   KANS_OP_BLOOTSTELLING KANS_OP_BLOOTSTELLING not null 
-      constraint CKC_KANS_OP_BLOOTSTEL_FINE_EN_ check (KANS_OP_BLOOTSTELLING in (10,6,3,2,1,0,5)),
-   KANS_OP_WAARSCHIJNLIJKHEID KANS_OP_WAARSCHIJNLIJKHEID not null 
-      constraint CKC_KANS_OP_WAARSCHIJ_FINE_EN_ check (KANS_OP_WAARSCHIJNLIJKHEID in (10,6,3,1,0,5,0,2)),
-   RISICO               AS dbo.fnGetRisico(ERNST_VAN_HET_ONGEVAL, KANS_OP_BLOOTSTELLING, KANS_OP_WAARSCHIJNLIJKHEID),
-   PRIORITEIT           AS dbo.fnGetPrioriteit(dbo.fnGetRisico(ERNST_VAN_HET_ONGEVAL, KANS_OP_BLOOTSTELLING, KANS_OP_WAARSCHIJNLIJKHEID)),
-   constraint PK_FINE_EN_KINNEY primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, FINE_EN_KINNEY_TYPE)
-)
-go
-
-/*==============================================================*/
-/* Index: RISICOREGEL_FINEY_EN_KENNY_FK                         */
-/*==============================================================*/
-
-
-
-
-create nonclustered index RISICOREGEL_FINEY_EN_KENNY_FK on FINE_EN_KINNEY (PROJECTNUMMER ASC,
-  RAPPORTNUMMER ASC,
-  REGELNUMMER ASC)
-go
-
-/*==============================================================*/
 /* Table: PERIODIEKE_BEOORDELING                                */
 /*==============================================================*/
 create table PERIODIEKE_BEOORDELING (
@@ -884,7 +851,6 @@ create table PLAN_VAN_AANPAK (
    WERKINSTRUCTIE_PROCEDURE WERKINSTRUCTIE_PROCEDURE null,
    TRA                  TRA                  null,
    CONTRACT_LIJST_      CONTROLELIJST        null,
-   PERIODIEKE_BEOORDELING PERIODIEKE_BEOORDELING null,
    constraint PK_PLAN_VAN_AANPAK primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
 )
 go
@@ -893,7 +859,7 @@ go
 /* Table: PROJECT                                               */
 /*==============================================================*/
 create table PROJECT (
-   PROJECTNUMMER        PROJECTNUMMER   IDENTITY (1,1)    not null,
+   PROJECTNUMMER        PROJECTNUMMER        not null,
    BEDRIJFSNAAM         BEDRIJFSNAAM         not null,
    LOCATIE              LOCATIE              not null,
    PROJECTOMSCHRIJVING  PROJECTOMSCHRIJVING  not null,
@@ -934,22 +900,42 @@ create nonclustered index PROJECT_RAPPORT_FK on RAPPORT (PROJECTNUMMER ASC)
 go
 
 /*==============================================================*/
-/* Table: RISICOMAATREGEL                                       */
-/*==============================================================*/
-create table RISICOMAATREGEL (
-   PROJECTNUMMER        PROJECTNUMMER        not null,
-   RAPPORTNUMMER        RAPPORTNUMMER        not null,
-   REGELNUMMER          REGELNUMMER          not null,
-   VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL not null,
-   AFWIJKENDE_ACTIE_TER_UITVOERING AFWIJKENDE_ACTIE_TER_UITVOER null,
-   RESTRISICO           RESTRISICO           null,
-   constraint PK_RISICOMAATREGEL primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
-)
-go
-
-/*==============================================================*/
 /* Table: RISICOREGEL                                           */
 /*==============================================================*/
+-- Geeft het risico terug op basis van ERNST_VAN_HET_ONGEVAL, KANS_OP_BLOOTSTELLING en KANS_OP_WAARSCHIJNLIJKHEID.
+GO
+CREATE FUNCTION dbo.fnGetRisico(@ERNST_VAN_HET_ONGEVAL NUMERIC(9, 2), @KANS_OP_BLOOTSTELLING NUMERIC(9, 2), @KANS_OP_WAARSCHIJNLIJKHEID NUMERIC(9, 2))
+RETURNS NUMERIC(9, 2)
+AS
+BEGIN
+	RETURN (@ERNST_VAN_HET_ONGEVAL * @KANS_OP_BLOOTSTELLING * @KANS_OP_WAARSCHIJNLIJKHEID)
+END
+GO
+
+-- Geeft de prioriteit van een risico terug.
+GO
+CREATE FUNCTION dbo.fnGetPrioriteit(@Risico NUMERIC(9, 2))
+RETURNS VARCHAR(255)
+AS
+BEGIN
+	DECLARE @Prioriteit VARCHAR(255)
+
+	IF(@Risico <= 20) BEGIN
+		SET @Prioriteit = 'P 5'
+	END ELSE IF(@Risico >= 21 AND @Risico <= 75) BEGIN
+		SET @Prioriteit = 'P 4'
+	END ELSE IF(@Risico >= 76 AND @Risico <= 200) BEGIN
+		SET @Prioriteit = 'P 3'
+	END ELSE IF(@Risico >= 201 AND @Risico <= 400) BEGIN
+		SET @Prioriteit = 'P 2'
+	END ELSE BEGIN
+		SET @Prioriteit = 'P 1'
+	END
+
+	RETURN @Prioriteit
+END
+GO
+
 create table RISICOREGEL (
    PROJECTNUMMER        PROJECTNUMMER        not null,
    RAPPORTNUMMER        RAPPORTNUMMER        not null,
@@ -957,7 +943,27 @@ create table RISICOREGEL (
    ASPECTNAAM           ASPECTNAAM           not null,
    EFFECTNAAM           EFFECTNAAM           not null,
    ARBO_ONDERWERP       ARBO_ONDERWERP       not null,
+   RISICO_OMSCHRIJVING_OF_BEVINDING RISICO_OMSCHRIJVING_OF_BEVINDING not null,
    HUIDIGE_BEHEERSMAATREGEL HUIDIGE_BEHEERSMAATREGEL null,
+   VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL not null,
+   VOOR_ERNST_VAN_HET_ONGEVAL VOOR_ERNST_VAN_ONGEVAL not null 
+      constraint CKC_VOOR_ERNST_VAN_HE_RISICORE check (VOOR_ERNST_VAN_HET_ONGEVAL in (100,40,15,7,3,1)),
+   VOOR_KANS_OP_BLOOTSTELLING VOOR_KANS_OP_BLOOTSTELLING not null 
+      constraint CKC_VOOR_KANS_OP_BLOO_RISICORE check (VOOR_KANS_OP_BLOOTSTELLING in (10,6,3,2,1,0.5)),
+   VOOR_KANS_OP_WAARSCHIJNLIJKHEID VOOR_KANS_OP_WAARSCHIJNLIJKHEID not null 
+      constraint CKC_VOOR_KANS_OP_WAAR_RISICORE check (VOOR_KANS_OP_WAARSCHIJNLIJKHEID in (10,6,3,1,0.5,0.2)),
+   VOOR_RISICO          AS dbo.fnGetRisico(VOOR_ERNST_VAN_HET_ONGEVAL, VOOR_KANS_OP_BLOOTSTELLING, VOOR_KANS_OP_WAARSCHIJNLIJKHEID),
+   VOOR_PRIORITEIT      AS dbo.fnGetPrioriteit(dbo.fnGetRisico(VOOR_ERNST_VAN_HET_ONGEVAL, VOOR_KANS_OP_BLOOTSTELLING, VOOR_KANS_OP_WAARSCHIJNLIJKHEID)),
+   AFWIJKENDE_ACTIE_TER_UITVOERING AFWIJKENDE_ACTIE_TER_UITVOER null,
+   RESTRISICO           RESTRISICO           null,
+   NA_ERNST_VAN_ONGEVAL VOOR_ERNST_VAN_ONGEVAL not null 
+      constraint CKC_NA_ERNST_VAN_ONGE_RISICORE check (NA_ERNST_VAN_ONGEVAL in (100,40,15,7,3,1)),
+   NA_KANS_OP_BLOOTSTELLING NA_KANS_OP_BLOOTSTELLING not null 
+      constraint CKC_NA_KANS_OP_BLOOTS_RISICORE check (NA_KANS_OP_BLOOTSTELLING in (10,6,3,2,1,0.5)),
+   NA_KANS_OP_WAARSCHIJNLIJKHEID NA_KANS_OP_WAARSCHIJNLIJKHEID not null 
+      constraint CKC_NA_KANS_OP_WAARSC_RISICORE check (NA_KANS_OP_WAARSCHIJNLIJKHEID in (10,6,3,1,0.5,0.2)),
+   NA_RISICO            AS dbo.fnGetRisico(NA_ERNST_VAN_ONGEVAL, NA_KANS_OP_BLOOTSTELLING, NA_KANS_OP_WAARSCHIJNLIJKHEID),
+   NA_PRIORITEIT        AS dbo.fnGetPrioriteit(dbo.fnGetRisico(NA_KANS_OP_BLOOTSTELLING, NA_KANS_OP_BLOOTSTELLING, NA_KANS_OP_WAARSCHIJNLIJKHEID)),
    constraint PK_RISICOREGEL primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
 )
 go
@@ -1022,19 +1028,14 @@ alter table ASPECT_EFFECT
       references EFFECT (EFFECTNAAM)
 go
 
-alter table FINE_EN_KINNEY
-   add constraint FK_FINE_EN__RISICOREG_RISICORE foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
-      references RISICOREGEL (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
-go
-
 alter table PERIODIEKE_BEOORDELING
    add constraint FK_PERIODIE_PLAN_VAN__PLAN_VAN foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
       references PLAN_VAN_AANPAK (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
 go
 
 alter table PLAN_VAN_AANPAK
-   add constraint FK_PLAN_VAN_RISICOMAA_RISICOMA foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
-      references RISICOMAATREGEL (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+   add constraint FK_PLAN_VAN_RISICOREG_RISICORE foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+      references RISICOREGEL (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
 go
 
 alter table PROJECT
@@ -1045,11 +1046,6 @@ go
 alter table RAPPORT
    add constraint FK_RAPPORT_PROJECT_R_PROJECT foreign key (PROJECTNUMMER)
       references PROJECT (PROJECTNUMMER)
-go
-
-alter table RISICOMAATREGEL
-   add constraint FK_RISICOMA_RISICOREG_RISICORE foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
-      references RISICOREGEL (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
 go
 
 alter table RISICOREGEL
