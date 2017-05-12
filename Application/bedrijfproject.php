@@ -20,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $meldingStatus = false;
             $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
         }
-        $stmt->release();
     }
 }
 if (isset($_GET["remove"])){
@@ -101,11 +100,15 @@ if (isset($_GET["removeProject"])){
         <div class="col-md-2">
         </div>
         <div class="col-md-5">
-          <a class="no-link" href="?newProject=1">
-              <button class="btn btn-justified btn-right">Toevoegen</button>
-          </a>
+          <?php if(isset($_GET['project'])){
+            echo '<a class="no-link" href="?newProject=1project="'.$_GET['project'].'">
+                  <button class="btn btn-justified btn-right">Toevoegen</button>
+                  </a>';
+          }
+          ?>
             <div class="row">
             </div>
+        <?php  if(isset($_GET['project'])) { ?>
             <div class="row table-responsive">
                 <table id="table" class="table table-striped table-bordered marginTop">
                     <thead>
@@ -115,7 +118,14 @@ if (isset($_GET["removeProject"])){
                         </tr>
                     </thead>
                     <?php
-                    if(isset($_GET['project'])) {
+                    if(isset($_GET["newProject"])){
+                      echo '<form action="bedrijfproject.php?newProject=1&project='.$_GET['project'].'" method="post">';
+                      echo '<tr>';
+                      echo '<td></td>';
+                      echo '<td><input type="text" name="PROJECTOMSCHRIJVING"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
+                      echo '</tr>';
+                      echo '</form>';
+                    }
                     $stmt = $dbh->prepare("SELECT * FROM PROJECT WHERE BEDRIJFSNAAM = :BEDRIJFSNAAM");
                     $stmt->execute(array(':BEDRIJFSNAAM'=>$_GET['project']));
                     $projecten = $stmt->fetchAll();
