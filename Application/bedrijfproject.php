@@ -23,22 +23,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->release();
     }
 }
-if (isset($_GET["remove"])) {
-    $query = 'EXEC dbo.deleteBedrijf
+if (isset($_GET["remove"])){
+  $query = 'EXEC dbo.deleteBedrijf
             :BEDRIJFSNAAM,
             :LOCATIE';
-    $stmt = $dbh->prepare($query);
-    $stmt->bindParam(':BEDRIJFSNAAM', $dbh->quote($_GET['remove']));
-    $stmt->bindParam(':LOCATIE', $dbh->quote($_GET['LOCATIE']));
-    try {
-        $stmt->execute();
+  $stmt = $dbh->prepare($query);
+  $stmt->bindParam(':BEDRIJFSNAAM', $_GET['remove']);
+  $stmt->bindParam(':LOCATIE', $_GET['LOCATIE']);
+  try {
+      $stmt->execute();
 
-        $meldingStatus = true;
-        $melding = "Regel opgeslagen.";
-    } catch (PDOException $e) {
-        $meldingStatus = false;
-        $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
-    }
+      $meldingStatus = true;
+      $melding = "Regel opgeslagen.";
+  }   catch (PDOException $e) {
+      $meldingStatus = false;
+      $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
+  }
 }
 ?>
     <div class="container">
@@ -62,31 +62,24 @@ if (isset($_GET["remove"])) {
                     </tr>
                     </thead>
                     <?php
-                    if (isset($_GET["new"])) {
-                        echo '<form action="bedrijfproject.php?new=1" method="post">';
-                        echo '<tr>';
-                        echo '<td><input type="text" name="BEDRIJFSNAAM"></td>';
-                        echo '<td><input type="text" name="LOCATIE"><button type="submit"><span class="glyphicon glyphicon-ok widintable"></button></td>';
-                        echo '</tr>';
-                        echo '</form>';
-                    }
+                if(isset($_GET["new"])){
+                  echo '<form action="bedrijfproject.php?new=1" method="post">';
+                  echo '<tr>';
+                  echo '<td><input type="text" name="BEDRIJFSNAAM"></td>';
+                  echo '<td><input type="text" name="LOCATIE"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
+                  echo '</tr>';
+                  echo '</form>';
+                }
+                  $rs = $dbh->query("SELECT * FROM BEDRIJF");
+                  $bedrijven = $rs->fetchAll();
+                  foreach ($bedrijven as $bedrijf){
+                    echo '<tr>';
+                    echo '<td>'.$bedrijf["BEDRIJFSNAAM"].'</td>';
+                    echo '<td>'.$bedrijf["LOCATIE"].'
+                    <a href="?remove='.$bedrijf["BEDRIJFSNAAM"].'&LOCATIE='.$bedrijf["LOCATIE"].'"><span class="glyphicon glyphicon-remove widintable red"></span></a>
+                    <a href="?edit='.$bedrijf["BEDRIJFSNAAM"].'&LOCATIE='.$bedrijf["LOCATIE"].'"><span class="glyphicon glyphicon-pencil widintable"></span></a>';
+                  }
                     ?>
-                    <tr>
-                        <?php
-                        $rs = $dbh->query("SELECT * FROM BEDRIJF");
-                        $bedrijven = $rs->fetchAll();
-                        foreach ($bedrijven as $bedrijf) {
-                            echo '<tr>';
-                            echo '<td>' . $bedrijf["BEDRIJFSNAAM"] . '</td>';
-                            echo '<td>' . $bedrijf["LOCATIE"] . '
-                    <a href="?remove=' . $bedrijf["BEDRIJFSNAAM"] . '&LOCATIE=' . $bedrijf["LOCATIE"] . '"><span class="glyphicon glyphicon-remove widintable red"></span></a>
-                    <a href="?edit=' . $bedrijf["BEDRIJFSNAAM"] . '&LOCATIE=' . $bedrijf["LOCATIE"] . '"><span class="glyphicon glyphicon-pencil widintable"></span></a>
-                    </td>';
-                            echo '</tr>';
-                        }
-
-                        ?>
-                    </tr>
                 </table>
             </div>
         </div>
@@ -122,4 +115,4 @@ if (isset($_GET["remove"])) {
     </form>
 
 
-<?php include_once('include/footer.php');
+<?php include_once('include/footer.php'); ?>

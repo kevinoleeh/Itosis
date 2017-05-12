@@ -60,5 +60,22 @@ BEGIN CATCH
 	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
 	EXEC _result 'insertBedrijf', 1, @msg
 END CATCH
+EXEC _end 0
+GO
+-- Testen delete bedrijf
+-- Succes
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC deleteBedrijf @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem'
+		SELECT * FROM BEDRIJF where BEDRIJFSNAAM = 'Meh'
+	ROLLBACK TRANSACTION
+	EXEC _result 'deleteBedrijf', 1, ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'deleteBedrijf', 0, @msg
+END CATCH
 EXEC _end 1
 GO
