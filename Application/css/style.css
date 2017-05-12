@@ -56,6 +56,17 @@ input[type=search] {
     width: 70%;
 }
 
+
+/* Buttons */
+
+.btn-huge{
+    padding-top:20px;
+    padding-bottom:20px;
+}
+.glyphicon-big
+{
+    font-size:30px;
+}
 .btn-right {
 
     float: right;
