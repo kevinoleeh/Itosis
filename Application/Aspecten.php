@@ -56,6 +56,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
 }
+  if (isset($_GET["removeAspect"])){
+    if (isset($_GET["CheckAspect"])){
+    $query = 'EXEC dbo.sp_deleteAspect
+              :ASPECTNAAM';
+    $stmt = $dbh->prepare($query);
+    $stmt->bindParam(':ASPECTNAAM', $_GET['removeAspect']);
+    try {
+        $stmt->execute();
+
+        $meldingStatus = true;
+        $melding = "Aspect verwijderd.";
+    }   catch (PDOException $e) {
+        $meldingStatus = false;
+        $melding = "Aspect niet verwijderd. Foutmelding: " . $e->getMessage();
+    }
+  }
+}
+  if (isset($_GET["removeEffect"])){
+    $query = 'EXEC dbo.sp_deleteEffectBijAspect
+              :ASPECTNAAM,
+              :EFFECTNAAM';
+    $stmt = $dbh->prepare($query);
+    $stmt->bindParam(':ASPECTNAAM', $_GET['removeAspect']);
+    $stmt->bindParam(':EFFECTNAAM', $_GET['removeEffect']);
+    try {
+        $stmt->execute();
+
+        $meldingStatus = true;
+        $melding = "Effect verwijderd.";
+    }   catch (PDOException $e) {
+        $meldingStatus = false;
+        $melding = "Effect niet verwijderd. Foutmelding: " . $e->getMessage();
+    }
+  }
+
 
 ?>
 <div class="container">
@@ -78,7 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </a>';
             } ?>
         </div>
-
     </div>
 
     <div class="row">
@@ -110,7 +144,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 echo'<td class="numberwidth">';
                                 echo   $i++;
                                 echo'  </td>';
-                                echo' <td><a href="aspecten.php?aspectnaam='.$aspecten["ASPECTNAAM"].'"> '.$aspecten["ASPECTNAAM"].'</a></td>';
+                                echo' <td><a href="aspecten.php?aspectnaam='.$aspecten["ASPECTNAAM"].'"> '.$aspecten["ASPECTNAAM"].'</a>';
+                                echo'   <a href="?removeAspect='.$aspecten["ASPECTNAAM"].'&checkAspect=1"><span class="glyphicon glyphicon-remove widintable red"></span></a>
+                                        <a href="?edit='.$aspecten["ASPECTNAAM"].'"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
                                 echo'  </tr>';
                       } ?>
                 </table>
@@ -171,8 +207,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <?php echo $i++; ?>
                             </td>
                             <td>
-                                <?php echo $effectnaam["EFFECTNAAM"]?>
+                                <?php echo $effectnaam["EFFECTNAAM"];
+                                echo'  <a href="?removeEffect='.$effectnaam["EFFECTNAAM"].'&removeAspect='.$_GET["aspectnaam"].'&aspectnaam='.$_GET["aspectnaam"].'"><span class="glyphicon glyphicon-remove widintable red"></span></a>
+                                       <a href="?edit='.$effectnaam["EFFECTNAAM"].'"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
+                                ?>
                             </td>
+
                         </tr>
                         <?php }} ?>
                 </table>
