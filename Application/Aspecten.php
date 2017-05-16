@@ -2,7 +2,7 @@
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_GET["insertAspect"])) {
-        $query = 'EXEC dbo.sp_insertAspect
+        $query = 'EXEC dbo.SP_INSERT_ASPECT
               :ASPECT';
         $stmt = $dbh->prepare($query);
         $stmt->bindParam(':ASPECT', $_POST['ASPECTNAAM']);
@@ -10,16 +10,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
 
             $meldingStatus = true;
-            $melding = "Regel opgeslagen.";
+            $melding = "Aspect opgeslagen.";
         } catch (PDOException $e) {
             $meldingStatus = false;
-            $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
+            $melding = "Aspect niet opgeslagen. Foutmelding: " . $e->getMessage();
         }
     }
 
-
+    // Voor een nog niet bestaand effect
     if (isset($_GET["aspectnaam"])) {
-        $query = 'EXEC dbo.sp_insertAspect_Effect_MetEffect
+        $query = 'EXEC dbo.SP_INSERT_ASPECT_EFFECT_EFFECT
                :ASPECT,
               :EFFECT';
         $stmt = $dbh->prepare($query);
@@ -29,36 +29,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
 
             $meldingStatus = true;
-            $melding = "Regel opgeslagen.";
+            $melding = "Effect opgeslagen.";
         } catch (PDOException $e) {
             $meldingStatus = false;
-            $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
+            $melding = "Effect niet opgeslagen. Foutmelding: " . $e->getMessage();
         }
     }
+    // voor een effet dat al bestaat
+if (isset($_GET["aspectnaam"])) {
+  if (isset($_GET["control"])){
+    $query = 'EXEC dbo.SP_INSERT_ASCPECT_EFFECT
+          :ASPECT,
+          :EFFECT';
+    $stmt = $dbh->prepare($query);
+    $stmt->bindParam(':ASPECT', $_GET['aspectnaam']);
+    $stmt->bindParam(':EFFECT', $_POST['EFFECTNAAM']);
+    try {
+        $stmt->execute();
 
-    if (isset($_GET["aspectnaam"])) {
-      if (isset($_GET["control"])){
-        $query = 'EXEC dbo.sp_insertAspect_Effect
-              :ASPECT,
-              :EFFECT';
-        $stmt = $dbh->prepare($query);
-        $stmt->bindParam(':ASPECT', $_GET['aspectnaam']);
-        $stmt->bindParam(':EFFECT', $_POST['EFFECTNAAM']);
-        try {
-            $stmt->execute();
-
-            $meldingStatus = true;
-            $melding = "Regel opgeslagen.";
-        } catch (PDOException $e) {
-            $meldingStatus = false;
-            $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
-        }
+        $meldingStatus = true;
+        $melding = "Effect opgeslagen.";
+    } catch (PDOException $e) {
+        $meldingStatus = false;
+        $melding = "Effect niet opgeslagen. Foutmelding: " . $e->getMessage();
     }
   }
+  }
 }
+
   if (isset($_GET["removeAspect"])){
-    if (isset($_GET["CheckAspect"])){
-    $query = 'EXEC dbo.sp_deleteAspect
+    if (isset($_GET["checkAspect"])){
+    $query = 'EXEC dbo.SP_DELETE_ASPECT
               :ASPECTNAAM';
     $stmt = $dbh->prepare($query);
     $stmt->bindParam(':ASPECTNAAM', $_GET['removeAspect']);
@@ -74,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
   if (isset($_GET["removeEffect"])){
-    $query = 'EXEC dbo.sp_deleteEffectBijAspect
+    $query = 'EXEC dbo.SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT
               :ASPECTNAAM,
               :EFFECTNAAM';
     $stmt = $dbh->prepare($query);
