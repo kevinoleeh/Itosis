@@ -1,4 +1,4 @@
-CREATE PROCEDURE SP_INSERT_ASPECT_EFFECT_EFFECT
+ALTER PROCEDURE sp_insertAspect_Effect_MetEffect
 	@Aspect		  VARCHAR(255),
 	@Effect       VARCHAR(255)
 AS
@@ -13,9 +13,9 @@ AS
 			BEGIN TRANSACTION;
 
 		BEGIN TRY
-
+		
 		BEGIN
-		execute SP_INSERT_EFFECT @Effect
+		execute sp_insertEffect @Effect
 		END
 		BEGIN
 		INSERT INTO ASPECT_EFFECT(ASPECTNAAM,EFFECTNAAM)
