@@ -1,6 +1,5 @@
-CREATE PROCEDURE insertProject
-		@Bedrijfsnaam        VARCHAR(255),
-		@Locatie             VARCHAR(255),
+CREATE PROCEDURE SP_UPDATE_PROJECT
+		@Projectnummer        VARCHAR(255),
 		@ProjectOmschrijving VARCHAR(255)
 AS
 	BEGIN
@@ -14,9 +13,11 @@ AS
 			BEGIN TRANSACTION;
 
 		BEGIN TRY
-		--1. Project insert
-		INSERT INTO PROJECT (BEDRIJFSNAAM, LOCATIE, PROJECTOMSCHRIJVING)
-		VALUES (@Bedrijfsnaam, @Locatie, @ProjectOmschrijving)
+
+		--1. Project update
+		UPDATE PROJECT
+		SET PROJECTOMSCHRIJVING = @ProjectOmschrijving
+		WHERE PROJECTNUMMER = @Projectnummer
 
 		IF @TranCounter = 0 AND XACT_STATE() = 1
 			COMMIT TRANSACTION;
@@ -36,4 +37,3 @@ AS
 		END CATCH
 	END
 GO
-

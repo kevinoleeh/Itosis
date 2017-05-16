@@ -1,6 +1,7 @@
-CREATE PROCEDURE insertBedrijf
+CREATE PROCEDURE SP_INSERT_PROJECT
 		@Bedrijfsnaam        VARCHAR(255),
-		@Locatie             VARCHAR(255)
+		@Locatie             VARCHAR(255),
+		@ProjectOmschrijving VARCHAR(255)
 AS
 	BEGIN
 		SET NOCOUNT, XACT_ABORT ON
@@ -14,8 +15,8 @@ AS
 
 		BEGIN TRY
 		--1. Project insert
-		INSERT INTO BEDRIJF (BEDRIJFSNAAM, LOCATIE)
-		VALUES (@Bedrijfsnaam, @Locatie)
+		INSERT INTO PROJECT (BEDRIJFSNAAM, LOCATIE, PROJECTOMSCHRIJVING)
+		VALUES (@Bedrijfsnaam, @Locatie, @ProjectOmschrijving)
 
 		IF @TranCounter = 0 AND XACT_STATE() = 1
 			COMMIT TRANSACTION;
@@ -35,4 +36,3 @@ AS
 		END CATCH
 	END
 GO
-

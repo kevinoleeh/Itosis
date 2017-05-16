@@ -1,4 +1,4 @@
-CREATE PROCEDURE deleteBedrijf
+CREATE PROCEDURE SP_INSERT_BEDRIJF
 		@Bedrijfsnaam        VARCHAR(255),
 		@Locatie             VARCHAR(255)
 AS
@@ -14,8 +14,9 @@ AS
 
 		BEGIN TRY
 		--1. Project insert
-		DELETE FROM BEDRIJF
-			WHERE LOCATIE = @Locatie AND BEDRIJFSNAAM = @Bedrijfsnaam
+		INSERT INTO BEDRIJF (BEDRIJFSNAAM, LOCATIE)
+		VALUES (@Bedrijfsnaam, @Locatie)
+
 		IF @TranCounter = 0 AND XACT_STATE() = 1
 			COMMIT TRANSACTION;
 		END TRY

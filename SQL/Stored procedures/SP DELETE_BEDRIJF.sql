@@ -1,6 +1,6 @@
-CREATE PROCEDURE updateProject
-		@Projectnummer        VARCHAR(255),
-		@ProjectOmschrijving VARCHAR(255)
+CREATE PROCEDURE SP_DELETE_BEDRIJF
+		@Bedrijfsnaam        VARCHAR(255),
+		@Locatie             VARCHAR(255)
 AS
 	BEGIN
 		SET NOCOUNT, XACT_ABORT ON
@@ -13,12 +13,9 @@ AS
 			BEGIN TRANSACTION;
 
 		BEGIN TRY
-
-		--1. Project update
-		UPDATE PROJECT
-		SET PROJECTOMSCHRIJVING = @ProjectOmschrijving
-		WHERE PROJECTNUMMER = @Projectnummer  
-
+		--1. Project insert
+		DELETE FROM BEDRIJF
+			WHERE LOCATIE = @Locatie AND BEDRIJFSNAAM = @Bedrijfsnaam
 		IF @TranCounter = 0 AND XACT_STATE() = 1
 			COMMIT TRANSACTION;
 		END TRY

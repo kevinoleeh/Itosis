@@ -19,7 +19,11 @@ CREATE PROCEDURE _begin AS BEGIN
 		BEGIN TRY
 			DECLARE @tabel VARCHAR(255) = 'BEDRIJF'
 			INSERT INTO BEDRIJF
-				VALUES('HAN','Arnhem');
+				VALUES('HAN','Arnhem'),
+				('EURATEX','Duiven');
+			SET @tabel = 'PROJECT'
+			INSERT INTO PROJECT
+				VALUES('EURATEX','Duiven','Test')
 		END TRY
 		BEGIN CATCH
 			DECLARE
@@ -57,9 +61,15 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 	--IF EXISTS(SELECT 'Error occurred' FROM testData WHERE Success = 0)
 		SELECT Test + ' #'+ CONVERT(VARCHAR, Number) AS Test, IIF(success = 1, 'OK', 'ERROR') AS Status, Reden AS Reden, message AS Melding FROM testData ORDER BY Success, id, Number
 	BEGIN TRY
-		DECLARE @tabel VARCHAR(255) = 'BEDRIJF'
+		DECLARE @tabel VARCHAR(255) = 'PROJECT'
+		DELETE FROM PROJECT
+		WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven'
+		SET @tabel = 'BEDRIJF'
 		DELETE FROM BEDRIJF
-		WHERE BEDRIJFSNAAM = 'HAN' AND LOCATIE = 'Arnhem'
+		WHERE BEDRIJFSNAAM = 'HAN' AND LOCATIE = 'Arnhem';
+		DELETE FROM BEDRIJF
+		WHERE BEDRIJFSNAAM = 'EURATEX';
+
 	END TRY
 	BEGIN CATCH
 		RAISERROR ('Fout bij verwijderen van testdata in tabel %s!', 16, 1, @tabel)
@@ -67,37 +77,4 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 	DROP TABLE testData
 	SET NOCOUNT OFF
 END
-GO
-
--- Voorbeeld van een execute
--- Succes
-EXEC _begin
-BEGIN TRY
-	BEGIN TRANSACTION test
-		EXEC insertProject @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem', @ProjectOmschrijving = 'Project voor de han'
-	ROLLBACK TRANSACTION
-	EXEC _result 'insertProject', 1, ''
-END TRY
-BEGIN CATCH
-	ROLLBACK TRANSACTION
-	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-	EXEC _result 'insertProject', 0, @msg
-END CATCH
-EXEC _end 0
-GO
--- Fail
-EXEC _begin
-BEGIN TRY
-	BEGIN TRANSACTION test
-		EXEC insertProject @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem', @ProjectOmschrijving = 'Project voor de han'
-		EXEC insertProject @Bedrijfsnaam = 'HANMMMMM', @Locatie = 'Arnhem', @ProjectOmschrijving = 'Project voor de han'
-	ROLLBACK TRANSACTION
-	EXEC _result 'insertProject', 0, ''
-END TRY
-BEGIN CATCH
-	ROLLBACK TRANSACTION
-	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-	EXEC _result 'insertProject', 1, @msg
-END CATCH
-EXEC _end 1
 GO
