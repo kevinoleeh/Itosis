@@ -40,7 +40,7 @@ AS BEGIN
 				AND RAPPORTNUMMER = @RAPPORTNUMMER
 				AND RAPPORT_TYPE = 'Organisatie' 
 			) BEGIN
-				DECLARE @Rapportnummer INT = (
+				DECLARE @REGELNUMMER INT = (
 					SELECT ISNULL(MAX(Rapportnummer), 0) + 1
 					FROM RISICOREGEL
 					WHERE PROJECTNUMMER = @PROJECTNUMMER
@@ -51,7 +51,7 @@ AS BEGIN
 				VALUES (
 					@PROJECTNUMMER, 
 					@RAPPORTNUMMER, 
-					@Rapportnummer, 
+					@REGELNUMMER, 
 					@ASPECTNAAM, 
 					@EFFECTNAAM, 
 					@ARBO_ONDERWERP, 
