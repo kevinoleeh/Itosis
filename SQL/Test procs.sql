@@ -10,7 +10,8 @@ CREATE PROCEDURE _begin AS BEGIN
 			Number  INT,
 			Test    VARCHAR(50),
 			Success BIT DEFAULT 0,
-			Message VARCHAR(200)
+			Reden   VARCHAR(200),
+			Message VARCHAR(200),
 			CONSTRAINT PK_Test PRIMARY KEY (Number, Test)
 		)
 
@@ -36,13 +37,13 @@ GO
 IF EXISTS (SELECT * FROM sysobjects WHERE name = '_result')
 	DROP PROCEDURE _result
 GO
-CREATE PROCEDURE _result @name VARCHAR(50),	@success BIT, @msg VARCHAR(200) AS BEGIN
+CREATE PROCEDURE _result @name VARCHAR(50),	@success BIT, @reden VARCHAR(200), @msg VARCHAR(200)  AS BEGIN
 	IF @name = ''
 		RETURN
 	SET NOCOUNT ON
 	DECLARE @number INT = (SELECT COUNT(*)+1 FROM testData WHERE Test = @name)
-	INSERT INTO testData(Number, Test, Success, Message)
-		VALUES(@number, @name, @success, IIF(@msg = '', IIF(@success = 0, 'ERROR - Transactie geslaagd terwijl hij zou moeten falen!', @msg), @msg));
+	INSERT INTO testData(Number, Test, Success, Message, Reden)
+		VALUES(@number, @name, @success, IIF(@msg = '', IIF(@success = 0, 'ERROR - Transactie geslaagd terwijl hij zou moeten falen!', @msg), @msg), @reden);
 	SET NOCOUNT OFF
 END
 GO
@@ -54,8 +55,7 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 	IF @stop = 0
 		RETURN
 	--IF EXISTS(SELECT 'Error occurred' FROM testData WHERE Success = 0)
-		SELECT Test + ' #'+ CONVERT(VARCHAR, Number) AS Test, IIF(success = 1, 'OK', 'ERROR') AS Status, message AS Melding FROM testData ORDER BY Success, id, Number
-
+		SELECT Test + ' #'+ CONVERT(VARCHAR, Number) AS Test, IIF(success = 1, 'OK', 'ERROR') AS Status, Reden AS Reden, message AS Melding FROM testData ORDER BY Success, id, Number
 	BEGIN TRY
 		DECLARE @tabel VARCHAR(255) = 'BEDRIJF'
 		DELETE FROM BEDRIJF
