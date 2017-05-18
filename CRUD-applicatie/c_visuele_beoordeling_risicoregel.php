@@ -1,8 +1,8 @@
-<?php include_once('include/header.php') ?>
+<?php include_once('include/pdo-connect.php') ?>
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $query = "EXEC dbo.SP_INSERT_ORGANISATIE_RISICOREGEL 
+    $query = "EXEC dbo.SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL 
              :PROJECTNUMMER,
              :RAPPORTNUMMER,
              :ASPECTNAAM,
@@ -13,6 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              :VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL,
              :AFWIJKENDE_ACTIE_TER_UITVOERING,
              :RESTRISICO,
+             :PROCES,
+	         :MACHINE_ONDERDEEL,
+	         :AFDELING,
              :VOOR_ERNST_VAN_HET_ONGEVAL,
              :VOOR_KANS_OP_BLOOTSTELLING,
              :VOOR_KANS_OP_WAARSCHIJNLIJKHEID,
@@ -30,6 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL', $_POST['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL']);
     $stmt->bindParam(':AFWIJKENDE_ACTIE_TER_UITVOERING', $_POST['AFWIJKENDE_ACTIE_TER_UITVOERING']);
     $stmt->bindParam(':RESTRISICO', $_POST['RESTRISICO']);
+    $stmt->bindParam(':PROCES', $_POST['PROCES']);
+    $stmt->bindParam(':MACHINE_ONDERDEEL', $_POST['MACHINE_ONDERDEEL']);
+    $stmt->bindParam(':AFDELING', $_POST['AFDELING']);
     $stmt->bindParam(':VOOR_ERNST_VAN_HET_ONGEVAL', $_POST['VOOR_ERNST_VAN_HET_ONGEVAL']);
     $stmt->bindParam(':VOOR_KANS_OP_BLOOTSTELLING', $_POST['VOOR_KANS_OP_BLOOTSTELLING']);
     $stmt->bindParam(':VOOR_KANS_OP_WAARSCHIJNLIJKHEID', $_POST['VOOR_KANS_OP_WAARSCHIJNLIJKHEID']);
@@ -46,9 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $meldingStatus = false;
         $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
 
+        $result['ARBO_ONDERWERP'] = $_POST['ARBO_ONDERWERP'];
         $result['ASPECTNAAM'] = $_POST['ASPECTNAAM'];
         $result['EFFECTNAAM'] = $_POST['EFFECTNAAM'];
-        $result['ARBO_ONDERWERP'] = $_POST['ARBO_ONDERWERP'];
+        $result['PROCES'] = $_POST['PROCES'];
+        $result['MACHINE_ONDERDEEL'] = $_POST['MACHINE_ONDERDEEL'];
+        $result['AFDELING'] = $_POST['AFDELING'];
         $result['RISICO_OMSCHRIJVING_OF_BEVINDING'] = $_POST['RISICO_OMSCHRIJVING_OF_BEVINDING'];
         $result['HUIDIGE_BEHEERSMAATREGEL'] = $_POST['HUIDIGE_BEHEERSMAATREGEL'];
         $result['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'] = $_POST['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'];
@@ -65,14 +74,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 ?>
 
+<?php include_once('include/header.php') ?>
+
 <div class="container">
     <div class="page-header">
-        <h1>Organisatieregel toevoegen</h1>
+        <h1>Visuele beoordelingregel toevoegen</h1>
     </div>
 
     <?php include_once('include/melding.php') ?>
 
-    <form action="i_organisatie_risicoregel.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" method="post">
+    <form action="c_visuele_beoordeling_risicoregel.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" method="post">
         <h3>Risico inventarisatie</h3>
         <div class="form-group">
             <label for="ARBO_ONDERWERP">Arbo onderwerp</label>
@@ -85,6 +96,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="form-group">
             <label for="EFFECT">Effect</label>
             <input type="text" class="form-control" name="EFFECTNAAM" value="<?php if(isset($result['EFFECTNAAM'])) { echo $result['EFFECTNAAM']; } ?>">
+        </div>
+        <div class="form-group">
+            <label for="PROCES">Proces</label>
+            <input type="text" class="form-control" name="PROCES" value="<?php if(isset($result['PROCES'])) { echo $result['PROCES']; } ?>">
+        </div>
+        <div class="form-group">
+            <label for="AFDELING">Afdeling</label>
+            <input type="text" class="form-control" name="AFDELING" value="<?php if(isset($result['AFDELING'])) { echo $result['AFDELING']; } ?>">
+        </div>
+        <div class="form-group">
+            <label for="MACHINE_ONDERDEEL">Machine(onderdeel)</label>
+            <input type="text" class="form-control" name="MACHINE_ONDERDEEL" value="<?php if(isset($result['MACHINE_ONDERDEEL_'])) { echo $result['MACHINE_ONDERDEEL_']; } ?>">
         </div>
         <div class="form-group">
             <label for="RISICO_OMSCHRIJVING_OF_BEVINDING">Risico omschrijving of bevinding</label>
@@ -103,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="form-group">
             <label for="VOOR_ERNST_VAN_HET_ONGEVAL">Ernst van ongeval</label>
             <input type="text" class="form-control" name="VOOR_ERNST_VAN_HET_ONGEVAL" value="<?php if(isset($result['VOOR_ERNST_VAN_HET_ONGEVAL'])) { echo $result['VOOR_ERNST_VAN_HET_ONGEVAL']; } ?>">
-            <small id="VOOR_ERNST_VAN_ONGEVAL" class="form-text text-muted">Keuze uit 100, 40, 15, 7, 3 of 1</small>
+            <small id="VOOR_ERNST_VAN_HET_ONGEVAL" class="form-text text-muted">Keuze uit 100, 40, 15, 7, 3 of 1</small>
         </div>
         <div class="form-group">
             <label for="VOOR_KANS_OP_BLOOTSTELLING">Kans op blootstelling</label>
@@ -147,3 +170,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <?php include_once('include/footer.php'); ?>
+<?php include_once('include/pdo-disconnect.php') ?>
