@@ -1,10 +1,11 @@
 <?php include_once('include/header.php') ?>
 
 <?php
+
 $query = "SELECT *
-         FROM RISICOREGEL
-         WHERE PROJECTNUMMER = :PROJECTNUMMER
-         AND RAPPORTNUMMER = :RAPPORTNUMMER";
+          FROM RISICOREGEL
+          WHERE PROJECTNUMMER = :PROJECTNUMMER
+          AND RAPPORTNUMMER = :RAPPORTNUMMER";
 $stmt = $dbh->prepare($query);
 $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
 $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
@@ -14,6 +15,28 @@ try {
     $result = $stmt->fetchAll();
 } catch (PDOException $e) {
     echo "Foutmelding: " . $e->getMessage();
+}
+
+$query = "SELECT RAPPORT_TYPE
+          FROM RAPPORT
+          WHERE PROJECTNUMMER = :PROJECTNUMMER
+          AND RAPPORTNUMMER = :RAPPORTNUMMER";
+$stmt = $dbh->prepare($query);
+$stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+$stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+
+try {
+    $stmt->execute();
+    $type = $stmt->fetch();
+} catch (PDOException $e) {
+    echo "Foutmelding: " . $e->getMessage();
+}
+
+if($type['RAPPORT_TYPE'] === 'Organisatie') {
+    $url = 'organisatie_risicoregel.php';
+}
+else if($type['RAPPORT_TYPE'] === 'Visuele beoordeling') {
+    $url = 'visuele_beoordeling_risicoregel.php';
 }
 
 ?>
@@ -26,14 +49,14 @@ try {
 
     <div class="row">
         <div class="col-md-12">
-            <a href="organisatie.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" class="btn btn-block btn-primary">Regel toevoegen</a>
+            <a href="i_<?= $url ?>?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" class="btn btn-block btn-primary">Regel toevoegen</a>
             <br>
 
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
-                    <th>Arbo onderwerp</th>
                     <th>Regelnummer</th>
+                    <th>Arbo onderwerp</th>
                     <th>Aspect</th>
                     <th>Effect</th>
                     <th>Risico voor maatregel</th>
@@ -43,8 +66,8 @@ try {
                 <tbody>
                 <?php foreach ($result as &$value) { ?>
                     <tr>
+                        <td><a href="u_<?= $url ?>?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $value['RAPPORTNUMMER'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"><?= $value['REGELNUMMER'] ?></td>
                         <td><?= $value['ARBO_ONDERWERP'] ?></td>
-                        <td><a href="organisatie.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $value['RAPPORTNUMMER'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"><?= $value['REGELNUMMER'] ?></td>
                         <td><?= $value['ASPECTNAAM'] ?></td>
                         <td><?= $value['EFFECTNAAM'] ?></td>
                         <td><?= $value['VOOR_RISICO'] ?></td>
