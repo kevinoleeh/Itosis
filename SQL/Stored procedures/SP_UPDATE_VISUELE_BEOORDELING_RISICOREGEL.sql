@@ -72,7 +72,7 @@ AS BEGIN
 				AND RAPPORTNUMMER = @RAPPORTNUMMER
 				AND REGELNUMMER = REGELNUMMER
 			END ELSE BEGIN
-				RAISERROR('Om deze SP te gebruiken moet RAPPORT.RAPPORT_TYPE "Organisatie" zijn.', 16, 1)
+				RAISERROR('Om deze SP te gebruiken moet RAPPORT.RAPPORT_TYPE "Visuele beoordeling" zijn.', 16, 1)
 			END
 		END ELSE BEGIN
 			RAISERROR('Projectnummer en/of rapportnummer en/of regelnummer bestaat niet.', 16, 1)

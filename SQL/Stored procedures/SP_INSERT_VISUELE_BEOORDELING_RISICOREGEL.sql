@@ -44,7 +44,7 @@ AS BEGIN
 				AND RAPPORT_TYPE = 'Visuele beoordeling' 
 			) BEGIN
 				DECLARE @REGELNUMMER INT = (
-					SELECT ISNULL(MAX(Rapportnummer), 0) + 1
+					SELECT ISNULL(MAX(REGELNUMMER), 0) + 1
 					FROM RISICOREGEL
 					WHERE PROJECTNUMMER = @PROJECTNUMMER
 					AND RAPPORTNUMMER = @RAPPORTNUMMER
@@ -74,7 +74,7 @@ AS BEGIN
 				INSERT VISUELE_BEOORDELING
 				VALUES (@PROJECTNUMMER, @RAPPORTNUMMER, @REGELNUMMER, @PROCES, @MACHINE_ONDERDEEL, @AFDELING)
 			END ELSE BEGIN
-				RAISERROR('Om deze SP te gebruiken moet RAPPORT.RAPPORT_TYPE "Organisatie" zijn.', 16, 1)
+				RAISERROR('Om deze SP te gebruiken moet RAPPORT.RAPPORT_TYPE "Visuele beoordeling" zijn.', 16, 1)
 			END
 		END ELSE BEGIN
 			RAISERROR('Projectnummer en/of rapportnummer bestaat niet.', 16, 1)
