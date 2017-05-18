@@ -60,7 +60,7 @@ if (isset($_POST["editBEDRIJFSNAAM"]) && isset($_POST["editLOCATIE"])) {
         $stmt->execute();
 
         $meldingStatus = true;
-        $melding = "Het bedrijf is succesvol geüpdatet"
+        $melding = "Het bedrijf is succesvol geüpdatet";
 
     } catch (PDOException $e) {
         $meldingStatus = false;
