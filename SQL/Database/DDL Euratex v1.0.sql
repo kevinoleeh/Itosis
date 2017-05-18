@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2014                    */
-/* Created on:     12-5-2017 10:58:05                           */
+/* Created on:     18-5-2017 11:44:56                           */
 /*==============================================================*/
 
 if exists (
@@ -474,7 +474,7 @@ go
 /* Domain: DATUM                                                */
 /*==============================================================*/
 create type DATUM
-   from varchar(255)
+   from datetime
 go
 
 /*==============================================================*/
@@ -565,7 +565,7 @@ go
 /* Domain: OPMERKING_STAND_VAN_ZAKEN                            */
 /*==============================================================*/
 create type OPMERKING_STAND_VAN_ZAKEN
-   from varchar(255)
+   from varchar(1000)
 go
 
 /*==============================================================*/
@@ -607,7 +607,7 @@ go
 /* Domain: PROJECTOMSCHRIJVING                                  */
 /*==============================================================*/
 create type PROJECTOMSCHRIJVING
-   from varchar(255)
+   from varchar(1000)
 go
 
 /*==============================================================*/
@@ -635,14 +635,14 @@ go
 /* Domain: RESTRISICO                                           */
 /*==============================================================*/
 create type RESTRISICO
-   from varchar(255)
+   from varchar(1000)
 go
 
 /*==============================================================*/
 /* Domain: RISICO_OMSCHRIJVING_OF_BEVINDING                     */
 /*==============================================================*/
 create type RISICO_OMSCHRIJVING_OF_BEVINDING
-   from varchar(255)
+   from varchar(1000)
 go
 
 /*==============================================================*/
@@ -684,7 +684,7 @@ go
 /* Domain: VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL          */
 /*==============================================================*/
 create type VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL
-   from varchar(255)
+   from varchar(1000)
 go
 
 /*==============================================================*/
@@ -733,7 +733,7 @@ go
 /* Domain: WERKINSTRUCTIE_PROCEDURE                             */
 /*==============================================================*/
 create type WERKINSTRUCTIE_PROCEDURE
-   from varchar(255)
+   from varchar(1000)
 go
 
 /*==============================================================*/
@@ -832,7 +832,7 @@ create table PERIODIEKE_BEOORDELING (
    OPMERKING_STAND_VAN_ZAKEN OPMERKING_STAND_VAN_ZAKEN null,
    STAND_VAN_ZAKEN      STAND_VAN_ZAKEN      null,
    SCORE                SCORE                null,
-   constraint PK_PERIODIEKE_BEOORDELING primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+   constraint PK_PERIODIEKE_BEOORDELING primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, DATUM_LAATSTE_BEOORDELING)
 )
 go
 
@@ -859,7 +859,7 @@ go
 /* Table: PROJECT                                               */
 /*==============================================================*/
 create table PROJECT (
-   PROJECTNUMMER        PROJECTNUMMER     IDENTITY(1,1)  not null,
+   PROJECTNUMMER        PROJECTNUMMER        identity,
    BEDRIJFSNAAM         BEDRIJFSNAAM         not null,
    LOCATIE              LOCATIE              not null,
    PROJECTOMSCHRIJVING  PROJECTOMSCHRIJVING  not null,
@@ -902,40 +902,6 @@ go
 /*==============================================================*/
 /* Table: RISICOREGEL                                           */
 /*==============================================================*/
--- Geeft het risico terug op basis van ERNST_VAN_HET_ONGEVAL, KANS_OP_BLOOTSTELLING en KANS_OP_WAARSCHIJNLIJKHEID.
-GO
-CREATE FUNCTION dbo.fnGetRisico(@ERNST_VAN_HET_ONGEVAL NUMERIC(9, 2), @KANS_OP_BLOOTSTELLING NUMERIC(9, 2), @KANS_OP_WAARSCHIJNLIJKHEID NUMERIC(9, 2))
-RETURNS NUMERIC(9, 2)
-AS
-BEGIN
-	RETURN (@ERNST_VAN_HET_ONGEVAL * @KANS_OP_BLOOTSTELLING * @KANS_OP_WAARSCHIJNLIJKHEID)
-END
-GO
-
--- Geeft de prioriteit van een risico terug.
-GO
-CREATE FUNCTION dbo.fnGetPrioriteit(@Risico NUMERIC(9, 2))
-RETURNS VARCHAR(255)
-AS
-BEGIN
-	DECLARE @Prioriteit VARCHAR(255)
-
-	IF(@Risico <= 20) BEGIN
-		SET @Prioriteit = 'P 5'
-	END ELSE IF(@Risico >= 21 AND @Risico <= 75) BEGIN
-		SET @Prioriteit = 'P 4'
-	END ELSE IF(@Risico >= 76 AND @Risico <= 200) BEGIN
-		SET @Prioriteit = 'P 3'
-	END ELSE IF(@Risico >= 201 AND @Risico <= 400) BEGIN
-		SET @Prioriteit = 'P 2'
-	END ELSE BEGIN
-		SET @Prioriteit = 'P 1'
-	END
-
-	RETURN @Prioriteit
-END
-GO
-
 create table RISICOREGEL (
    PROJECTNUMMER        PROJECTNUMMER        not null,
    RAPPORTNUMMER        RAPPORTNUMMER        not null,
@@ -952,8 +918,8 @@ create table RISICOREGEL (
       constraint CKC_VOOR_KANS_OP_BLOO_RISICORE check (VOOR_KANS_OP_BLOOTSTELLING in (10,6,3,2,1,0.5)),
    VOOR_KANS_OP_WAARSCHIJNLIJKHEID VOOR_KANS_OP_WAARSCHIJNLIJKHEID not null 
       constraint CKC_VOOR_KANS_OP_WAAR_RISICORE check (VOOR_KANS_OP_WAARSCHIJNLIJKHEID in (10,6,3,1,0.5,0.2)),
-   VOOR_RISICO          AS dbo.fnGetRisico(VOOR_ERNST_VAN_HET_ONGEVAL, VOOR_KANS_OP_BLOOTSTELLING, VOOR_KANS_OP_WAARSCHIJNLIJKHEID),
-   VOOR_PRIORITEIT      AS dbo.fnGetPrioriteit(dbo.fnGetRisico(VOOR_ERNST_VAN_HET_ONGEVAL, VOOR_KANS_OP_BLOOTSTELLING, VOOR_KANS_OP_WAARSCHIJNLIJKHEID)),
+   VOOR_RISICO          VOOR_RISICO          not null,
+   VOOR_PRIORITEIT      VOOR_PRIORITEIT      not null,
    AFWIJKENDE_ACTIE_TER_UITVOERING AFWIJKENDE_ACTIE_TER_UITVOER null,
    RESTRISICO           RESTRISICO           null,
    NA_ERNST_VAN_ONGEVAL VOOR_ERNST_VAN_ONGEVAL not null 
@@ -962,8 +928,8 @@ create table RISICOREGEL (
       constraint CKC_NA_KANS_OP_BLOOTS_RISICORE check (NA_KANS_OP_BLOOTSTELLING in (10,6,3,2,1,0.5)),
    NA_KANS_OP_WAARSCHIJNLIJKHEID NA_KANS_OP_WAARSCHIJNLIJKHEID not null 
       constraint CKC_NA_KANS_OP_WAARSC_RISICORE check (NA_KANS_OP_WAARSCHIJNLIJKHEID in (10,6,3,1,0.5,0.2)),
-   NA_RISICO            AS dbo.fnGetRisico(NA_ERNST_VAN_ONGEVAL, NA_KANS_OP_BLOOTSTELLING, NA_KANS_OP_WAARSCHIJNLIJKHEID),
-   NA_PRIORITEIT        AS dbo.fnGetPrioriteit(dbo.fnGetRisico(NA_KANS_OP_BLOOTSTELLING, NA_KANS_OP_BLOOTSTELLING, NA_KANS_OP_WAARSCHIJNLIJKHEID)),
+   NA_RISICO            NA_RISICO            not null,
+   NA_PRIORITEIT        NA_PRIORITEIT        not null,
    constraint PK_RISICOREGEL primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
 )
 go
