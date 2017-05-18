@@ -60,11 +60,11 @@ if (isset($_POST["editBEDRIJFSNAAM"]) && isset($_POST["editLOCATIE"])) {
         $stmt->execute();
 
         $meldingStatus = true;
-        $melding = $_POST['editBEDRIJFSNAAM'];
+        $melding = "Het bedrijf is succesvol geüpdatet"
 
     } catch (PDOException $e) {
         $meldingStatus = false;
-        $melding = "Regel niet geupdatet. Foutmelding: " . $e->getMessage();
+        $melding = "Bedrijf niet geupdatet. Foutmelding: " . $e->getMessage();
     }
 }
 
