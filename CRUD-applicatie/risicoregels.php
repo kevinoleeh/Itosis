@@ -32,10 +32,10 @@ try {
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
+                    <th>Arbo onderwerp</th>
                     <th>Regelnummer</th>
                     <th>Aspect</th>
                     <th>Effect</th>
-                    <th>Arbo onderwerp</th>
                     <th>Risico voor maatregel</th>
                     <th>Prioriteit voor maatregel</th>
                 </tr>
@@ -43,10 +43,10 @@ try {
                 <tbody>
                 <?php foreach ($result as &$value) { ?>
                     <tr>
+                        <td><?= $value['ARBO_ONDERWERP'] ?></td>
                         <td><a href="organisatie.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $value['RAPPORTNUMMER'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"><?= $value['REGELNUMMER'] ?></td>
                         <td><?= $value['ASPECTNAAM'] ?></td>
                         <td><?= $value['EFFECTNAAM'] ?></td>
-                        <td><?= $value['ARBO_ONDERWERP'] ?></td>
                         <td><?= $value['VOOR_RISICO'] ?></td>
                         <td><?= $value['VOOR_PRIORITEIT'] ?></td>
                     </tr>
