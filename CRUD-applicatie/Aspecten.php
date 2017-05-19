@@ -57,7 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
   if (isset($_GET["removeAspect"])){
-    if (isset($_GET["CheckAspect"])){
+    
+    if (isset($_GET["checkAspect"])){
+
     $query = 'EXEC dbo.SP_DELETE_ASPECT
               :ASPECTNAAM';
     $stmt = $dbh->prepare($query);
@@ -89,6 +91,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $meldingStatus = false;
         $melding = "Effect niet verwijderd. Foutmelding: " . $e->getMessage();
     }
+  }
+
+  if (isset($_POST["ASPECTNAAMNEW"])) {
+      $query = 'EXEC dbo.SP_UPDATE_ASPECT
+                :ASPECTNAAMOUD,
+                :ASPECTNAAMNEW
+                ';
+      $stmt = $dbh->prepare($query);
+
+      $stmt->bindParam(':ASPECTNAAMOUD', $_POST['ASPECTNAAMOUD']);
+
+      $stmt->bindParam(':ASPECTNAAMNEW', $_POST['ASPECTNAAMNEW']);
+      try {
+          $stmt->execute();
+
+          $meldingStatus = true;
+          $melding = "Het aspect is succesvol geüpdatet";
+
+      } catch (PDOException $e) {
+          $meldingStatus = false;
+          $melding = "Aspect niet geupdatet. Foutmelding: " . $e->getMessage();
+      }
+  }
+
+  if (isset($_POST["EFFECTNAAMNEW"])) {
+      $query = 'EXEC dbo.SP_UPDATE_EFFECT
+                :EFFECTNAAMOUD,
+                :EFFECTNAAMNEW
+                ';
+      $stmt = $dbh->prepare($query);
+
+      $stmt->bindParam(':EFFECTNAAMOUD', $_POST['EFFECTNAAMOUD']);
+
+      $stmt->bindParam(':EFFECTNAAMNEW', $_POST['EFFECTNAAMNEW']);
+      try {
+          $stmt->execute();
+
+          $meldingStatus = true;
+          $melding = "Het effect is succesvol geüpdatet";
+
+      } catch (PDOException $e) {
+          $meldingStatus = false;
+          $melding = "Effect niet geupdatet. Foutmelding: " . $e->getMessage();
+      }
   }
 
 
@@ -136,6 +182,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             echo '</form>';
                         }
 
+                        if (isset($_GET["editAspect"])) {
+                            echo '<form action="Aspecten.php?edit=1" method="post">';
+                            echo '<input type="hidden" value="' . $_GET["editAspect"] . '" name="ASPECTNAAMOUD"></td>';
+                            echo '<tr>';
+                            echo '<td>  </td>';
+                            echo '<td><input type="text" value="' . $_GET["editAspect"] . '" name="ASPECTNAAMNEW">';
+                            echo '<button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
+                            echo '</tr>';
+                            echo '</form>';
+                        }
+
+
+
                     $rs = $dbh->query("SELECT * FROM ASPECT");
                     $aspecten = $rs->fetchAll();
                     $i = 1;
@@ -146,7 +205,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 echo'  </td>';
                                 echo' <td><a href="aspecten.php?aspectnaam='.$aspecten["ASPECTNAAM"].'"> '.$aspecten["ASPECTNAAM"].'</a>';
                                 echo'   <a href="?removeAspect='.$aspecten["ASPECTNAAM"].'&checkAspect=1"><span class="glyphicon glyphicon-remove widintable red"></span></a>
-                                        <a href="?edit='.$aspecten["ASPECTNAAM"].'"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
+                                        <a href="?editAspect='.$aspecten["ASPECTNAAM"].'&"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
+
                                 echo'  </tr>';
                       } ?>
                 </table>
@@ -199,6 +259,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     }
 
+                    if (isset($_GET["editEffect"])) {
+                        echo '<form action="Aspecten.php?edit=1" method="post">';
+                        echo '<input type="hidden" value="' . $_GET["editEffect"] . '" name="EFFECTNAAMOUD"></td>';
+                        echo '<tr>';
+                        echo '<td>  </td>';
+                        echo '<td><input type="text" value="' . $_GET["editEffect"] . '" name="EFFECTNAAMNEW">';
+                        echo '<button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
+                        echo '</tr>';
+                        echo '</form>';
+                    }
+
+
                       foreach ($effecten as $effectnaam) {
                 ?>
 
@@ -209,7 +281,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <td>
                                 <?php echo $effectnaam["EFFECTNAAM"];
                                 echo'  <a href="?removeEffect='.$effectnaam["EFFECTNAAM"].'&removeAspect='.$_GET["aspectnaam"].'&aspectnaam='.$_GET["aspectnaam"].'"><span class="glyphicon glyphicon-remove widintable red"></span></a>
-                                       <a href="?edit='.$effectnaam["EFFECTNAAM"].'"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
+                                       <a href="?editEffect='.$effectnaam["EFFECTNAAM"].'&aspectnaam='.$_GET['aspectnaam'].'"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
                                 ?>
                             </td>
 
