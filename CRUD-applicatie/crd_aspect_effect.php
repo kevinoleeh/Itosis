@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 if (isset($_GET["removeAspect"])) {
-    if (isset($_GET["CheckAspect"])) {
+    if (isset($_GET["checkAspect"])) {
         $query = 'EXEC dbo.SP_DELETE_ASPECT
               :ASPECTNAAM';
         $stmt = $dbh->prepare($query);
