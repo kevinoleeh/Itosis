@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php include_once('include/melding.php') ?>
 
-    <form action="rapporttoevoegen.php?projectnummer=<?= $_GET['projectnummer'] ?>" method="post">
+    <form action="c_rapportage.php?projectnummer=<?= $_GET['projectnummer'] ?>" method="post">
         <div class="form-group">
             <label for="ASPECT">Rapport type</label>
             <select class="form-control" name="RAPPORT_TYPE">

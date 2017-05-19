@@ -2,8 +2,10 @@
 
 <?php
 $query = "SELECT *
-         FROM PROJECT";
+         FROM RAPPORT
+         WHERE PROJECTNUMMER = :PROJECTNUMMER";
 $stmt = $dbh->prepare($query);
+$stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
 
 try {
     $stmt->execute();
@@ -16,30 +18,27 @@ try {
 
 <div class="container">
     <div class="page-header">
-        <h1>Projecten</h1>
+        <h1>Rapporten</h1>
+        <h4>Projectnummer <?= $_GET['projectnummer'] ?></h4>
     </div>
 
     <div class="row">
         <div class="col-md-12">
-            <a href="bedrijfproject.php" class="btn btn-block btn-primary">Project toevoegen</a>
+            <a href="c_rapportage.php?projectnummer=<?= $_GET['projectnummer'] ?>" class="btn btn-block btn-primary">Rapport toevoegen</a>
             <br>
 
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
-                    <th>Projectnummer</th>
-                    <th>Projectomschrijving</th>
-                    <th>Bedrijf</th>
-                    <th>Locatie</th>
+                    <th>Rapportnummer</th>
+                    <th>Type</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php foreach ($result as &$value) { ?>
                     <tr>
-                        <td><a href="rapporten.php?projectnummer=<?= $value['PROJECTNUMMER'] ?>"><?= $value['PROJECTNUMMER'] ?></a></td>
-                        <td><?= $value['PROJECTOMSCHRIJVING'] ?></td>
-                        <td><?= $value['BEDRIJFSNAAM'] ?></td>
-                        <td><?= $value['LOCATIE'] ?></td>
+                        <td><a href="rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $value['RAPPORTNUMMER'] ?>"><?= $value['RAPPORTNUMMER'] ?></a></td>
+                        <td><?= $value['RAPPORT_TYPE'] ?></td>
                     </tr>
                 <?php } ?>
                 </tbody>
