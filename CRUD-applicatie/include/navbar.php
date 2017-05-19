@@ -13,8 +13,8 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="rd_projecten.php">Projecten</a></li>
-                <li><a href="crd_bedrijf_project.php">Bedrijven</a></li>
+                <li><a href="rd_projecten.php">Alle projecten</a></li>
+                <li><a href="crd_bedrijf_project.php">Bedrijf en project</a></li>
                 <li><a href="crd_aspect_effect.php">Aspect en effect</a></li>
             </ul>
         </div>
