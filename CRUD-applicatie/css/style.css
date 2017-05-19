@@ -38,8 +38,6 @@ h1 {
 
 .navbar-default .navbar-brand,
 .navbar-default .navbar-brand:hover {
-    pointer-events: none;
-    cursor: default;
     background-color: orange;
     color: black;
     font-weight: bold;
