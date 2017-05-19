@@ -187,7 +187,7 @@ if (isset($_GET["removeProject"])) {
                     $projecten = $stmt->fetchAll();
                     foreach ($projecten as $project) {
                         echo '<tr>';
-                        echo '<td><a href=rapporten.php?projectnummer=' . $project["PROJECTNUMMER"] . '>' . $project["PROJECTNUMMER"] . '</a></td>';
+                        echo '<td><a href=rd_rapportages.php?projectnummer=' . $project["PROJECTNUMMER"] . '>' . $project["PROJECTNUMMER"] . '</a></td>';
                         echo '<td>' . $project["PROJECTOMSCHRIJVING"] . '
                       <a href="?removeProject=' . $project["PROJECTNUMMER"] . '&project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '"><span class="glyphicon glyphicon-remove widintable red"></span></a>
                       <a href="?editProject=' . $project["PROJECTNUMMER"] . '&project=' . $_GET['project'] . '"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
