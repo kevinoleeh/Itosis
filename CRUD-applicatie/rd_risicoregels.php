@@ -49,7 +49,7 @@ else if($type['RAPPORT_TYPE'] === 'Visuele beoordeling') {
 
     <div class="row">
         <div class="col-md-12">
-            <a href="i_<?= $url ?>?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" class="btn btn-block btn-primary">Regel toevoegen</a>
+            <a href="c_<?= $url ?>?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" class="btn btn-block btn-primary">Regel toevoegen</a>
             <br>
 
             <table class="table table-striped table-bordered">

@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_GET["aspectnaam"])) {
         if (isset($_GET["control"])) {
-            $query = 'EXEC dbo.SP_INSERT_ASCPECT_EFFECT
+            $query = 'EXEC dbo.SP_INSERT_ASPECT_EFFECT
               :ASPECT,
               :EFFECT';
             $stmt = $dbh->prepare($query);
@@ -95,7 +95,7 @@ if (isset($_GET["removeEffect"])) {
 ?>
 <div class="container">
     <div class="page-header">
-        <h1>Aspecten</h1>
+        <h1>Aspecten en effecten beheren</h1>
     </div>
     <?php include_once('include/melding.php') ?>
 
@@ -104,15 +104,12 @@ if (isset($_GET["removeEffect"])) {
             <a href="?insertAspect=1" class="btn btn-block btn-primary">Aspect toevoegen</a>
         </div>
 
-    </div>
-    <div class="row">
-
         <div class="col-md-1">
         </div>
         <div class="col-md-5">
             <?php if (isset($_GET['aspectnaam'])) {
                 echo '  <a class="no-link" href="?inserteffect=1&aspectnaam=' . $_GET['aspectnaam'] . '">
-                <button class="btn btn-justified btn-right">Toevoegen</button>
+                <button class="btn btn-block btn-primary">Effect aan aspect toevoegen</button>
             </a>';
             } ?>
         </div>
@@ -120,34 +117,28 @@ if (isset($_GET["removeEffect"])) {
 
     <div class="row">
         <div class="col-md-5">
-            <div class="table-responsive">
-                <table id="table" class="table table-striped table-bordered marginTop">
+            <div class="table-responsive marginTop">
+                <table id="table" class="table table-striped table-bordered">
                     <thead>
                     <tr class="borderwhite">
-                        <th>Nr.</th>
                         <th>Aspect</th>
                     </tr>
                     </thead>
                     <?php
 
                     if (isset($_GET["insertAspect"])) {
-                        echo '<form action="Aspecten.php?insertAspect=1" method="post">';
+                        echo '<form action="crd_aspect_effect.php?insertAspect=1" method="post">';
                         echo '<tr>';
-                        echo '<th>Aspect toevoegen:</th>';
-                        echo '<td><input class="form-control" type="text" name="ASPECTNAAM"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok"></button></td>';
+                        echo '<td><input class="form-control" type="text" name="ASPECTNAAM"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
                         echo '</tr>';
                         echo '</form>';
                     }
 
                     $rs = $dbh->query("SELECT * FROM ASPECT");
                     $aspecten = $rs->fetchAll();
-                    $i = 1;
                     foreach ($aspecten as $aspecten) {
                         echo '<tr>';
-                        echo '<td class="numberwidth">';
-                        echo $i++;
-                        echo '  </td>';
-                        echo ' <td><a href="aspecten.php?aspectnaam=' . $aspecten["ASPECTNAAM"] . '"> ' . $aspecten["ASPECTNAAM"] . '</a>';
+                        echo ' <td><a href="crd_aspect_effect.php?aspectnaam=' . $aspecten["ASPECTNAAM"] . '"> ' . $aspecten["ASPECTNAAM"] . '</a>';
                         echo '   <a href="?removeAspect=' . $aspecten["ASPECTNAAM"] . '&checkAspect=1"><span class="glyphicon glyphicon-remove widintable red"></span></a>
                                         <a href="?edit=' . $aspecten["ASPECTNAAM"] . '"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
                         echo '  </tr>';
@@ -159,11 +150,10 @@ if (isset($_GET["removeEffect"])) {
         </div>
         <div class="col-md-5">
             <?php if (isset($_GET['aspectnaam'])){ ?>
-            <div class="table-responsive">
-                <table id="table" class="table table-striped table-bordered marginTop">
+            <div class="table-responsive marginTop">
+                <table id="table" class="table table-striped table-bordered">
                     <thead>
                     <tr class="borderwhite">
-                        <th>Nr.</th>
                         <th>Effect</th>
                     </tr>
                     </thead>
@@ -179,10 +169,9 @@ if (isset($_GET["removeEffect"])) {
                     $i = 1;
 
                     if (isset($_GET["inserteffect"])) {
-                        echo '<form action="Aspecten.php?control=1&aspectnaam=' . $_GET['aspectnaam'] . '" method="post">';
+                        echo '<form action="crd_aspect_effect.php?control=1&aspectnaam=' . $_GET['aspectnaam'] . '" method="post">';
                         echo '<tr>';
-                        echo '<th>Effect toevoegen (kies):</th>';
-                        echo '  <td>  <select name="EFFECTNAAM" class="form-control">';
+                        echo '  <td><p><b>Effect toevoegen (kies):</b></p><select name="EFFECTNAAM" class="form-control">';
                         foreach ($alleEffecten as $effect) {
                             echo '  <option > ' . $effect['EFFECTNAAM'] . '</option>';
                         }
@@ -193,10 +182,9 @@ if (isset($_GET["removeEffect"])) {
 
 
                     if (isset($_GET["inserteffect"])) {
-                        echo '<form action="Aspecten.php?aspectnaam=' . $_GET['aspectnaam'] . '" method="post">';
+                        echo '<form action="crd_aspect_effect.php?aspectnaam=' . $_GET['aspectnaam'] . '" method="post">';
                         echo '<tr>';
-                        echo '<th>Effect toevoegen (nieuw):</th>';
-                        echo '<td><input class="form-control" type="text" name="EFFECTNAAM"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
+                        echo '<td><p><b>Effect toevoegen (nieuw):</b></p><input class="form-control" type="text" name="EFFECTNAAM"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
                         echo '</tr>';
                         echo '</form>';
 
@@ -206,9 +194,6 @@ if (isset($_GET["removeEffect"])) {
                         ?>
 
                         <tr>
-                            <td class="numberwidth">
-                                <?php echo $i++; ?>
-                            </td>
                             <td>
                                 <?php echo $effectnaam["EFFECTNAAM"];
                                 echo '  <a href="?removeEffect=' . $effectnaam["EFFECTNAAM"] . '&removeAspect=' . $_GET["aspectnaam"] . '&aspectnaam=' . $_GET["aspectnaam"] . '"><span class="glyphicon glyphicon-remove widintable red"></span></a>
