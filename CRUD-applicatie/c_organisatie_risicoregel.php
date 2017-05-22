@@ -93,7 +93,7 @@ foreach ($effectaspecten as $row) {
 
     <?php include_once('include/melding.php') ?>
 
-    <form action="c_organisatie_risicoregel.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" method="post">
+    <form action="c_organisatie_risicoregel.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" method="post" id="crisicoregel">
         <h3>Risico inventarisatie</h3>
         <div class="form-group">
             <label for="ARBO_ONDERWERP">Arbo onderwerp</label>
@@ -101,7 +101,7 @@ foreach ($effectaspecten as $row) {
         </div>
         <div class="form-group">
             <label for="ASPECT">Aspect</label>
-            <select class="form-control" name="ASPECTNAAM" id="selectcat" form="urisicoregel">
+            <select class="form-control" name="ASPECTNAAM" id="selectcat" form="crisicoregel">
               <?php for($i = 0; $i < sizeof($aspecten); $i ++){
                 echo "<option id='$i' value='$aspecten[$i]'";if(isset($result['ASPECTNAAM']) && $aspecten[$i] == $result['ASPECTNAAM']){ $id = $i; echo "selected";} echo ">".$aspecten[$i]."</option>";
               } ?>
@@ -109,7 +109,7 @@ foreach ($effectaspecten as $row) {
         </div>
         <div class="form-group">
             <label for="EFFECT">Effect</label>
-            <select class="form-control" name="EFFECTNAAM" id="selectprod" form="urisicoregel">
+            <select class="form-control" name="EFFECTNAAM" id="selectprod" form="crisicoregel">
               <?php
                 for($i = 0; $i < sizeof($effecten); $i++){
                   for($j = 0; $j < sizeof($effecten[$i]); $j++){
