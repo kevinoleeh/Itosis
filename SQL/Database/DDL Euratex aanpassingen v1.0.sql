@@ -6,8 +6,8 @@ use Euratex
 -- Geeft het risico terug op basis van ERNST_VAN_HET_ONGEVAL, KANS_OP_BLOOTSTELLING en KANS_OP_WAARSCHIJNLIJKHEID.
 GO
 CREATE FUNCTION dbo.FN_GET_RISICO (
-	@ERNST_VAN_HET_ONGEVAL NUMERIC(9, 2), 
-	@KANS_OP_BLOOTSTELLING NUMERIC(9, 2), 
+	@ERNST_VAN_HET_ONGEVAL NUMERIC(9, 2),
+	@KANS_OP_BLOOTSTELLING NUMERIC(9, 2),
 	@KANS_OP_WAARSCHIJNLIJKHEID NUMERIC(9, 2)
 ) RETURNS NUMERIC(9, 2) AS BEGIN
 	RETURN (@ERNST_VAN_HET_ONGEVAL * @KANS_OP_BLOOTSTELLING * @KANS_OP_WAARSCHIJNLIJKHEID)
@@ -67,5 +67,44 @@ drop column NA_PRIORITEIT
 
 alter table RISICOREGEL
 add NA_PRIORITEIT AS dbo.FN_GET_PRIORITEIT(dbo.FN_GET_RISICO(VOOR_ERNST_VAN_HET_ONGEVAL, VOOR_KANS_OP_BLOOTSTELLING, VOOR_KANS_OP_WAARSCHIJNLIJKHEID))
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('PROJECT') and o.name = 'FK_PROJECT_BEDRIJF_P_BEDRIJF')
+alter table PROJECT
+   drop constraint FK_PROJECT_BEDRIJF_P_BEDRIJF
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('ASPECT_EFFECT') and o.name = 'FK_ASPECT_E_ASPECT_EF_ASPECT')
+alter table ASPECT_EFFECT
+   drop constraint FK_ASPECT_E_ASPECT_EF_ASPECT
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('ASPECT_EFFECT') and o.name = 'FK_ASPECT_E_ASPECT_EF_EFFECT')
+alter table ASPECT_EFFECT
+   drop constraint FK_ASPECT_E_ASPECT_EF_EFFECT
+go
+
+alter table ASPECT_EFFECT
+   add constraint FK_ASPECT_E_ASPECT_EF_ASPECT foreign key (ASPECTNAAM)
+      references ASPECT (ASPECTNAAM)
+         on update cascade on delete cascade
+go
+
+alter table ASPECT_EFFECT
+   add constraint FK_ASPECT_E_ASPECT_EF_EFFECT foreign key (EFFECTNAAM)
+      references EFFECT (EFFECTNAAM)
+         on update cascade on delete cascade
+go
+
+alter table PROJECT
+   add constraint FK_PROJECT_BEDRIJF_P_BEDRIJF foreign key (BEDRIJFSNAAM, LOCATIE)
+      references BEDRIJF (BEDRIJFSNAAM, LOCATIE)
+         on update cascade
+go
 
 use master
