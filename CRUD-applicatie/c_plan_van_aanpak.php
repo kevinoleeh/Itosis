@@ -122,6 +122,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <br>
+<script type="text/javascript">
+    var projectnummer = "<?= $_GET['projectnummer'] ?>";
+    var rapportnummer = "<?= $_GET['rapportnummer'] ?>";
+</script>
 </div>
 
 <?php include_once('include/footer.php'); ?>
