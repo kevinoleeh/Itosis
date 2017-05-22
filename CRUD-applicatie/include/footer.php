@@ -10,7 +10,7 @@
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/bootstrap.min.js"></script>
 <script src="js/table.js"></script>
-<?php include_once('js/aspecteffect.php') ?>
+<?php include_once('include/aspecteffect.php') ?>
 <?php include_once('include/pdo-disconnect.php') ?>
 </body>
 </html>
