@@ -2,7 +2,7 @@
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $query = "EXEC dbo.SP_UPDATE_ORGANISATIE_RISICOREGEL 
+    $query = "EXEC dbo.SP_UPDATE_ORGANISATIE_RISICOREGEL
              :PROJECTNUMMER,
              :RAPPORTNUMMER,
              :REGELNUMMER,
@@ -41,9 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $stmt->execute();
-
-        $meldingStatus = true;
-        $melding = "Regel geüpdatet.";
+        header('Location: rd_risicoregels.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Regel niet geüpdatet. Foutmelding: " . $e->getMessage();

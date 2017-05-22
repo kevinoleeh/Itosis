@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $meldingStatus = false;
         $melding = "Rapport niet opgeslagen. Foutmelding: " . $e->getMessage();
     }
+    header('Location: rd_rapportages.php?projectnummer='.$_GET['projectnummer']);
 }
 
 ?>

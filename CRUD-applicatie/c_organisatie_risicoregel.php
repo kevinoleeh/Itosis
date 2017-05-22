@@ -2,7 +2,7 @@
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $query = "EXEC dbo.SP_INSERT_ORGANISATIE_RISICOREGEL 
+    $query = "EXEC dbo.SP_INSERT_ORGANISATIE_RISICOREGEL
              :PROJECTNUMMER,
              :RAPPORTNUMMER,
              :ASPECTNAAM,
@@ -39,9 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $stmt->execute();
-
-        $meldingStatus = true;
-        $melding = "Regel opgeslagen.";
+        header('Location: rd_risicoregels.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
@@ -61,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result['NA_KANS_OP_BLOOTSTELLING'] = $_POST['NA_KANS_OP_BLOOTSTELLING'];
         $result['NA_KANS_OP_WAARSCHIJNLIJKHEID'] = $_POST['NA_KANS_OP_WAARSCHIJNLIJKHEID'];
     }
+
 }
 
 ?>

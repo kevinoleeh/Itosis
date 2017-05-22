@@ -2,7 +2,7 @@
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $query = "EXEC dbo.SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL 
+    $query = "EXEC dbo.SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL
              :PROJECTNUMMER,
              :RAPPORTNUMMER,
              :REGELNUMMER,
@@ -47,9 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $stmt->execute();
-
-        $meldingStatus = true;
-        $melding = "Regel opgeslagen.";
+        header('Location: rd_risicoregels.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
