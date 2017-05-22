@@ -48,11 +48,17 @@ else if($type['RAPPORT_TYPE'] === 'Visuele beoordeling') {
     </div>
 
     <div class="row">
+        <div class="col-md-6">
+        <a href="c_<?= $url ?>?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" class="btn btn-block btn-primary">Regel toevoegen</a>
+        </div>
+        <div class="col-md-6">
+            <a id="pvabutton"  class="btn btn-block btn-primary">PvA toevoegen</a>
+        </div>
         <div class="col-md-12">
-            <a href="c_<?= $url ?>?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" class="btn btn-block btn-primary">Regel toevoegen</a>
+
             <br>
 
-            <table class="table table-striped table-bordered">
+            <table id="table" class="table table-striped table-bordered">
                 <thead>
                 <tr>
                     <th>Regelnummer</th>
@@ -66,6 +72,7 @@ else if($type['RAPPORT_TYPE'] === 'Visuele beoordeling') {
                 <tbody>
                 <?php foreach ($result as &$value) { ?>
                     <tr>
+                        <td style="display: none;"><?=  $value['REGELNUMMER']?></td>
                         <td><a href="u_<?= $url ?>?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $value['RAPPORTNUMMER'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"><?= $value['REGELNUMMER'] ?></td>
                         <td><?= $value['ARBO_ONDERWERP'] ?></td>
                         <td><?= $value['ASPECTNAAM'] ?></td>
@@ -79,4 +86,9 @@ else if($type['RAPPORT_TYPE'] === 'Visuele beoordeling') {
         </div>
     </div>
 </div>
+    <script type="text/javascript">
+        var projectnummer = "<?php echo $_GET['projectnummer']; ?>";
+        var rapportnummer = "<?php echo $_GET['rapportnummer']; ?>";
+
+    </script>
 <?php include_once('include/footer.php');
