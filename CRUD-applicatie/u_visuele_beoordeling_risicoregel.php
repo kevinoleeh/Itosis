@@ -92,6 +92,28 @@ try {
     $meldingStatus = false;
     $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
 }
+$rs = $dbh->query('SELECT ASPECTNAAM, EFFECTNAAM FROM ASPECT_EFFECT GROUP BY ASPECTNAAM, EFFECTNAAM ORDER BY ASPECTNAAM');
+$effectaspecten = $rs->fetchAll();
+global $effecten;
+foreach ($effectaspecten as $row) {
+  if(!isset($aspecten)){
+    $effectrow = 0;
+    $number = 0;
+    $aspecten[$number] = $row[0];
+    $aspectlast = $row[0];
+  }
+    $effecten[$number][$effectrow]= $row[1];
+  if($aspectlast != $row[0]){
+    $effectrow = 0;
+    $aspecten[$number] = $row[0];
+    $aspectlast = $row[0];
+    $number ++;
+  }
+  else{
+    $effectrow ++;
+  }
+
+}
 
 ?>
 
@@ -112,11 +134,22 @@ try {
         </div>
         <div class="form-group">
             <label for="ASPECT">Aspect</label>
-            <input type="text" class="form-control" name="ASPECTNAAM" value="<?php if(isset($result['ASPECTNAAM'])) { echo $result['ASPECTNAAM']; } ?>">
+            <select class="form-control" name="ASPECTNAAM" id="selectcat" form="urisicoregel">
+              <?php for($i = 0; $i < sizeof($aspecten); $i ++){
+                echo "<option id='$i' value='$aspecten[$i]'";if(isset($result['ASPECTNAAM']) && $aspecten[$i] == $result['ASPECTNAAM']){ $id = $i; echo "selected";} echo ">".$aspecten[$i]."</option>";
+              } ?>
+            </select>
         </div>
         <div class="form-group">
             <label for="EFFECT">Effect</label>
-            <input type="text" class="form-control" name="EFFECTNAAM" value="<?php if(isset($result['EFFECTNAAM'])) { echo $result['EFFECTNAAM']; } ?>">
+            <select class="form-control" name="EFFECTNAAM" id="selectprod" form="urisicoregel">
+              <?php
+                for($i = 0; $i < sizeof($effecten); $i++){
+                  for($j = 0; $j < sizeof($effecten[$i]); $j++){
+                    echo "<option value='".$effecten[$i][$j]."' id='$i' ";if(isset($result['EFFECTNAAM']) && $effecten[$i][$j] == $result['EFFECTNAAM']) {echo "selected";} echo ">".$effecten[$i][$j]."</option>";
+                  }
+                } ?>
+            </select>
         </div>
         <div class="form-group">
             <label for="PROCES">Proces</label>
