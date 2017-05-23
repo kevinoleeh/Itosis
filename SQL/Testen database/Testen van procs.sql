@@ -844,6 +844,41 @@ BEGIN CATCH
 END CATCH
 EXEC _end 0
 GO
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
+		EXEC SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL
+			@projectnummer,
+			2,
+			1,
+			'Test aspect',
+			'Test effect',
+			'Nieuw test',
+			'Test',
+			'Test',
+			'Test',
+			'Test',
+			'Test',
+			'',
+			'',
+			'',
+			1,
+			1,
+			1,
+			1,
+			1,
+			1
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL', 0, '', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Niet voldaan aan de visuele beoordeling br', @msg
+END CATCH
+EXEC _end 0
+GO
 -- Insert organisatie risicoregel tests
 EXEC _begin
 BEGIN TRY
@@ -1050,6 +1085,40 @@ BEGIN CATCH
 	ROLLBACK TRANSACTION
 	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
 	EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Aspect hoort niet bij effect.', @msg
+END CATCH
+EXEC _end 0
+GO
+EXEC _begin
+BEGIN TRY
+	DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
+	BEGIN TRANSACTION test
+		EXEC SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL
+			@projectnummer,
+			2,
+			'Test aspect',
+			'Test effect',
+			'Test',
+			'Test',
+			'Test',
+			'Test',
+			'Test',
+			'Test',
+			'',
+			'',
+			'',
+			1,
+			1,
+			1,
+			1,
+			1,
+			1
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 0, 'Niet aan de visuele beoordeling br voldaan.', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Niet aan de visuele beoordeling br voldaan.', @msg
 END CATCH
 EXEC _end 0
 GO
