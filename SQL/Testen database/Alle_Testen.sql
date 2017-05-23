@@ -1151,5 +1151,192 @@ BEGIN CATCH
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
 	EXEC _result 'SP_DELETE_RAPPORT', 1, 'Zit een risicoregel bij', @msg
 END CATCH
+EXEC _end 0
+GO
+
+--succes insert aspect_effect
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC SP_INSERT_ASPECT_EFFECT_EFFECT
+			'Test aspect',
+			'Test effect 1231232'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 1, 'Juiste insert', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 0, 'Juiste insert', @msg
+END CATCH
+EXEC _end 0
+GO
+
+--fail duplicate key
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC SP_INSERT_ASPECT_EFFECT_EFFECT
+			'Test aspect',
+			'Test effect'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 0, 'Effect bestaat al duplicate key', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 1, 'Effect bestaat al duplicate key', @msg
+END CATCH
+EXEC _end 0
+GO
+
+-- fail onbestaand aspect voor effect
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC SP_INSERT_ASPECT_EFFECT_EFFECT
+			'Test aspect2',
+			'Test effect'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 0, 'Moet aan bestaand aspect toevoegen', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 1, 'Moet aan bestaand aspect toevoegen', @msg
+END CATCH
+EXEC _end 0
+GO
+
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC SP_INSERT_ASPECT_EFFECT
+			'Test aspect',
+			'Test effect5'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_INSERT_ASPECT_EFFECT', 0, 'Moet een bestaand Effect betreffen', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_INSERT_ASPECT_EFFECT', 1, 'Moet een bestaand Effect betreffen', @msg
+END CATCH
+EXEC _end 0
+GO
+
+--succes
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC SP_INSERT_ASPECT_EFFECT
+			'Test aspect',
+			'Test effect 2'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_INSERT_ASPECT_EFFECT', 1, 'Juiste insert', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_INSERT_ASPECT_EFFECT', 0, 'Juiste insert', @msg
+END CATCH
+EXEC _end 0
+GO
+
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC SP_DELETE_ASPECT
+			'Test aspect'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_DELETE_ASPECT', 1, 'Juiste delete zonder effect', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_DELETE_ASPECT', 0, 'Juiste delete zonder effect', @msg
+END CATCH
+EXEC _end 0
+GO
+
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC SP_DELETE_ASPECT
+			'Test Aspect'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_DELETE_ASPECT', 1, 'Juiste delete met effect', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_DELETE_ASPECT', 0, 'Juiste delete met effect', @msg
+END CATCH
+EXEC _end 0
+GO
+
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+EXEC SP_DELETE_Aspect
+			'Beverages'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_DELETE_ASPECT', 0, 'Nog in gebruik bij risicoregel', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_DELETE_ASPECT', 1, 'Nog in gebruik bij risicoregel', @msg
+END CATCH
+EXEC _end 0
+GO
+
+
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT
+			'Test aspect',
+			'Test effect'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 1, 'Juiste delete van effect', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 0, 'Juiste delete van effect', @msg
+END CATCH
+EXEC _end 0
+GO
+
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC SP_INSERT_ASPECT
+			'Test aspect'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 0, 'Aspect bestaat al', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 1, 'Aspect bestaat al', @msg
+END CATCH
+EXEC _end 0
+GO
+
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC SP_INSERT_ASPECT
+			'Test aspect123'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 1, 'Juiste insert Aspect', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 0, 'Juiste insert Aspect', @msg
+END CATCH
 EXEC _end 1
 GO
