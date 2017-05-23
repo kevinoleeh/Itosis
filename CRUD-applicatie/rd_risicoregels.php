@@ -77,7 +77,7 @@ else if($type['RAPPORT_TYPE'] === 'Visuele beoordeling') {
                 <?php foreach ($result as &$value) { ?>
                     <tr>
                         <td style="display: none;"><?=  $value['REGELNUMMER']?></td>
-                        <td><a href="u_<?= $url ?>?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $value['RAPPORTNUMMER'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"><?= $value['REGELNUMMER'] ?></td>
+                        <td><?= $value['REGELNUMMER'] ?></td>
                         <td><?= $value['ARBO_ONDERWERP'] ?></td>
                         <td><?= $value['ASPECTNAAM'] ?></td>
                         <td><?= $value['EFFECTNAAM'] ?></td>
