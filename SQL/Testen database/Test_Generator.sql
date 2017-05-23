@@ -29,11 +29,20 @@ CREATE PROCEDURE _begin AS BEGIN
 			SET @tabel = 'RAPPORT'
 			INSERT INTO RAPPORT
 				VALUES (@projectnummer, 1, 'Organisatie'),
-				(@projectnummer, 2, 'Visuele_beoordeling')
+				(@projectnummer, 2, 'Visuele beoordeling')
 			SET @tabel = 'RISICOREGEL'
 			INSERT INTO RISICOREGEL(PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, ASPECTNAAM, EFFECTNAAM, ARBO_ONDERWERP, RISICO_OMSCHRIJVING_OF_BEVINDING, HUIDIGE_BEHEERSMAATREGEL, VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL, VOOR_ERNST_VAN_HET_ONGEVAL, VOOR_KANS_OP_BLOOTSTELLING, VOOR_KANS_OP_WAARSCHIJNLIJKHEID, AFWIJKENDE_ACTIE_TER_UITVOERING, RESTRISICO, NA_ERNST_VAN_ONGEVAL, NA_KANS_OP_BLOOTSTELLING, NA_KANS_OP_WAARSCHIJNLIJKHEID)
 				VALUES(@projectnummer, 1, 1, 'Beverages', 'Add. Words', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00, 'pars transit.', 'novum', 15.00, 1.00, 10.00),
 					(@projectnummer, 2, 1, 'Beverages', 'Add. Words', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00, 'pars transit.', 'novum', 15.00, 1.00, 10.00)
+			INSERT INTO VISUELE_BEOORDELING
+				VALUES(@projectnummer, 2, 1, '', 'test', '')
+			SET @tabel = 'ASPECT'
+			INSERT INTO ASPECT VALUES('Test aspect')
+			SET @tabel = 'EFFECT'
+			INSERT INTO EFFECT VALUES('Test effect')
+			INSERT INTO EFFECT VALUES('Test effect 2')
+			SET @tabel = 'ASPECT_EFFECT'
+			INSERT INTO ASPECT_EFFECT VALUES('Test aspect', 'Test effect')
 		END TRY
 		BEGIN CATCH
 			DECLARE
@@ -71,8 +80,11 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 	--IF EXISTS(SELECT 'Error occurred' FROM testData WHERE Success = 0)
 		SELECT Test + ' #'+ CONVERT(VARCHAR, Number) AS Test, IIF(success = 1, 'OK', 'ERROR') AS Status, Reden AS Reden, message AS Melding FROM testData ORDER BY Success, id, Number
 	BEGIN TRY
-		DECLARE @tabel VARCHAR(255) = 'RISICOREGEL'
+		DECLARE @tabel VARCHAR(255) = 'VISUELE BEOORDELING'
 		DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
+		DELETE FROM VISUELE_BEOORDELING
+		WHERE PROJECTNUMMER = @projectnummer
+		SET @tabel = 'RISICOREGEL'
 		DELETE FROM RISICOREGEL
 		WHERE PROJECTNUMMER = @projectnummer
 		SET @tabel = 'RAPPORT'
@@ -86,6 +98,18 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 		WHERE BEDRIJFSNAAM = 'HAN' AND LOCATIE = 'Arnhem';
 		DELETE FROM BEDRIJF
 		WHERE BEDRIJFSNAAM = 'EURATEX';
+		SET @tabel = 'ASPECT_EFFECT'
+		DELETE FROM ASPECT_EFFECT
+		WHERE ASPECTNAAM = 'Test aspect';
+		SET @tabel = 'EFFECT'
+		DELETE FROM EFFECT
+		WHERE EFFECTNAAM = 'Test effect';
+		DELETE FROM EFFECT
+		WHERE EFFECTNAAM = 'Test effect 2';
+		SET @tabel = 'ASPECT'
+		DELETE FROM ASPECT
+		WHERE ASPECTNAAM = 'Test aspect';
+
 
 
 	END TRY
