@@ -79,39 +79,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <hr>
     <div class="row">
-        <form action="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['rapportnummer'] ?> " method="post">
+        <form action="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?> "
+              method="post">
             <h3>Plan van aanpak</h3>
             <div class="form-group">
                 <label for="UITGEVOERD_DOOR">Uitgevoerd door:</label>
-                <input type="text" class="form-control" name="UITGEVOERD_DOOR" value="<?php if(isset($result['UITGEVOERD_DOOR'])) { echo $result['UITGEVOERD_DOOR']; } ?>">
+                <input type="text" class="form-control" name="UITGEVOERD_DOOR"
+                       value="<?php if (isset($result['UITGEVOERD_DOOR'])) {
+                           echo $result['UITGEVOERD_DOOR'];
+                       } ?>">
             </div>
             <div class="form-group">
                 <label for="EINDVERANTWOORDELIJKE">Eindverantwoordelijke</label>
-                <input type="text" class="form-control" name="EINDVERANTWOORDELIJKE" value="<?php if(isset($result['EINDVERANTWOORDELIJKE'])) { echo $result['EINDVERANTWOORDELIJKE']; } ?>">
+                <input type="text" class="form-control" name="EINDVERANTWOORDELIJKE"
+                       value="<?php if (isset($result['EINDVERANTWOORDELIJKE'])) {
+                           echo $result['EINDVERANTWOORDELIJKE'];
+                       } ?>">
             </div>
             <div class="form-group">
                 <label for="DATUM_GEREED_GEPLAND">Datum gereed gepland</label>
-                <input type="text" class="form-control" name="DATUM_GEREED_GEPLAND" value="<?php if(isset($result['DATUM_GEREED_GEPLAND'])) { echo $result['DATUM_GEREED_GEPLAND']; } ?>">
+                <input type="text" class="form-control" name="DATUM_GEREED_GEPLAND"
+                       value="<?php if (isset($result['DATUM_GEREED_GEPLAND'])) {
+                           echo $result['DATUM_GEREED_GEPLAND'];
+                       } ?>">
             </div>
             <div class="form-group">
                 <label for="PBM">PBM</label>
-                <textarea class="form-control" rows="2" name="PBM"><?php if(isset($result['PBM'])) { echo $result['PBM']; } ?></textarea>
+                <textarea class="form-control" rows="2" name="PBM"><?php if (isset($result['PBM'])) {
+                        echo $result['PBM'];
+                    } ?></textarea>
             </div>
             <div class="form-group">
                 <label for="VOORLICHTING">Voorlichting</label>
-                <textarea class="form-control" rows="2" name="VOORLICHTING"><?php if(isset($result['VOORLICHTING'])) { echo $result['VOORLICHTING']; } ?></textarea>
+                <textarea class="form-control" rows="2" name="VOORLICHTING"><?php if (isset($result['VOORLICHTING'])) {
+                        echo $result['VOORLICHTING'];
+                    } ?></textarea>
             </div>
             <div class="form-group">
                 <label for="WERKINSTRUCTIE_PROCEDURE">Werkinstructie procedure</label>
-                <textarea class="form-control" rows="2" name="WERKINSTRUCTIE_PROCEDURE"><?php if(isset($result['WERKINSTRUCTIE_PROCEDURE'])) { echo $result['WERKINSTRUCTIE_PROCEDURE']; } ?></textarea>
+                <textarea class="form-control" rows="2"
+                          name="WERKINSTRUCTIE_PROCEDURE"><?php if (isset($result['WERKINSTRUCTIE_PROCEDURE'])) {
+                        echo $result['WERKINSTRUCTIE_PROCEDURE'];
+                    } ?></textarea>
             </div>
             <div class="form-group">
                 <label for="TRA">TRA</label>
-                <textarea class="form-control" rows="2" name="TRA"><?php if(isset($result['TRA'])) { echo $result['TRA']; } ?></textarea>
+                <textarea class="form-control" rows="2" name="TRA"><?php if (isset($result['TRA'])) {
+                        echo $result['TRA'];
+                    } ?></textarea>
             </div>
             <div class="form-group">
                 <label for="CONTRACT_LIJST_">Controlelijst</label>
-                <textarea class="form-control" rows="2" name="CONTRACT_LIJST_"><?php if(isset($result['CONTRACT_LIJST_'])) { echo $result['CONTRACT_LIJST_']; } ?></textarea>
+                <textarea class="form-control" rows="2"
+                          name="CONTRACT_LIJST_"><?php if (isset($result['CONTRACT_LIJST_'])) {
+                        echo $result['CONTRACT_LIJST_'];
+                    } ?></textarea>
             </div>
 
             <button class="btn btn-block btn-primary" name="submit" type="submit">Aanmaken</button>
@@ -122,6 +144,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <br>
-</div>
+<script type="text/javascript">
+    var projectnummer = "<?= $_GET['projectnummer'] ?>";
+    var rapportnummer = "<?= $_GET['rapportnummer'] ?>";
+
+</script>
 
 <?php include_once('include/footer.php'); ?>
