@@ -98,9 +98,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="form-group">
                 <label for="DATUM_GEREED_GEPLAND">Datum gereed gepland</label>
-                <input type="text" class="form-control" name="DATUM_GEREED_GEPLAND"
+                <input type="date" class="form-control" name="DATUM_GEREED_GEPLAND"
                        value="<?php if (isset($result['DATUM_GEREED_GEPLAND'])) {
-                           echo $result['DATUM_GEREED_GEPLAND'];
+                           echo strftime('%Y-%m-%d', strtotime($result['DATUM_GEREED_GEPLAND']));
                        } ?>">
             </div>
             <div class="form-group">
