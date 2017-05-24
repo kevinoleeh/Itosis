@@ -36,8 +36,8 @@ try {
                 </thead>
                 <tbody>
                 <?php foreach ($result as &$value) { ?>
-                    <tr>
-                        <td><a href="rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $value['RAPPORTNUMMER'] ?>"><?= $value['RAPPORTNUMMER'] ?></a></td>
+                    <tr onClick="document.location.href='rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $value['RAPPORTNUMMER'] ?>';">
+                        <td><?= $value['RAPPORTNUMMER'] ?></td>
                         <td><?= $value['RAPPORT_TYPE'] ?></td>
                     </tr>
                 <?php } ?>

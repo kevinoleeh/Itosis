@@ -35,8 +35,8 @@ try {
                 </thead>
                 <tbody>
                 <?php foreach ($result as &$value) { ?>
-                    <tr>
-                        <td><a href="rd_rapportages.php?projectnummer=<?= $value['PROJECTNUMMER'] ?>"><?= $value['PROJECTNUMMER'] ?></a></td>
+                    <tr onClick="document.location.href='rd_rapportages.php?projectnummer=<?= $value['PROJECTNUMMER'] ?>';">
+                        <td><?= $value['PROJECTNUMMER'] ?></a></td>
                         <td><?= $value['PROJECTOMSCHRIJVING'] ?></td>
                         <td><?= $value['BEDRIJFSNAAM'] ?></td>
                         <td><?= $value['LOCATIE'] ?></td>
