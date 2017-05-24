@@ -34,7 +34,7 @@ BEGIN
         AND regelnummer = @REGELNUMMER)
       BEGIN
         UPDATE plan_van_aanpak
-        SET projectnummer = @PROJECTNUMMER, rapportnummer = @RAPPORTNUMMER, regelnummer = @REGELNUMMER, uitgevoerd_door = @UITGEVOERD_DOOR, eindverantwoordelijke = @EINDVERANTWOORDELIJKE, datum_gereed_gepland = @DATUM_GEREED_GEPLAND,PBM = @PBM, voorlichting = @VOORLICHTING, werkinstructie_procedure = @WERKINSTRUCTIE_PROCEDURE, TRA = @TRA, contract_lijst_ = @CONTRACT_LIJST_)
+        SET projectnummer = @PROJECTNUMMER, rapportnummer = @RAPPORTNUMMER, regelnummer = @REGELNUMMER, uitgevoerd_door = @UITGEVOERD_DOOR, eindverantwoordelijke = @EINDVERANTWOORDELIJKE, datum_gereed_gepland = @DATUM_GEREED_GEPLAND,PBM = @PBM, voorlichting = @VOORLICHTING, werkinstructie_procedure = @WERKINSTRUCTIE_PROCEDURE, TRA = @TRA, contract_lijst_ = @CONTRACT_LIJST_
         WHERE projectnummer = @PROJECTNUMMER AND rapportnummer = @RAPPORTNUMMER AND regelnummer = @REGELNUMMER
       END
       ELSE
