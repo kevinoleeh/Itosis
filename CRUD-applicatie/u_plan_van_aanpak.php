@@ -116,7 +116,9 @@ try {
             <div class="form-group">
                 <label for="DATUM_GEREED_GEPLAND">Datum gereed gepland</label>
                 <input type="date" class="form-control" name="DATUM_GEREED_GEPLAND"
-                       value="2017-12-12">
+                       value="<?php if (isset($result['DATUM_GEREED_GEPLAND'])) {
+                           echo strftime('%Y-%m-%d', strtotime($result['DATUM_GEREED_GEPLAND']));
+                       } ?>">
             </div>
             <div class="form-group">
                 <label for="PBM">PBM</label>
