@@ -37,6 +37,34 @@ CREATE FUNCTION dbo.FN_GET_PRIORITEIT (
 END
 GO
 
+-- Geeft maximaal rapportnummer + 1 terug
+GO
+CREATE FUNCTION dbo.FN_GET_NEW_RAPPORTNUMMER (
+	@PROJECTNUMMER INT
+) RETURNS INT AS BEGIN
+	RETURN (
+		SELECT ISNULL(MAX(RAPPORTNUMMER), 0) + 1
+		FROM RAPPORT
+		WHERE PROJECTNUMMER = @PROJECTNUMMER
+	)
+END
+GO
+
+-- Geeft maximaal regelnummer + 1 terug
+GO
+CREATE FUNCTION dbo.FN_GET_NEW_REGELNUMMER (
+	@PROJECTNUMMER INT,
+	@RAPPORTNUMMER INT
+) RETURNS INT AS BEGIN
+	RETURN (
+		SELECT ISNULL(MAX(REGELNUMMER), 0) + 1
+		FROM RISICOREGEL
+		WHERE PROJECTNUMMER = @PROJECTNUMMER
+		AND RAPPORTNUMMER = @RAPPORTNUMMER
+	)
+END
+GO
+
 /*==============================================================*/
 /* KOLOMMEN							                            */
 /*==============================================================*/
