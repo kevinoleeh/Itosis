@@ -1,65 +1,6 @@
 use Euratex
 
 /*==============================================================*/
-/* HISTORY TABELLEN					                            */
-/*==============================================================*/
--- RISCOREGEL
-
-SELECT *
-INTO RISICOREGEL_HISTORY
-FROM RISICOREGEL
-WHERE 1 = 2
-
-ALTER TABLE RISICOREGEL_HISTORY
-ADD GEBRUIKER VARCHAR(255) DEFAULT CURRENT_USER, DATUM DATETIME DEFAULT GETDATE(), ACTIE VARCHAR(255)
-
--- VISUELE_BEOORDELING
-
-SELECT *
-INTO VISUELE_BEOORDELING_HISTORY
-FROM VISUELE_BEOORDELING
-WHERE 1 = 2
-
-ALTER TABLE VISUELE_BEOORDELING_HISTORY
-ADD GEBRUIKER VARCHAR(255) DEFAULT CURRENT_USER, DATUM DATETIME DEFAULT GETDATE(), ACTIE VARCHAR(255)
-
--- MACHINE_VEILIGHEID
-
-SELECT *
-INTO MACHINE_VEILIGHEID_HISTORY
-FROM MACHINE_VEILIGHEID
-WHERE 1 = 2
-
-ALTER TABLE MACHINE_VEILIGHEID_HISTORY
-ADD GEBRUIKER VARCHAR(255) DEFAULT CURRENT_USER, DATUM DATETIME DEFAULT GETDATE(), ACTIE VARCHAR(255)
-
--- PLAN_VAN_AANPAK
-
-SELECT *
-INTO PLAN_VAN_AANPAK_HISTORY
-FROM PLAN_VAN_AANPAK
-WHERE 1 = 2
-
-ALTER TABLE PLAN_VAN_AANPAK_HISTORY
-ADD GEBRUIKER VARCHAR(255) DEFAULT CURRENT_USER, DATUM DATETIME DEFAULT GETDATE(), ACTIE VARCHAR(255)
-
--- PERIODIEKE_BEOORDELING
-
-SELECT *
-INTO PERIODIEKE_BEOORDELING_HISTORY
-FROM PERIODIEKE_BEOORDELING
-WHERE 1 = 2
-
-ALTER TABLE PERIODIEKE_BEOORDELING_HISTORY
-ADD GEBRUIKER VARCHAR(255) DEFAULT CURRENT_USER, DATUM DATETIME DEFAULT GETDATE(), ACTIE VARCHAR(255)
-
-alter table RISICOREGEL_HISTORY
-alter column VOOR_PRIORITEIT varchar(255)
-
-alter table RISICOREGEL_HISTORY
-alter column NA_PRIORITEIT  Varchar(255)
-
-/*==============================================================*/
 /* FUNCTIES							                            */
 /*==============================================================*/
 -- Geeft het risico terug op basis van ERNST_VAN_HET_ONGEVAL, KANS_OP_BLOOTSTELLING en KANS_OP_WAARSCHIJNLIJKHEID.
@@ -125,7 +66,7 @@ END
 GO
 
 /*==============================================================*/
-/* RISICOREGEL KOLOMMEN					                        */
+/* KOLOMMEN							                            */
 /*==============================================================*/
 -- Voor
 
@@ -155,9 +96,6 @@ drop column NA_PRIORITEIT
 alter table RISICOREGEL
 add NA_PRIORITEIT AS dbo.FN_GET_PRIORITEIT(dbo.FN_GET_RISICO(VOOR_ERNST_VAN_HET_ONGEVAL, VOOR_KANS_OP_BLOOTSTELLING, VOOR_KANS_OP_WAARSCHIJNLIJKHEID))
 
-/*==============================================================*/
-/* CASCADING REGELS 					                        */
-/*==============================================================*/
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
    where r.fkeyid = object_id('PROJECT') and o.name = 'FK_PROJECT_BEDRIJF_P_BEDRIJF')

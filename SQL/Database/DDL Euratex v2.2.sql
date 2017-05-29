@@ -718,7 +718,7 @@ go
 /* Domain: OPMERKING_STAND_VAN_ZAKEN                            */
 /*==============================================================*/
 create type OPMERKING_STAND_VAN_ZAKEN
-   from text
+   from Varchar(max)
 go
 
 /*==============================================================*/
@@ -760,7 +760,7 @@ go
 /* Domain: PROJECTOMSCHRIJVING                                  */
 /*==============================================================*/
 create type PROJECTOMSCHRIJVING
-   from text
+   from Varchar(max)
 go
 
 /*==============================================================*/
@@ -788,14 +788,14 @@ go
 /* Domain: RESTRISICO                                           */
 /*==============================================================*/
 create type RESTRISICO
-   from text
+   from Varchar(max)
 go
 
 /*==============================================================*/
 /* Domain: RISICO_OMSCHRIJVING_OF_BEVINDING                     */
 /*==============================================================*/
 create type RISICO_OMSCHRIJVING_OF_BEVINDING
-   from text
+   from Varchar(max)
 go
 
 /*==============================================================*/
@@ -844,7 +844,7 @@ go
 /* Domain: VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL          */
 /*==============================================================*/
 create type VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL
-   from text
+   from Varchar(max)
 go
 
 /*==============================================================*/
@@ -893,7 +893,7 @@ go
 /* Domain: WERKINSTRUCTIE_PROCEDURE                             */
 /*==============================================================*/
 create type WERKINSTRUCTIE_PROCEDURE
-   from text
+   from Varchar(max)
 go
 
 /*==============================================================*/
@@ -1134,11 +1134,11 @@ create table RISICOREGEL (
    RISICO_OMSCHRIJVING_OF_BEVINDING RISICO_OMSCHRIJVING_OF_BEVINDING not null,
    HUIDIGE_BEHEERSMAATREGEL HUIDIGE_BEHEERSMAATREGEL null,
    VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL not null,
-   VOOR_ERNST_VAN_HET_ONGEVAL VOOR_ERNST_VAN_ONGEVAL not null 
+   VOOR_ERNST_VAN_HET_ONGEVAL VOOR_ERNST_VAN_ONGEVAL not null
       constraint CKC_VOOR_ERNST_VAN_HE_RISICORE check (VOOR_ERNST_VAN_HET_ONGEVAL in (100,40,15,7,3,1)),
-   VOOR_KANS_OP_BLOOTSTELLING VOOR_KANS_OP_BLOOTSTELLING not null 
+   VOOR_KANS_OP_BLOOTSTELLING VOOR_KANS_OP_BLOOTSTELLING not null
       constraint CKC_VOOR_KANS_OP_BLOO_RISICORE check (VOOR_KANS_OP_BLOOTSTELLING in (10,6,3,2,1,0,5)),
-   VOOR_KANS_OP_WAARSCHIJNLIJKHEID VOOR_KANS_OP_WAARSCHIJNLIJKHEID not null 
+   VOOR_KANS_OP_WAARSCHIJNLIJKHEID VOOR_KANS_OP_WAARSCHIJNLIJKHEID not null
       constraint CKC_VOOR_KANS_OP_WAAR_RISICORE check (VOOR_KANS_OP_WAARSCHIJNLIJKHEID in (10,6,3,1,0,5,0,2)),
    VOOR_RISICO          VOOR_RISICO          not null,
    VOOR_PRIORITEIT      VOOR_PRIORITEIT      not null,
@@ -1182,11 +1182,11 @@ create table VISUELE_BEOORDELING (
    PROJECTNUMMER        PROJECTNUMMER        not null,
    RAPPORTNUMMER        RAPPORTNUMMER        not null,
    REGELNUMMER          REGELNUMMER          not null,
-   PROCES               PROCES               null 
+   PROCES               PROCES               null
       constraint CKC_PROCES_VISUELE_ check (PROCES is null or (PROCES >= '1')),
-   MACHINE_ONDERDEEL_   MACHINE_ONDERDEEL    null 
+   MACHINE_ONDERDEEL_   MACHINE_ONDERDEEL    null
       constraint CKC_MACHINE_ONDERDEEL_VISUELE_ check (MACHINE_ONDERDEEL_ is null or (MACHINE_ONDERDEEL_ >= '1')),
-   AFDELING             AFDELING             null 
+   AFDELING             AFDELING             null
       constraint CKC_AFDELING_VISUELE_ check (AFDELING is null or (AFDELING >= '1')),
    constraint PK_VISUELE_BEOORDELING primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
 )
