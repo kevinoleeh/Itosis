@@ -208,7 +208,7 @@ try {
                 <tbody>
                 <?php foreach ($periodieke_beoordelingen as &$value) { ?>
                     <tr>
-                        <td><?PHP echo strftime('%Y-%m-%d', strtotime($value['DATUM_LAATSTE_BEOORDELING'])); ?></td>
+                        <td><?PHP echo strftime('%Y-%m-%d', strtotime($value['DATUM_BEOORDELING'])); ?></td>
                         <td><?= $value['INSPECTIE_IS_DE_ACTIE_UITGEVOERD'] ?></td>
                         <td><?= $value['OPMERKING_STAND_VAN_ZAKEN'] ?></td>
                         <td><?= $value['STAND_VAN_ZAKEN'] ?></td>
@@ -216,7 +216,7 @@ try {
                         <td>
                             <div class="">
                                 <a id="periodiekebutton"
-                                   href="u_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>&datum=<?php echo strftime('%Y-%m-%d', strtotime($value['DATUM_LAATSTE_BEOORDELING'])); ?>"
+                                   href="u_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>&datum=<?php echo strftime('%Y-%m-%d', strtotime($value['DATUM_BEOORDELING'])); ?>"
                                    class="btn btn-block btn-primary">Wijzigen</a>
                             </div>
 
