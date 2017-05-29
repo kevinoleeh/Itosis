@@ -2,7 +2,7 @@
 
 session_start();
 
-if($_SERVER["PHP_SELF"] != '/Github/Itosis/CRUD-applicatie/login.php') {
+if(strstr($_SERVER["PHP_SELF"], 'login.php') != 'login.php') {
     if(isset($_SESSION['gebruikersnaam']) and isset($_SESSION['wachtwoord'])) {
         include_once('pdo-connect.php');
     } else {
