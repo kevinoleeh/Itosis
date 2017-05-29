@@ -1,8 +1,8 @@
-<?php include_once('include/header.php'); ?>
-
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    echo 'hallo';
+
     session_start();
 
     try {
@@ -27,14 +27,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute();
     $result = $stmt->fetch();
 
-    echo $result;
-
-    if($result === 1) {
-        echo 'correct';
+    if($result[0] == 1) {
         $_SESSION['gebruikersnaam'] = $_POST['gebruikersnaam'];
         $_SESSION['wachtwoord'] = $_POST['wachtwoord'];
+
+        header('Location: '. 'index.php');
     } else {
-        echo 'incorrect';
+        $meldingStatus = false;
+        $melding = "Gebruikersnaam en/of wachtwoord incorrect.";
     }
 }
 
@@ -43,8 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container">
     <div class="row">
         <div class="col-lg-offset-3 col-lg-6">
+            <?php include_once('include/melding.php') ?>
             <form class="form-group" method="post">
-                <center><h2>Login</h2></center>
+                <h2>Login</h2>
                 <label for="gebruikersnaam">Gebruikersnaam</label>
                 <input type="text" id="gebruikersnaam" name="gebruikersnaam" class="form-control" placeholder="Gebruikersnaam" required="">
                 <br>

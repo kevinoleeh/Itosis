@@ -1,3 +1,13 @@
+<?php
+
+if(isset($_SESSION['gebruikersnaam']) and isset($_SESSION['wachtwoord'])) {
+    include_once('pdo-connect.php');
+} else {
+    header('Location: '. 'login.php');
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,7 +20,6 @@
     <!-- Bootstrap own style sheet-->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
