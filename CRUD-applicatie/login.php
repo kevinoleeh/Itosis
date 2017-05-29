@@ -4,10 +4,10 @@
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        $hostname = "(local)\SQLEXPRESS";
+        $hostname = "euratexserver.nl";
         $dbname = "Euratex";
         $username = "sa";
-        $password = "P@ssw0rd";
+        $password = "Euratex1234";
         $dbh = new PDO("sqlsrv:Server=$hostname;Database=$dbname", "$username", "$password");
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
