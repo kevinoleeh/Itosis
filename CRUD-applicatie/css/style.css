@@ -142,3 +142,44 @@ input[type=search] {
 tr:hover td {
     background-color: #d9edf7;
 }
+
+h1 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.page-header {
+    margin: 0 0 20px;
+}
+
+.btn-primary {
+    color: black;
+    border: #FFA500;
+    background: #FFA500;
+}
+
+.btn-primary:hover {
+    color: black;
+    border: #e59400;
+    background: #e59400;
+}
+.btn-primary:active,
+.btn-primary.active,
+.open > .dropdown-toggle.btn-primary {
+    color: black;
+    border: #e59400;
+    background: #e59400;
+}
+.btn-primary:active:hover,
+.btn-primary.active:hover,
+.open > .dropdown-toggle.btn-primary:hover,
+.btn-primary:active:focus,
+.btn-primary.active:focus,
+.open > .dropdown-toggle.btn-primary:focus,
+.btn-primary:active.focus,
+.btn-primary.active.focus,
+.open > .dropdown-toggle.btn-primary.focus {
+    color: black;
+    border: #e59400;
+    background: #e59400;
+}
