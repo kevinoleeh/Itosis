@@ -3,17 +3,17 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $query = "EXEC dbo.SP_INSERT_PLAN_VAN_AANPAK 
-             :PROJECTNUMMER,
-             :RAPPORTNUMMER,
-             :REGELNUMMER,
-             :UITGEVOERD_DOOR,
-             :EINDVERANTWOORDELIJKE,
-             :DATUM_GEREED_GEPLAND,
-             :PBM,
-             :VOORLICHTING,
-             :WERKINSTRUCTIE_PROCEDURE,
-             :TRA,
-             :CONTRACT_LIJST_";
+                 :PROJECTNUMMER,
+                 :RAPPORTNUMMER,
+                 :REGELNUMMER,
+                 :UITGEVOERD_DOOR,
+                 :EINDVERANTWOORDELIJKE,
+                 :DATUM_GEREED_GEPLAND,
+                 :PBM,
+                 :VOORLICHTING,
+                 :WERKINSTRUCTIE_PROCEDURE,
+                 :TRA,
+                 :CONTRACT_LIJST_";
     $stmt = $dbh->prepare($query);
     $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
     $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
@@ -135,8 +135,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         echo $result['CONTRACT_LIJST_'];
                     } ?></textarea>
             </div>
+            <?php if ($_SERVER['REQUEST_METHOD'] === 'POST') { ?>
 
-            <button class="btn btn-block btn-primary" name="submit" type="submit">Aanmaken</button>
+            <?php } else { ?>
+                <button class="btn btn-block btn-primary" name="submit" type="submit">Aanmaken</button>
+            <?php } ?>
         </form>
 
     </div>

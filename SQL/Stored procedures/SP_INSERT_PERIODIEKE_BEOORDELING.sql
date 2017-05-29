@@ -35,7 +35,7 @@ AS
 	  END
     ELSE
       BEGIN
-        RAISERROR ('Om deze SP te kunnen gebruiken dient de plan van aanpak te bestaan.', 16, 1)
+        RAISERROR ('Om deze SP te kunnen gebruiken dient het plan van aanpak te bestaan.', 16, 1)
       END
 
     IF @TranCounter = 0
