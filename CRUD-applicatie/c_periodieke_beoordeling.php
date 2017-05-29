@@ -108,17 +108,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="form-group">
                 <label for="SCORE">Score</label>
-                <input type="text" class="form-control" name="SCORE"
+                <input type="number" class="form-control" name="SCORE"
                        value="<?php if (isset($result['SCORE'])) {
                            echo $result['SCORE'];
                        } ?>">
             </div>
-
-            <?php if ($_SERVER['REQUEST_METHOD'] === 'POST') { ?>
-
-            <?php } else { ?>
                 <button class="btn btn-block btn-primary" name="submit" type="submit">Aanmaken</button>
-            <?php } ?>
         </form>
 
     </div>
