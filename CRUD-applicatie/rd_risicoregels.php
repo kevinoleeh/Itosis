@@ -1,5 +1,67 @@
-<?php include_once('include/header.php') ?>
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  error_reporting(E_ALL); ini_set('display_errors', TRUE); ini_set('display_startup_errors', TRUE);
+  include_once('PHPExcel/Classes/PHPExcel.php');
+  include_once('include/pdo-connect.php');
+  $query = "SELECT *
+            FROM RISICOREGEL
+            WHERE PROJECTNUMMER = :PROJECTNUMMER
+            AND RAPPORTNUMMER = :RAPPORTNUMMER";
+  $stmt = $dbh->prepare($query);
+  $projectnummer = $_GET['projectnummer'];
+  $rapportnummer = $_GET['rapportnummer'];
+  $stmt->bindParam(':PROJECTNUMMER', $projectnummer);
+  $stmt->bindParam(':RAPPORTNUMMER', $rapportnummer);
+  $stmt->execute();
+  $results = array();
+  while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+    $results[] = $row;
+  }
+  $filename =  'Projectnummer'.$projectnummer.'Rapportnummer'.$rapportnummer.' Excel';
+  $objPHPExcel = new PHPExcel();
+  $objPHPExcel->getActiveSheet()->setTitle('Organisatie risicoregel');
 
+  // Zet hier alle kolommen neer
+  $objPHPExcel->setActiveSheetIndex(0);
+  $objPHPExcel->getActiveSheet()->getStyle('1:1')->getFont()->setBold(true);
+  $excelLetters = array();
+  $excelLetter = 'A';
+
+while ($excelLetter !== 'AAA') {
+    $excelLetters[] = $excelLetter++;
+}
+
+  $setHeaders = false;
+  $keys = array_keys($results[0]);
+  for($i = 0; $i < sizeof($keys); $i ++){
+    $objPHPExcel->getActiveSheet()->getColumnDimension($excelLetters[$i])->setWidth(22);
+  }
+  foreach ($results as $key => $row) {
+
+    if(!$setHeaders){
+      for($i = 0; $i < sizeof($row); $i ++){
+        $objPHPExcel->getActiveSheet()->setCellValue($excelLetters[$i] . '1', $keys[$i]);
+      }
+      $setHeaders = true;
+    }
+    for($i = 0; $i < sizeof($row); $i ++){
+      if($key == 0 or $key == 1){
+        $key = 2;
+      }
+      $objPHPExcel->getActiveSheet()->setCellValue($excelLetters[$i].$key, $row[$keys[$i]]);
+    }
+  }
+
+  $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+  header('Content-type: application/vnd.ms-excel');
+  header('Content-disposition: attachment; filename="'.$filename.'.xls"');
+  header('Cache-Control: max-age=0');
+  ob_end_clean();
+  $objWriter->save('php://output');
+include_once('include/pdo-disconnect.php');
+exit();
+} else {?>
+<?php include_once('include/header.php'); ?>
 <?php
 
 $query = "SELECT *
@@ -52,6 +114,8 @@ if ($type['RAPPORT_TYPE'] === 'Organisatie') {
     $url = 'organisatie_risicoregel.php';
 } else if ($type['RAPPORT_TYPE'] === 'Visuele beoordeling') {
     $url = 'visuele_beoordeling_risicoregel.php';
+} else if ($type['RAPPORT_TYPE'] === 'Machine veiligheid'){
+    $url = 'machine_veiligheid_risicoregel.php';
 }
 
 ?>
@@ -63,14 +127,17 @@ if ($type['RAPPORT_TYPE'] === 'Organisatie') {
         </div>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <a id="regelopenenbutton" class="btn btn-block btn-primary">Regel openen</a>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <a href="c_<?= $url ?>?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>"
                    class="btn btn-block btn-primary">Regel toevoegen</a>
             </div>
-
+            <div class="col-md-2">
+                <form action ="rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" method ="post">
+                <input type="submit" class="btn btn-block btn-primary" value="Excel export">
+              </div>
 
             <div class="col-md-12">
 
@@ -111,7 +178,7 @@ if ($type['RAPPORT_TYPE'] === 'Organisatie') {
                                     ?>
                                     <div class="">
                                         <a id="pvabutton"
-                                           href="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"
+                                           href="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"=
                                            class="btn btn-block btn-primary">PvA toevoegen</a>
                                     </div>
                                     <?php
@@ -128,4 +195,7 @@ if ($type['RAPPORT_TYPE'] === 'Organisatie') {
         var rapportnummer = "<?php echo $_GET['rapportnummer']; ?>";
 
     </script>
-<?php include_once('include/footer.php');
+<?php
+   include_once('include/footer.php');
+ }
+?>
