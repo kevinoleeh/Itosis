@@ -1,6 +1,6 @@
 GO
 
-CREATE PROCEDURE SP_INSERT_PERIODIEKE_BEOORDELING
+CREATE PROCEDURE UPDATE_PERIODIEKE_BEOORDELING
     @PROJECTNUMMER int,
     @RAPPORTNUMMER int,
     @REGELNUMMER int,
@@ -23,19 +23,24 @@ AS
       BEGIN TRANSACTION;
 
     BEGIN TRY
-    IF EXISTS (SELECT
+    IF EXISTS (SELECT 
                  1
-               FROM PLAN_VAN_AANPAK
+               FROM PERIODIEKE_BEOORDELING
                WHERE projectnummer = @PROJECTNUMMER
                      AND rapportnummer = @RAPPORTNUMMER
-                     AND regelnummer = @REGELNUMMER)
+                     AND regelnummer = @REGELNUMMER
+					 AND datum_laatste_beoordeling = @DATUM_LAATSTE_BEOORDELING)
       BEGIN
-        INSERT PERIODIEKE_BEOORDELING
-        VALUES (@PROJECTNUMMER, @RAPPORTNUMMER, @REGELNUMMER, @DATUM_LAATSTE_BEOORDELING, @INSPECTIE_IS_DE_ACTIE_UITGEVOERD, @OPMERKING_STAND_VAN_ZAKEN, @STAND_VAN_ZAKEN, @SCORE)
+        UPDATE PERIODIEKE_BEOORDELING
+        SET inspectie_is_de_actie_uitgevoerd = @INSPECTIE_IS_DE_ACTIE_UITGEVOERD, opmerking_stand_van_zaken = @OPMERKING_STAND_VAN_ZAKEN, stand_van_zaken = @STAND_VAN_ZAKEN, score = @SCORE
+		WHERE projectnummer = @PROJECTNUMMER
+                     AND rapportnummer = @RAPPORTNUMMER
+                     AND regelnummer = @REGELNUMMER
+					 AND datum_laatste_beoordeling = @DATUM_LAATSTE_BEOORDELING
 	  END
     ELSE
       BEGIN
-        RAISERROR ('Om deze SP te kunnen gebruiken dient het plan van aanpak te bestaan.', 16, 1)
+        RAISERROR ('Om deze SP te kunnen gebruiken dient het desbetreffende periodieke beoordeling te bestaan.', 16, 1)
       END
 
     IF @TranCounter = 0

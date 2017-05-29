@@ -65,12 +65,32 @@ try {
     $meldingStatus = false;
     $melding = "Plan van aanpak niet opgeslagen. Foutmelding: " . $e->getMessage();
 }
+
+
+try {
+    $query = "SELECT *
+              FROM PERIODIEKE_BEOORDELING
+              WHERE PROJECTNUMMER = :PROJECTNUMMER
+              AND RAPPORTNUMMER = :RAPPORTNUMMER
+              AND REGELNUMMER = :REGELNUMMER";
+    $stmt = $dbh->prepare($query);
+    $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+    $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+    $stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
+
+    $stmt->execute();
+    $periodieke_beoordelingen = $stmt->fetchAll();
+
+} catch (PDOException $e) {
+    $meldingStatus = false;
+    $melding = "Periodieke beoordelingen niet kunnen ophalen. Foutmelding: " . $e->getMessage();
+}
 ?>
 
 <div class="container" xmlns="http://www.w3.org/1999/html">
     <div class="row">
         <div class="page-header">
-            <h1>Plan van Aanpak toevoegen</h1>
+            <h1>Plan van Aanpak wijzigen </h1>
         </div>
     </div>
     <?php include_once('include/melding.php') ?>
@@ -93,8 +113,10 @@ try {
                        value=" <?= $_GET['regelnummer'] ?>">
             </div>
         </div>
+        <hr>
+
     </div>
-    <hr>
+
     <div class="row">
         <form action="u_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?> "
               method="post">
@@ -153,11 +175,58 @@ try {
                     } ?></textarea>
             </div>
 
-            <button class="btn btn-block btn-primary" name="submit" type="submit">Updaten</button>
+            <button class="btn btn-block btn-primary" name="submit" type="submit">Wijzigen</button>
         </form>
 
     </div>
+    <hr>
+    <h3>Periodieke beoordelingen</h3>
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-block btn-primary"
+               href="c_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?>">Periodieke
+                beoordeling toevoegen</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
 
+            <br>
+
+            <table id="table" class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Datum Beoordeling</th>
+                    <th>Inspectie uitgevoerd</th>
+                    <th>Opmerkingen s.v.z.</th>
+                    <th>Stand van zaken</th>
+                    <th>Score</th>
+                    <th>Wijzigen</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($periodieke_beoordelingen as &$value) { ?>
+                    <tr>
+                        <td><?PHP echo strftime('%Y-%m-%d', strtotime($value['DATUM_LAATSTE_BEOORDELING'])); ?></td>
+                        <td><?= $value['INSPECTIE_IS_DE_ACTIE_UITGEVOERD'] ?></td>
+                        <td><?= $value['OPMERKING_STAND_VAN_ZAKEN'] ?></td>
+                        <td><?= $value['STAND_VAN_ZAKEN'] ?></td>
+                        <td><?= $value['SCORE'] ?></td>
+                        <td>
+                            <div class="">
+                                <a id="periodiekebutton"
+                                   href="u_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>&datum=<?php echo strftime('%Y-%m-%d', strtotime($value['DATUM_LAATSTE_BEOORDELING'])); ?>"
+                                   class="btn btn-block btn-primary">Wijzigen</a>
+                            </div>
+
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <br>
