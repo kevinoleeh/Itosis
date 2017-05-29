@@ -175,7 +175,7 @@ try {
                     } ?></textarea>
             </div>
 
-            <button class="btn btn-block btn-primary" name="submit" type="submit">Updaten</button>
+            <button class="btn btn-block btn-primary" name="submit" type="submit">Wijzigen</button>
         </form>
 
     </div>

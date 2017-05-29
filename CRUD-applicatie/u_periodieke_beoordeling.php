@@ -106,10 +106,10 @@ try {
             <label for="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">Is de actie uitgevoerd?</label>
             <div class="btn-group" data-toggle="buttons">
                 <label class="btn btn-success">
-                    <input type="radio" name="INSPECTIE_IS_DE_ACTIE_UITGEVOERD" value="1" checked> Ja
+                    <input type="radio" name="INSPECTIE_IS_DE_ACTIE_UITGEVOERD" value="1"> Ja
                 </label>
                 <label class="btn btn-danger">
-                    <input type="radio" name="INSPECTIE_IS_DE_ACTIE_UITGEVOERD" value="0"> Nee
+                    <input type="radio" name="INSPECTIE_IS_DE_ACTIE_UITGEVOERD" value="0" checked> Nee
                 </label>
             </div>
 
