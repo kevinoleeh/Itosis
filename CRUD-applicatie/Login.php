@@ -6,8 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $hostname = "(local)\SQLEXPRESS";
         $dbname = "Euratex";
-        $username = ""; // Vervangen met master wachtwoord
-        $password = ""; // Vervangen met master wachtwoord
+        $username = "sa";
+        $password = "P@ssw0rd";
         $dbh = new PDO("sqlsrv:Server=$hostname;Database=$dbname", "$username", "$password");
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
