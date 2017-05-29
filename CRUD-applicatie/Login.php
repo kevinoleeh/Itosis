@@ -1,8 +1,8 @@
+<?php include_once('include/header.php') ?>
+
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    echo 'hallo';
-
     session_start();
 
     try {
@@ -27,12 +27,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute();
     $result = $stmt->fetch();
 
+    echo $result[0];
+
     if($result[0] == 1) {
+        echo 'Correct';
         $_SESSION['gebruikersnaam'] = $_POST['gebruikersnaam'];
         $_SESSION['wachtwoord'] = $_POST['wachtwoord'];
 
         header('Location: '. 'index.php');
     } else {
+        echo 'Incorrect';
         $meldingStatus = false;
         $melding = "Gebruikersnaam en/of wachtwoord incorrect.";
     }
