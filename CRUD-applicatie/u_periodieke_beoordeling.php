@@ -2,11 +2,11 @@
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $query = "EXEC dbo.UPDATE_PERIODIEKE_BEOORDELING
+    $query = "EXEC dbo.SP_UPDATE_PERIODIEKE_BEOORDELING
                  :PROJECTNUMMER,
                  :RAPPORTNUMMER,
                  :REGELNUMMER,
-                 :DATUM_LAATSTE_BEOORDELING,
+                 :DATUM_BEOORDELING,
                  :INSPECTIE_IS_DE_ACTIE_UITGEVOERD,
                  :OPMERKING_STAND_VAN_ZAKEN,
                  :STAND_VAN_ZAKEN,
@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
     $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
     $stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
-    $stmt->bindParam(':DATUM_LAATSTE_BEOORDELING', $_GET['datum']);
+    $stmt->bindParam(':DATUM_BEOORDELING', $_GET['datum']);
     $stmt->bindParam(':INSPECTIE_IS_DE_ACTIE_UITGEVOERD', $_POST['INSPECTIE_IS_DE_ACTIE_UITGEVOERD']);
     $stmt->bindParam(':OPMERKING_STAND_VAN_ZAKEN', $_POST['OPMERKING_STAND_VAN_ZAKEN']);
     $stmt->bindParam(':STAND_VAN_ZAKEN', $_POST['STAND_VAN_ZAKEN']);
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $melding = "Periodieke beoordeling niet opgeslagen. Foutmelding: " . $e->getMessage();
 
 
-        $result['DATUM_LAATSTE_BEOORDELING'] = $_POST['DATUM_LAATSTE_BEOORDELING'];
+        $result['DATUM_BEOORDELING'] = $_POST['DATUM_BEOORDELING'];
         $result['INSPECTIE_IS_DE_ACTIE_UITGEVOERD'] = $_POST['INSPECTIE_IS_DE_ACTIE_UITGEVOERD'];
         $result['OPMERKING_STAND_VAN_ZAKEN'] = $_POST['OPMERKING_STAND_VAN_ZAKEN'];
         $result['STAND_VAN_ZAKEN'] = $_POST['STAND_VAN_ZAKEN'];
@@ -45,7 +45,7 @@ try {
               WHERE PROJECTNUMMER = :PROJECTNUMMER
               AND RAPPORTNUMMER = :RAPPORTNUMMER
               AND REGELNUMMER = :REGELNUMMER
-              AND DATUM_LAATSTE_BEOORDELING = '" . $_GET['datum'] . "'";
+              AND DATUM_BEOORDELING = '" . $_GET['datum'] . "'";
     $stmt = $dbh->prepare($query);
     $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
     $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
@@ -94,13 +94,13 @@ try {
               method="post">
             <h3>Periodieke beoordeling toevoegen</h3>
             <div class="form-group">
-                <label for="DATUM_LAATSTE_BEOORDELING">Datum laatste beoordeling</label>
-                <input type="date" class="form-control" name="DATUM_LAATSTE_BEOORDELING"
-                       value="<?php if (isset($result['DATUM_LAATSTE_BEOORDELING'])) {
-                           echo strftime('%Y-%m-%d', strtotime($result['DATUM_LAATSTE_BEOORDELING']));
+                <label for="DATUM_BEOORDELING">Datum laatste beoordeling</label>
+                <input type="date" class="form-control" name="DATUM_BEOORDELING"
+                       value="<?php if (isset($result['DATUM_BEOORDELING'])) {
+                           echo strftime('%Y-%m-%d', strtotime($result['DATUM_BEOORDELING']));
                        } ?>">
             </div>
-            <?= $result['DATUM_LAATSTE_BEOORDELING'] ?>
+            <?= $result['DATUM_BEOORDELING'] ?>
 
 
             <label for="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">Is de actie uitgevoerd?</label>
