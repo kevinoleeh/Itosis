@@ -2,7 +2,7 @@
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $query = "EXEC dbo.UPDATE_PERIODIEKE_BEOORDELING
+    $query = "EXEC dbo.SP_UPDATE_PERIODIEKE_BEOORDELING
                  :PROJECTNUMMER,
                  :RAPPORTNUMMER,
                  :REGELNUMMER,

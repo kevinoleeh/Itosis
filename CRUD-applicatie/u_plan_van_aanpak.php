@@ -208,7 +208,7 @@ try {
                 <tbody>
                 <?php foreach ($periodieke_beoordelingen as &$value) { ?>
                     <tr>
-                        <td><?PHP echo strftime('%Y-%m-%d', strtotime($value['DATUM_BEOORDELING'])); ?></td>
+                        <td><?PHP echo strftime('%d-%m-%Y', strtotime($value['DATUM_BEOORDELING'])); ?></td>
                         <td><?= $value['INSPECTIE_IS_DE_ACTIE_UITGEVOERD'] ?></td>
                         <td><?= $value['OPMERKING_STAND_VAN_ZAKEN'] ?></td>
                         <td><?= $value['STAND_VAN_ZAKEN'] ?></td>
