@@ -1,18 +1,60 @@
-<?php include_once('include/header.php'); ?>
+<?php include_once('include/header.php') ?>
+
+<?php
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        $hostname = "(local)\SQLEXPRESS";
+        $dbname = "Euratex";
+        $username = ""; // Vervangen met master wachtwoord
+        $password = ""; // Vervangen met master wachtwoord
+        $dbh = new PDO("sqlsrv:Server=$hostname;Database=$dbname", "$username", "$password");
+        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        echo "Er kon geen verbinding met de database gemaakt worden.";
+        exit;
+    }
+
+    $query = 'SELECT PWDCOMPARE(:WACHTWOORD, password_hash) 
+              FROM sys.sql_logins 
+              WHERE name = :GEBRUIKERSNAAM';
+    $stmt = $dbh->prepare($query);
+    $stmt->bindParam(':GEBRUIKERSNAAM', $_POST['gebruikersnaam']);
+    $stmt->bindParam(':WACHTWOORD', $_POST['wachtwoord']);
+    $stmt->execute();
+    $result = $stmt->fetch();
+
+    if($result[0] == 1) {
+        $_SESSION['gebruikersnaam'] = $_POST['gebruikersnaam'];
+        $_SESSION['wachtwoord'] = $_POST['wachtwoord'];
+
+        header('Location: '. 'index.php');
+    } else {
+        session_destroy();
+
+        $meldingStatus = false;
+        $melding = "Gebruikersnaam en/of wachtwoord incorrect.";
+    }
+}
+
+?>
 
 <div class="container">
-    <form class="form-signin" _lpchecked="1">
-        <center><h2 class="form-signin-heading">Log alstublieft in</h2></center>
-        <label for="inputEmail" class="sr-only">Gebruikersnaam</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%;" autocomplete="off">
-        <label for="inputPassword" class="sr-only">Wachtwoord</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAAAAXNSR0IArs4c6QAAAPhJREFUOBHlU70KgzAQPlMhEvoQTg6OPoOjT+JWOnRqkUKHgqWP4OQbOPokTk6OTkVULNSLVc62oJmbIdzd95NcuGjX2/3YVI/Ts+t0WLE2ut5xsQ0O+90F6UxFjAI8qNcEGONia08e6MNONYwCS7EQAizLmtGUDEzTBNd1fxsYhjEBnHPQNG3KKTYV34F8ec/zwHEciOMYyrIE3/ehKAqIoggo9inGXKmFXwbyBkmSQJqmUNe15IRhCG3byphitm1/eUzDM4qR0TTNjEixGdAnSi3keS5vSk2UDKqqgizLqB4YzvassiKhGtZ/jDMtLOnHz7TE+yf8BaDZXA509yeBAAAAAElFTkSuQmCC&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;" autocomplete="off">
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" value="remember-me"> Herinner mij
-            </label>
+    <div class="row">
+        <div class="col-lg-offset-3 col-lg-6">
+            <?php include_once('include/melding.php') ?>
+            <form class="form-group" method="post">
+                <h2>Login</h2>
+                <label for="gebruikersnaam">Gebruikersnaam</label>
+                <input type="text" id="gebruikersnaam" name="gebruikersnaam" class="form-control" placeholder="Gebruikersnaam" required="">
+                <br>
+                <label for="wachtwoord">Wachtwoord</label>
+                <input type="password" id="wachtwoord" name="wachtwoord" class="form-control" placeholder="Wachtwoord" required="">
+                <br>
+                <button class="btn btn-primary btn-block" type="submit">Inloggen</button>
+            </form>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
-    </form>
+    </div>
 </div>
 <?php include_once('include/footer.php'); ?>
