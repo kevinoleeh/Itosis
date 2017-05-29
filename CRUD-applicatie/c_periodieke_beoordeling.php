@@ -78,9 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label for="DATUM_LAATSTE_BEOORDELING">Datum laatste beoordeling</label>
                     <input type="date" class="form-control" name="DATUM_LAATSTE_BEOORDELING"
-                           value="<?php if (isset($result['DATUM_LAATSTE_BEOORDELING'])) {
-                               echo strftime('%Y-%m-%d', strtotime($result['DATUM_LAATSTE_BEOORDELING']));
-                           } ?>">
+                           value="<?php echo date("Y-m-d"); ?>">
                 </div>
             </div>
 
