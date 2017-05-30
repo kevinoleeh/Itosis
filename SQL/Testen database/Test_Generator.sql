@@ -18,55 +18,32 @@ CREATE PROCEDURE _begin AS BEGIN
 		--TESTDATA
 		BEGIN TRY
 			DECLARE @tabel VARCHAR(255) = 'BEDRIJF'
-
-					--Bedrijf
 			INSERT INTO BEDRIJF
 				VALUES('HAN','Arnhem'),
 				('EURATEX','Duiven');
-
-						--Project
 			SET @tabel = 'PROJECT'
 			INSERT INTO PROJECT
 				VALUES('EURATEX','Duiven','Test'),
 				('EURATEX', 'Duiven', 'Test2')
 			DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
-
-						--Rapport
 			SET @tabel = 'RAPPORT'
 			INSERT INTO RAPPORT
 				VALUES (@projectnummer, 1, 'Organisatie'),
 				(@projectnummer, 2, 'Visuele beoordeling'),
 					(@projectnummer, 3, 'Organisatie')
-
-							--Risicoregel
 			SET @tabel = 'RISICOREGEL'
 			INSERT INTO RISICOREGEL(PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, ASPECTNAAM, EFFECTNAAM, ARBO_ONDERWERP, RISICO_OMSCHRIJVING_OF_BEVINDING, HUIDIGE_BEHEERSMAATREGEL, VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL, VOOR_ERNST_VAN_HET_ONGEVAL, VOOR_KANS_OP_BLOOTSTELLING, VOOR_KANS_OP_WAARSCHIJNLIJKHEID, AFWIJKENDE_ACTIE_TER_UITVOERING, RESTRISICO, NA_ERNST_VAN_ONGEVAL, NA_KANS_OP_BLOOTSTELLING, NA_KANS_OP_WAARSCHIJNLIJKHEID)
 				VALUES(@projectnummer, 1, 1, 'Beverages', 'Add. Words', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00, 'pars transit.', 'novum', 15.00, 1.00, 10.00),
 					(@projectnummer, 2, 1, 'Beverages', 'Add. Words', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00, 'pars transit.', 'novum', 15.00, 1.00, 10.00)
-
-					--Visuele_beoordeling
-			SET @tabel = 'VISUELE_BEOORDELING'
 			INSERT INTO VISUELE_BEOORDELING
 				VALUES(@projectnummer, 2, 1, '', 'test', '')
-
-				--Plan_van_aanpak
-				SET @tabel = 'PLAN_VAN_AANPAK'
-				INSERT INTO PLAN_VAN_AANPAK
-				VALUES(@projectnummer, 2, 1, '', 'test', '')
-
-				--Aspect
 			SET @tabel = 'ASPECT'
 			INSERT INTO ASPECT VALUES('Test aspect')
-
-			--Effect
 			SET @tabel = 'EFFECT'
 			INSERT INTO EFFECT VALUES('Test effect')
 			INSERT INTO EFFECT VALUES('Test effect 2')
-
-			--Aspect_effect
 			SET @tabel = 'ASPECT_EFFECT'
 			INSERT INTO ASPECT_EFFECT VALUES('Test aspect', 'Test effect')
-
 		END TRY
 		BEGIN CATCH
 			DECLARE
