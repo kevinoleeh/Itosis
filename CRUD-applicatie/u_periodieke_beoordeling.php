@@ -92,18 +92,17 @@ try {
     <div class="row">
         <form action="u_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?>&datum=<?= $_GET['datum'] ?> "
               method="post">
-            <h3>Periodieke beoordeling toevoegen</h3>
+
             <div class="form-group">
-                <label for="DATUM_BEOORDELING">Datum laatste beoordeling</label>
+                <label for="DATUM_BEOORDELING">Datum beoordeling</label>
                 <input type="date" class="form-control" name="DATUM_BEOORDELING"
                        value="<?php if (isset($result['DATUM_BEOORDELING'])) {
                            echo strftime('%Y-%m-%d', strtotime($result['DATUM_BEOORDELING']));
                        } ?>">
             </div>
-            <?= $result['DATUM_BEOORDELING'] ?>
 
 
-            <label for="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">Is de actie uitgevoerd?</label>
+            <label for="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">Is de actie uitgevoerd?</label><br>
             <div class="btn-group" data-toggle="buttons">
                 <label class="btn btn-success">
                     <input type="radio" name="INSPECTIE_IS_DE_ACTIE_UITGEVOERD" value="1"> Ja

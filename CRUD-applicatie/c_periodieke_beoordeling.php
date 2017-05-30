@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h3>Periodieke beoordeling toevoegen</h3>
             <div class="form-group">
                 <div class="form-group">
-                    <label for="DATUM_BEOORDELING">Datum laatste beoordeling</label>
+                    <label for="DATUM_BEOORDELING">Datum beoordeling</label>
                     <input type="date" class="form-control" name="DATUM_BEOORDELING"
                            value="<?php echo date("Y-m-d"); ?>">
                 </div>
