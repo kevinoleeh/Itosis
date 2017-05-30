@@ -1,17 +1,8 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2014                    */
-/* Created on:     29-5-2017 12:27:45                           */
+/* Created on:     30-5-2017 10:00:30                           */
 /*==============================================================*/
 
-
-use master
-
-if db_id('Euratex') is not null begin
-	drop database Euratex
-end
-
-create database Euratex
-use Euratex
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
@@ -36,9 +27,9 @@ go
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('MACHINE_VEILIGHEID') and o.name = 'FK_MACHINE__IS_EEN_VI_VISUELE_')
-alter table MACHINE_VEILIGHEID
-   drop constraint FK_MACHINE__IS_EEN_VI_VISUELE_
+   where r.fkeyid = object_id('MACHINEVEILIGHEID') and o.name = 'FK_MACHINEV_IS_EEN_VI_VISUELE_')
+alter table MACHINEVEILIGHEID
+   drop constraint FK_MACHINEV_IS_EEN_VI_VISUELE_
 go
 
 if exists (select 1
@@ -161,9 +152,9 @@ go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('MACHINE_VEILIGHEID')
+           where  id = object_id('MACHINEVEILIGHEID')
             and   type = 'U')
-   drop table MACHINE_VEILIGHEID
+   drop table MACHINEVEILIGHEID
 go
 
 if exists (select 1
@@ -718,7 +709,7 @@ go
 /* Domain: OPMERKING_STAND_VAN_ZAKEN                            */
 /*==============================================================*/
 create type OPMERKING_STAND_VAN_ZAKEN
-   from Varchar(max)
+   from text
 go
 
 /*==============================================================*/
@@ -760,7 +751,7 @@ go
 /* Domain: PROJECTOMSCHRIJVING                                  */
 /*==============================================================*/
 create type PROJECTOMSCHRIJVING
-   from Varchar(max)
+   from text
 go
 
 /*==============================================================*/
@@ -788,14 +779,14 @@ go
 /* Domain: RESTRISICO                                           */
 /*==============================================================*/
 create type RESTRISICO
-   from Varchar(max)
+   from text
 go
 
 /*==============================================================*/
 /* Domain: RISICO_OMSCHRIJVING_OF_BEVINDING                     */
 /*==============================================================*/
 create type RISICO_OMSCHRIJVING_OF_BEVINDING
-   from Varchar(max)
+   from text
 go
 
 /*==============================================================*/
@@ -844,7 +835,7 @@ go
 /* Domain: VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL          */
 /*==============================================================*/
 create type VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL
-   from Varchar(max)
+   from text
 go
 
 /*==============================================================*/
@@ -893,7 +884,7 @@ go
 /* Domain: WERKINSTRUCTIE_PROCEDURE                             */
 /*==============================================================*/
 create type WERKINSTRUCTIE_PROCEDURE
-   from Varchar(max)
+   from text
 go
 
 /*==============================================================*/
@@ -902,6 +893,7 @@ go
 create table AFBEELDING (
    URL                  URL                  not null,
    PROJECTNUMMER        PROJECTNUMMER        not null,
+   RAPPORT_TYPE         RAPPORT_TYPE         not null,
    RAPPORTNUMMER        RAPPORTNUMMER        not null,
    REGELNUMMER          REGELNUMMER          not null,
    AFBEELDING_TYPE      AFBEELDING_TYPE      null,
@@ -918,6 +910,7 @@ go
 
 
 create nonclustered index VISUELE_BEOORDELING_FK on AFBEELDING (PROJECTNUMMER ASC,
+  RAPPORT_TYPE ASC,
   RAPPORTNUMMER ASC,
   REGELNUMMER ASC)
 go
@@ -981,25 +974,26 @@ create table EFFECT (
 go
 
 /*==============================================================*/
-/* Table: MACHINE_VEILIGHEID                                    */
+/* Table: MACHINEVEILIGHEID                                     */
 /*==============================================================*/
-create table MACHINE_VEILIGHEID (
+create table MACHINEVEILIGHEID (
    PROJECTNUMMER        PROJECTNUMMER        not null,
+   RAPPORT_TYPE         RAPPORT_TYPE         not null,
    RAPPORTNUMMER        RAPPORTNUMMER        not null,
    REGELNUMMER          REGELNUMMER          not null,
    MACHINE              MACHINE              not null,
-   MODEL___TYPE         MODEL___TYPE         not null,
+   MODEL_TYPE           MODEL___TYPE         not null,
    SERIENUMMER          SERIENUMMER          not null,
    LEVERANCIER          LEVERANCIER          not null,
    CE_MARKERING         CE_MARKERING         not null,
    CE_DOCUCHECK         CE_DOCUCHECK         not null,
    TRANSPORT            KEUZE                not null,
    MONTAGE              KEUZE                not null,
-   IN_BEDRIJFNAME       KEUZE                not null,
+   IN_BEDRIJFSNAME      KEUZE                not null,
    TIJDENS_PRODUCTIE    KEUZE                not null,
    TIJDENS_ONDERHOUD    KEUZE                not null,
    TIJDENS_STORING      KEUZE                not null,
-   TIJDENS_REININGEN    KEUZE                not null,
+   TIJDENS_REINIGEN     KEUZE                not null,
    TIJDENS_AFSTELLEN    KEUZE                not null,
    DEMONTAGE            KEUZE                not null,
    FREQUENTIE           FREQUENTIE           not null,
@@ -1007,7 +1001,13 @@ create table MACHINE_VEILIGHEID (
    MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE not null,
    CI                   CI                   not null,
    ERNST_VAN_DE_GEVOLGEN ERNST_VAN_DE_GEVOLGEN not null,
-   constraint PK_MACHINE_VEILIGHEID primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+   PROCES               PROCES               null 
+      constraint CKC_PROCES_MACHINEV check (PROCES is null or (PROCES >= '1')),
+   MACHINE_ONDERDEEL_   MACHINE_ONDERDEEL    null 
+      constraint CKC_MACHINE_ONDERDEEL_MACHINEV check (MACHINE_ONDERDEEL_ is null or (MACHINE_ONDERDEEL_ >= '1')),
+   AFDELING             AFDELING             null 
+      constraint CKC_AFDELING_MACHINEV check (AFDELING is null or (AFDELING >= '1')),
+   constraint PK_MACHINEVEILIGHEID primary key (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER)
 )
 go
 
@@ -1016,14 +1016,15 @@ go
 /*==============================================================*/
 create table PERIODIEKE_BEOORDELING (
    PROJECTNUMMER        PROJECTNUMMER        not null,
+   RAPPORT_TYPE         RAPPORT_TYPE         not null,
    RAPPORTNUMMER        RAPPORTNUMMER        not null,
    REGELNUMMER          REGELNUMMER          not null,
-   DATUM_BEOORDELING    DATUM                not null,
+   DATUM_LAATSTE_BEOORDELING DATUM                not null,
    INSPECTIE_IS_DE_ACTIE_UITGEVOERD INSPECTIE_IS_DE_ACTIE_UITGEVOERD not null,
    OPMERKING_STAND_VAN_ZAKEN OPMERKING_STAND_VAN_ZAKEN null,
    STAND_VAN_ZAKEN      STAND_VAN_ZAKEN      null,
    SCORE                SCORE                null,
-   constraint PK_PERIODIEKE_BEOORDELING primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, DATUM_BEOORDELING)
+   constraint PK_PERIODIEKE_BEOORDELING primary key (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER, DATUM_LAATSTE_BEOORDELING)
 )
 go
 
@@ -1035,6 +1036,7 @@ go
 
 
 create nonclustered index PLAN_VAN_AANPAK_PERIODIEKE_BEOORDELING_FK on PERIODIEKE_BEOORDELING (PROJECTNUMMER ASC,
+  RAPPORT_TYPE ASC,
   RAPPORTNUMMER ASC,
   REGELNUMMER ASC)
 go
@@ -1044,6 +1046,7 @@ go
 /*==============================================================*/
 create table PLAN_VAN_AANPAK (
    PROJECTNUMMER        PROJECTNUMMER        not null,
+   RAPPORT_TYPE         RAPPORT_TYPE         not null,
    RAPPORTNUMMER        RAPPORTNUMMER        not null,
    REGELNUMMER          REGELNUMMER          not null,
    UITGEVOERD_DOOR      UITGEVOERD_DOOR      not null,
@@ -1054,7 +1057,7 @@ create table PLAN_VAN_AANPAK (
    WERKINSTRUCTIE_PROCEDURE WERKINSTRUCTIE_PROCEDURE null,
    TRA                  TRA                  null,
    CONTRACT_LIJST_      CONTROLELIJST        null,
-   constraint PK_PLAN_VAN_AANPAK primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+   constraint PK_PLAN_VAN_AANPAK primary key (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER)
 )
 go
 
@@ -1062,7 +1065,7 @@ go
 /* Table: PROJECT                                               */
 /*==============================================================*/
 create table PROJECT (
-   PROJECTNUMMER        PROJECTNUMMER        identity,
+   PROJECTNUMMER        PROJECTNUMMER        not null,
    BEDRIJFSNAAM         BEDRIJFSNAAM         not null,
    LOCATIE              LOCATIE              not null,
    PROJECTOMSCHRIJVING  PROJECTOMSCHRIJVING  not null,
@@ -1086,9 +1089,9 @@ go
 /*==============================================================*/
 create table RAPPORT (
    PROJECTNUMMER        PROJECTNUMMER        not null,
-   RAPPORTNUMMER        RAPPORTNUMMER        not null,
    RAPPORT_TYPE         RAPPORT_TYPE         not null,
-   constraint PK_RAPPORT primary key (PROJECTNUMMER, RAPPORTNUMMER)
+   RAPPORTNUMMER        RAPPORTNUMMER        not null,
+   constraint PK_RAPPORT primary key (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER)
 )
 go
 
@@ -1126,6 +1129,7 @@ go
 /*==============================================================*/
 create table RISICOREGEL (
    PROJECTNUMMER        PROJECTNUMMER        not null,
+   RAPPORT_TYPE         RAPPORT_TYPE         not null,
    RAPPORTNUMMER        RAPPORTNUMMER        not null,
    REGELNUMMER          REGELNUMMER          not null,
    ASPECTNAAM           ASPECTNAAM           not null,
@@ -1134,11 +1138,11 @@ create table RISICOREGEL (
    RISICO_OMSCHRIJVING_OF_BEVINDING RISICO_OMSCHRIJVING_OF_BEVINDING not null,
    HUIDIGE_BEHEERSMAATREGEL HUIDIGE_BEHEERSMAATREGEL null,
    VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL not null,
-   VOOR_ERNST_VAN_HET_ONGEVAL VOOR_ERNST_VAN_ONGEVAL not null
-      constraint CKC_VOOR_ERNST_VAN_HE_RISICORE check (VOOR_ERNST_VAN_HET_ONGEVAL in (100,40,15,7,3,1)),
-   VOOR_KANS_OP_BLOOTSTELLING VOOR_KANS_OP_BLOOTSTELLING not null
+   VOOR_ERNST_VAN_ONGEVAL VOOR_ERNST_VAN_ONGEVAL not null 
+      constraint CKC_VOOR_ERNST_VAN_ON_RISICORE check (VOOR_ERNST_VAN_ONGEVAL in (100,40,15,7,3,1)),
+   VOOR_KANS_OP_BLOOTSTELLING VOOR_KANS_OP_BLOOTSTELLING not null 
       constraint CKC_VOOR_KANS_OP_BLOO_RISICORE check (VOOR_KANS_OP_BLOOTSTELLING in (10,6,3,2,1,0,5)),
-   VOOR_KANS_OP_WAARSCHIJNLIJKHEID VOOR_KANS_OP_WAARSCHIJNLIJKHEID not null
+   VOOR_KANS_OP_WAARSCHIJNLIJKHEID VOOR_KANS_OP_WAARSCHIJNLIJKHEID not null 
       constraint CKC_VOOR_KANS_OP_WAAR_RISICORE check (VOOR_KANS_OP_WAARSCHIJNLIJKHEID in (10,6,3,1,0,5,0,2)),
    VOOR_RISICO          VOOR_RISICO          not null,
    VOOR_PRIORITEIT      VOOR_PRIORITEIT      not null,
@@ -1149,7 +1153,7 @@ create table RISICOREGEL (
    NA_KANS_OP_WAARSCHIJNLIJKHEID NA_KANS_OP_WAARSCHIJNLIJKHEID not null,
    NA_RISICO            NA_RISICO            not null,
    NA_PRIORITEIT        NA_PRIORITEIT        not null,
-   constraint PK_RISICOREGEL primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+   constraint PK_RISICOREGEL primary key (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER)
 )
 go
 
@@ -1161,6 +1165,7 @@ go
 
 
 create nonclustered index RAPPORT_RISICOREGEL_FK on RISICOREGEL (PROJECTNUMMER ASC,
+  RAPPORT_TYPE ASC,
   RAPPORTNUMMER ASC)
 go
 
@@ -1180,21 +1185,22 @@ go
 /*==============================================================*/
 create table VISUELE_BEOORDELING (
    PROJECTNUMMER        PROJECTNUMMER        not null,
+   RAPPORT_TYPE         RAPPORT_TYPE         not null,
    RAPPORTNUMMER        RAPPORTNUMMER        not null,
    REGELNUMMER          REGELNUMMER          not null,
-   PROCES               PROCES               null
+   PROCES               PROCES               null 
       constraint CKC_PROCES_VISUELE_ check (PROCES is null or (PROCES >= '1')),
-   MACHINE_ONDERDEEL_   MACHINE_ONDERDEEL    null
+   MACHINE_ONDERDEEL_   MACHINE_ONDERDEEL    null 
       constraint CKC_MACHINE_ONDERDEEL_VISUELE_ check (MACHINE_ONDERDEEL_ is null or (MACHINE_ONDERDEEL_ >= '1')),
-   AFDELING             AFDELING             null
+   AFDELING             AFDELING             null 
       constraint CKC_AFDELING_VISUELE_ check (AFDELING is null or (AFDELING >= '1')),
-   constraint PK_VISUELE_BEOORDELING primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+   constraint PK_VISUELE_BEOORDELING primary key (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER)
 )
 go
 
 alter table AFBEELDING
-   add constraint FK_AFBEELDI_VISUELE_B_VISUELE_ foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
-      references VISUELE_BEOORDELING (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+   add constraint FK_AFBEELDI_VISUELE_B_VISUELE_ foreign key (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER)
+      references VISUELE_BEOORDELING (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER)
 go
 
 alter table ASPECT_EFFECT
@@ -1207,19 +1213,19 @@ alter table ASPECT_EFFECT
       references EFFECT (EFFECTNAAM)
 go
 
-alter table MACHINE_VEILIGHEID
-   add constraint FK_MACHINE__IS_EEN_VI_VISUELE_ foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
-      references VISUELE_BEOORDELING (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+alter table MACHINEVEILIGHEID
+   add constraint FK_MACHINEV_IS_EEN_VI_VISUELE_ foreign key (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER)
+      references VISUELE_BEOORDELING (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER)
 go
 
 alter table PERIODIEKE_BEOORDELING
-   add constraint FK_PERIODIE_PLAN_VAN__PLAN_VAN foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
-      references PLAN_VAN_AANPAK (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+   add constraint FK_PERIODIE_PLAN_VAN__PLAN_VAN foreign key (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER)
+      references PLAN_VAN_AANPAK (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER)
 go
 
 alter table PLAN_VAN_AANPAK
-   add constraint FK_PLAN_VAN_RISICOREG_RISICORE foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
-      references RISICOREGEL (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+   add constraint FK_PLAN_VAN_RISICOREG_RISICORE foreign key (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER)
+      references RISICOREGEL (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER)
 go
 
 alter table PROJECT
@@ -1238,8 +1244,8 @@ alter table RAPPORT
 go
 
 alter table RISICOREGEL
-   add constraint FK_RISICORE_RAPPORT_R_RAPPORT foreign key (PROJECTNUMMER, RAPPORTNUMMER)
-      references RAPPORT (PROJECTNUMMER, RAPPORTNUMMER)
+   add constraint FK_RISICORE_RAPPORT_R_RAPPORT foreign key (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER)
+      references RAPPORT (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER)
 go
 
 alter table RISICOREGEL
@@ -1248,8 +1254,7 @@ alter table RISICOREGEL
 go
 
 alter table VISUELE_BEOORDELING
-   add constraint FK_VISUELE__IS_EEN_RI_RISICORE foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
-      references RISICOREGEL (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+   add constraint FK_VISUELE__IS_EEN_RI_RISICORE foreign key (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER)
+      references RISICOREGEL (PROJECTNUMMER, RAPPORT_TYPE, RAPPORTNUMMER, REGELNUMMER)
 go
 
-use master
