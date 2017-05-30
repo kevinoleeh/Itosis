@@ -128,16 +128,16 @@ if ($type['RAPPORT_TYPE'] === 'Organisatie') {
         </div>
 
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <a id="regelopenenbutton" class="btn btn-block btn-primary">Regel openen</a>
             </div>
-            <div class="col-md-5">
-                <a href="c_<?= $url ?>?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>"
+            <div class="col-md-4">
+                <a href="risicoregel.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>"
                    class="btn btn-block btn-primary">Regel toevoegen</a>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <form action ="rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" method ="post">
-                <input type="submit" class="btn btn-block btn-primary" value="Excel export">
+                <input type="submit" class="btn btn-block btn-default" value="Regels exporteren naar Excel">
               </div>
 
             <div class="col-md-12">
