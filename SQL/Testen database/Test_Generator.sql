@@ -37,6 +37,10 @@ CREATE PROCEDURE _begin AS BEGIN
 					(@projectnummer, 2, 1, 'Beverages', 'Add. Words', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00, 'pars transit.', 'novum', 15.00, 1.00, 10.00)
 			INSERT INTO VISUELE_BEOORDELING
 				VALUES(@projectnummer, 2, 1, '', 'test', '')
+								--Plan_van_aanpak
+				SET @tabel = 'PLAN_VAN_AANPAK'
+				INSERT INTO PLAN_VAN_AANPAK
+				VALUES(@projectnummer, 1, 1, 'Testpersoon', 'Testpersoon', '2017-12-12', 'PBMTEST', 'Voorlichting test', 'Werkinstructie voorbeeld test', 'Tra testje', 'de test die het testen heeft willen testen test de test die getest is om te testen of de test getest kan worden')
 			SET @tabel = 'ASPECT'
 			INSERT INTO ASPECT VALUES('Test aspect')
 			SET @tabel = 'EFFECT'
@@ -83,30 +87,43 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 	BEGIN TRY
 		DECLARE @tabel VARCHAR(255) = 'VISUELE BEOORDELING'
 		DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING LIKE 'Test')
+
 		DELETE FROM VISUELE_BEOORDELING
 		WHERE PROJECTNUMMER = @projectnummer
+
+
+		SET @tabel = 'PLAN_VAN_AANPAK'
+		DELETE FROM PLAN_VAN_AANPAK
+		WHERE PROJECTNUMMER = @projectnummer AND RAPPORTNUMMER = 1 AND REGELNUMMER = 1
+
 		SET @tabel = 'RISICOREGEL'
 		DELETE FROM RISICOREGEL
 		WHERE PROJECTNUMMER = @projectnummer
+
 		SET @tabel = 'RAPPORT'
 		DELETE FROM RAPPORT
 		WHERE PROJECTNUMMER = @projectnummer
+
 		SET @tabel = 'PROJECT'
 		DELETE FROM PROJECT
 		WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven'
+
 		SET @tabel = 'BEDRIJF'
 		DELETE FROM BEDRIJF
 		WHERE BEDRIJFSNAAM = 'HAN' AND LOCATIE = 'Arnhem';
 		DELETE FROM BEDRIJF
 		WHERE BEDRIJFSNAAM = 'EURATEX';
+
 		SET @tabel = 'ASPECT_EFFECT'
 		DELETE FROM ASPECT_EFFECT
 		WHERE ASPECTNAAM = 'Test aspect';
+
 		SET @tabel = 'EFFECT'
 		DELETE FROM EFFECT
 		WHERE EFFECTNAAM = 'Test effect';
 		DELETE FROM EFFECT
 		WHERE EFFECTNAAM = 'Test effect 2';
+
 		SET @tabel = 'ASPECT'
 		DELETE FROM ASPECT
 		WHERE ASPECTNAAM = 'Test aspect';
