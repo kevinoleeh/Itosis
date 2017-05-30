@@ -171,7 +171,7 @@ if ($type['RAPPORT_TYPE'] === 'Organisatie') {
                                     <div class="">
                                         <a id="pvabutton"
                                            href="u_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"
-                                           class="btn btn-block btn-primary">PvA wijzigen</a>
+                                           class="btn btn-block btn-primary">Wijzigen</a>
                                     </div>
 
                                     <?php
@@ -180,7 +180,7 @@ if ($type['RAPPORT_TYPE'] === 'Organisatie') {
                                     <div class="">
                                         <a id="pvabutton"
                                            href="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"=
-                                           class="btn btn-block btn-primary">PvA toevoegen</a>
+                                           class="btn btn-block btn-primary">Toevoegen</a>
                                     </div>
                                     <?php
                                 } ?></td>
