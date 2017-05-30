@@ -166,6 +166,14 @@ try {
                 <input type="text" class="form-control" name="VOOR_KANS_OP_WAARSCHIJNLIJKHEID" value="<?php if(isset($result['VOOR_KANS_OP_WAARSCHIJNLIJKHEID'])) { echo $result['VOOR_KANS_OP_WAARSCHIJNLIJKHEID']; } ?>">
                 <small id="VOOR_KANS_OP_WAARSCHIJNLIJKHEID" class="form-text text-muted">Keuze uit 10, 6, 3, 1, 0.5 of 0.2</small>
             </div>
+            <div class="form-group">
+                <label>Risico</label>
+                <input type="text" class="form-control" value="<?php if(isset($result['VOOR_RISICO'])) { echo $result['VOOR_RISICO']; } ?>" disabled>
+            </div>
+            <div class="form-group">
+                <label>Prioriteit</label>
+                <input type="text" class="form-control" value="<?php if(isset($result['VOOR_PRIORITEIT'])) { echo $result['VOOR_PRIORITEIT']; } ?>" disabled>
+            </div>
             <h3>Risico na maatregelen</h3>
             <h4>Fine en Kinney</h4>
             <div class="form-group">
@@ -182,6 +190,14 @@ try {
                 <label for="NA_KANS_OP_WAARSCHIJNLIJKHEID">Kans op waarschijnlijkheid</label>
                 <input type="text" class="form-control" name="NA_KANS_OP_WAARSCHIJNLIJKHEID" value="<?php if(isset($result['NA_KANS_OP_WAARSCHIJNLIJKHEID'])) { echo $result['NA_KANS_OP_WAARSCHIJNLIJKHEID']; } ?>">
                 <small id="NA_KANS_OP_WAARSCHIJNLIJKHEID" class="form-text text-muted">Keuze uit 10, 6, 3, 1, 0.5 of 0.2</small>
+            </div>
+            <div class="form-group">
+                <label>Risico</label>
+                <input type="text" class="form-control" value="<?php if(isset($result['NA_RISICO'])) { echo $result['NA_RISICO']; } ?>" disabled>
+            </div>
+            <div class="form-group">
+                <label>Prioriteit</label>
+                <input type="text" class="form-control" value="<?php if(isset($result['NA_PRIORITEIT'])) { echo $result['NA_PRIORITEIT']; } ?>" disabled>
             </div>
             <div class="form-group">
                 <label for="AFWIJKENDE_ACTIE_TER_UITVOERING">Afwijkende actie ter uitvoering</label>

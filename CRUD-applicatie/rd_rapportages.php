@@ -1,17 +1,20 @@
 <?php include_once('include/header.php') ?>
 
 <?php
+
 $query = "SELECT *
          FROM RAPPORT
          WHERE PROJECTNUMMER = :PROJECTNUMMER";
 $stmt = $dbh->prepare($query);
 $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+$result = null;
 
 try {
     $stmt->execute();
     $result = $stmt->fetchAll();
 } catch (PDOException $e) {
-    echo "Foutmelding: " . $e->getMessage();
+    $meldingStatus = false;
+    $melding = "Foutmelding: " . $e->getMessage();
 }
 
 ?>
@@ -21,6 +24,8 @@ try {
         <h1>Rapporten</h1>
         <h4>Projectnummer <?= $_GET['projectnummer'] ?></h4>
     </div>
+
+    <?php include_once('include/melding.php') ?>
 
     <div class="row">
         <div class="col-md-12">
@@ -35,15 +40,18 @@ try {
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($result as &$value) { ?>
-                    <tr onClick="document.location.href='rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $value['RAPPORTNUMMER'] ?>';">
-                        <td><?= $value['RAPPORTNUMMER'] ?></td>
-                        <td><?= $value['RAPPORT_TYPE'] ?></td>
-                    </tr>
+                <?php if(count($result) > 0) { ?>
+                    <?php foreach ($result as &$value) { ?>
+                        <tr onClick="document.location.href='rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $value['RAPPORTNUMMER'] ?>';">
+                            <td><?= $value['RAPPORTNUMMER'] ?></td>
+                            <td><?= $value['RAPPORT_TYPE'] ?></td>
+                        </tr>
+                    <?php } ?>
                 <?php } ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
 <?php include_once('include/footer.php');

@@ -72,51 +72,31 @@ $query = "SELECT *
 $stmt = $dbh->prepare($query);
 $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
 $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+$result = null;
 
 try {
     $stmt->execute();
     $result = $stmt->fetchAll();
 } catch (PDOException $e) {
-    echo "Foutmelding: " . $e->getMessage();
+    $meldingStatus = false;
+    $melding = "Foutmelding: " . $e->getMessage();
 }
 
-$query = "SELECT RAPPORT_TYPE
-          FROM RAPPORT
+$query = "SELECT REGELNUMMER
+          FROM PLAN_VAN_AANPAK
           WHERE PROJECTNUMMER = :PROJECTNUMMER
-          AND RAPPORTNUMMER = :RAPPORTNUMMER";
-$stmt = $dbh->prepare($query);
-$stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
-$stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
-
-try {
-    $stmt->execute();
-    $type = $stmt->fetch();
-} catch (PDOException $e) {
-    echo "Foutmelding: " . $e->getMessage();
-}
-
-$query = "SELECT regelnummer
-FROM PLAN_VAN_AANPAK
- WHERE PROJECTNUMMER = :PROJECTNUMMER
           AND RAPPORTNUMMER = :RAPPORTNUMMER ";
 $stmt = $dbh->prepare($query);
 $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
 $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+$regelnummers = null;
 
 try {
     $stmt->execute();
     $regelnummers = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-
 } catch (PDOException $e) {
-    echo "Foutmelding: " . $e->getMessage();
-}
-
-if ($type['RAPPORT_TYPE'] === 'Organisatie') {
-    $url = 'organisatie_risicoregel.php';
-} else if ($type['RAPPORT_TYPE'] === 'Visuele beoordeling') {
-    $url = 'visuele_beoordeling_risicoregel.php';
-} else if ($type['RAPPORT_TYPE'] === 'Machine veiligheid'){
-    $url = 'machine_veiligheid_risicoregel.php';
+    $meldingStatus = false;
+    $melding = "Foutmelding: " . $e->getMessage();
 }
 
 ?>
@@ -126,6 +106,8 @@ if ($type['RAPPORT_TYPE'] === 'Organisatie') {
             <h1>Regels</h1>
             <h4>Projectnummer <?= $_GET['projectnummer'] ?>, rapportnummer <?= $_GET['rapportnummer'] ?></h4>
         </div>
+
+        <?php include_once('include/melding.php') ?>
 
         <div class="row">
             <div class="col-md-4">
@@ -157,34 +139,32 @@ if ($type['RAPPORT_TYPE'] === 'Organisatie') {
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($result as &$value) { ?>
-                        <tr>
-                            <td style="display: none;"><?= $value['REGELNUMMER'] ?></td>
-                            <td><?= $value['REGELNUMMER'] ?></td>
-                            <td><?= $value['ARBO_ONDERWERP'] ?></td>
-                            <td><?= $value['ASPECTNAAM'] ?></td>
-                            <td><?= $value['EFFECTNAAM'] ?></td>
-                            <td><?= $value['VOOR_RISICO'] ?></td>
-                            <td><?= $value['VOOR_PRIORITEIT'] ?></td>
-                            <td><?php if (in_array($value['REGELNUMMER'], $regelnummers)) { ?>
-
-                                    <div class="">
-                                        <a id="pvabutton"
-                                           href="u_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"
-                                           class="btn btn-block btn-primary">Wijzigen</a>
-                                    </div>
-
-                                    <?php
-                                } else {
-                                    ?>
-                                    <div class="">
-                                        <a id="pvabutton"
-                                           href="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"=
-                                           class="btn btn-block btn-primary">Toevoegen</a>
-                                    </div>
-                                    <?php
-                                } ?></td>
-                        </tr>
+                    <?php if(count($result) > 0) { ?>
+                        <?php foreach ($result as $value) { ?>
+                            <tr>
+                                <td><?= $value['REGELNUMMER'] ?></td>
+                                <td><?= $value['ARBO_ONDERWERP'] ?></td>
+                                <td><?= $value['ASPECTNAAM'] ?></td>
+                                <td><?= $value['EFFECTNAAM'] ?></td>
+                                <td><?= $value['VOOR_RISICO'] ?></td>
+                                <td><?= $value['VOOR_PRIORITEIT'] ?></td>
+                                <td>
+                                    <?php if (in_array($value['REGELNUMMER'], $regelnummers)) { ?>
+                                        <div class="">
+                                            <a id="pvabutton"
+                                               href="u_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"
+                                               class="btn btn-block btn-primary">Wijzigen</a>
+                                        </div>
+                                    <?php } else { ?>
+                                        <div class="">
+                                            <a id="pvabutton"
+                                               href="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"=
+                                               class="btn btn-block btn-primary">Toevoegen</a>
+                                        </div>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                        <?php } ?>
                     <?php } ?>
                     </tbody>
                 </table>
@@ -194,7 +174,6 @@ if ($type['RAPPORT_TYPE'] === 'Organisatie') {
     <script type="text/javascript">
         var projectnummer = "<?php echo $_GET['projectnummer']; ?>";
         var rapportnummer = "<?php echo $_GET['rapportnummer']; ?>";
-
     </script>
 <?php
    include_once('include/footer.php');
