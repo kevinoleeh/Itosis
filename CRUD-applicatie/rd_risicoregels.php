@@ -1,5 +1,6 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    session_start();
   error_reporting(E_ALL); ini_set('display_errors', TRUE); ini_set('display_startup_errors', TRUE);
   include_once('PHPExcel/Classes/PHPExcel.php');
   include_once('include/pdo-connect.php');
