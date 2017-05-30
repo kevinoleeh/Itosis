@@ -1,6 +1,7 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   error_reporting(E_ALL); ini_set('display_errors', TRUE); ini_set('display_startup_errors', TRUE);
+  session_start();
   include_once('PHPExcel/Classes/PHPExcel.php');
   include_once('include/pdo-connect.php');
   $query = "SELECT *
@@ -115,7 +116,7 @@ if ($type['RAPPORT_TYPE'] === 'Organisatie') {
 } else if ($type['RAPPORT_TYPE'] === 'Visuele beoordeling') {
     $url = 'visuele_beoordeling_risicoregel.php';
 } else if ($type['RAPPORT_TYPE'] === 'Machine veiligheid'){
-    $url = 'machine_veiligheid_risicoregel.php';
+    $url = 'machineveiligheid_risicoregel.php';
 }
 
 ?>
