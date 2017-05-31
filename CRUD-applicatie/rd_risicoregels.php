@@ -197,7 +197,9 @@ try {
                                 } else {
                                     ?>
                                         <div class="">
-                                            <a id="pvabutton" href="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"=c lass="btn btn-block btn-primary">PvA toevoegen</a>
+                                            <a id="pvabutton"
+                                               href="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"
+                                               class="btn btn-block btn-primary">PvA toevoegen</a>
                                         </div>
                                         <?php
                                 } ?>
