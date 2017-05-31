@@ -1305,7 +1305,7 @@ AS
 		WHERE projectnummer = @PROJECTNUMMER
                      AND rapportnummer = @RAPPORTNUMMER
                      AND regelnummer = @REGELNUMMER
-					 AND datum_beoordeling = @DATUM_BEOORDELING
+					 AND datum_beoordeling = @DATUM_BEOORDELING_OUD
 	  END
     ELSE
       BEGIN
