@@ -11,9 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':RAPPORT_TYPE', $_POST['RAPPORT_TYPE']);
     try {
         $stmt->execute();
-
-        $meldingStatus = true;
-        $melding = "Rapport opgeslagen.";
+        header('Location: rd_risicoregels.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Rapport niet opgeslagen. Foutmelding: " . $e->getMessage();
