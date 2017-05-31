@@ -1,4 +1,4 @@
--- SP_INSERT_PLAN_VAN_AANPAK test
+-- SP_INSERT_PLAN_VAN_AANPAK test (success)
 EXEC _begin
 BEGIN TRY
 	DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
@@ -9,7 +9,7 @@ BEGIN TRY
     @REGELNUMMER = 1,
     @UITGEVOERD_DOOR = 'Testpersoon',
     @EINDVERANTWOORDELIJKE = 'Testpersoon 2',
-    @DATUM_GEREED_GEPLAND = '12-12-2017',
+    @DATUM_GEREED_GEPLAND = '2017-11-11',
     @PBM ='Dit is een PBM',
     @VOORLICHTING = 'Voorlichting etc.',
     @WERKINSTRUCTIE_PROCEDURE = 'Werkinstructies',
@@ -25,6 +25,35 @@ BEGIN CATCH
 END CATCH
 EXEC _end 0
 GO
+
+-- SP_UPDATE_PLAN_VAN_AANPAK test
+EXEC _begin
+BEGIN TRY
+	DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
+	BEGIN TRANSACTION test
+		EXEC SP_UPDATE_PLAN_VAN_AANPAK
+		@PROJECTNUMMER = @projectnummer,
+    @RAPPORTNUMMER = 1,
+    @REGELNUMMER = 1,
+    @UITGEVOERD_DOOR = 'Testertje',
+    @EINDVERANTWOORDELIJKE = 'Testertje 2',
+    @DATUM_GEREED_GEPLAND = '2017-12-12',
+    @PBM ='Dit is een pbmmmm',
+    @VOORLICHTING = 'Voorlichting o.i.d.',
+    @WERKINSTRUCTIE_PROCEDURE = 'Workinstructions',
+    @TRA = 'Task risk analysing',
+    @CONTRACT_LIJST_  = 'Checklist'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_UPDATE_PLAN_VAN_AANPAK', 1, 'Pva is geüpdatet', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_UPDATE_PLAN_VAN_AANPAK', 0, '',@msg
+END CATCH
+EXEC _end 0
+GO
+
 
 
 -- SP_INSERT_PROJECT tests
@@ -94,6 +123,34 @@ GO
 -- Testen update bedrijf
 -- succes
 EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC SP_UPDATE_BEDRIJF @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem', @uBedrijfsnaam = 'HAN', @uLocatie =  'Nijmegen'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_UPDATE_BEDRIJF', 1, 'HAN Arnhem locatie verandert naar HAN Nijmegen', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_UPDATE_BEDRIJF', 0, '', @msg
+END CATCH
+EXEC _end 0
+GO
+--  update kan niet worden uitgevoerd, geeft succes geen oorspronkelijke waardes
+EXEC _begin
+BEGIN TRY
+	BEGIN TRANSACTION test
+		EXEC SP_UPDATE_BEDRIJF @Bedrijfsnaam = 'HAN', @Locatie = 'Nijmegen', @uBedrijfsnaam = 'HAN', @uLocatie =  'Nijmegen'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_UPDATE_BEDRIJF', 1, 'Geen te updaten waarde, geeft geen error', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_UPDATE_BEDRIJF', 0, '', @msg
+END CATCH
+EXEC _end 0
+GOEXEC _begin
 BEGIN TRY
 	BEGIN TRANSACTION test
 		EXEC SP_UPDATE_BEDRIJF @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem', @uBedrijfsnaam = 'HAN', @uLocatie =  'Nijmegen'
