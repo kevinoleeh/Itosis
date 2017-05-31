@@ -899,7 +899,7 @@ BEGIN TRY
 			1,
 			1
 	ROLLBACK TRANSACTION
-	EXEC _result 'SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL', 0, '', ''
+	EXEC _result 'SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL', 0, 'Niet voldaan aan de visuele beoordeling br', ''
 END TRY
 BEGIN CATCH
 	ROLLBACK TRANSACTION
@@ -1276,7 +1276,7 @@ EXEC _begin
 BEGIN TRY
 	BEGIN TRANSACTION test
 		EXEC SP_DELETE_ASPECT
-			'Test aspect'
+			'Test aspect2'
 	ROLLBACK TRANSACTION
 	EXEC _result 'SP_DELETE_ASPECT', 1, 'Juiste delete zonder effect', ''
 END TRY
@@ -1292,7 +1292,7 @@ EXEC _begin
 BEGIN TRY
 	BEGIN TRANSACTION test
 		EXEC SP_DELETE_ASPECT
-			'Test Aspect'
+			'Test aspect2'
 	ROLLBACK TRANSACTION
 	EXEC _result 'SP_DELETE_ASPECT', 1, 'Juiste delete met effect', ''
 END TRY
@@ -1308,7 +1308,7 @@ EXEC _begin
 BEGIN TRY
 	BEGIN TRANSACTION test
 EXEC SP_DELETE_Aspect
-			'Beverages'
+			'Test aspect'
 	ROLLBACK TRANSACTION
 	EXEC _result 'SP_DELETE_ASPECT', 0, 'Nog in gebruik bij risicoregel', ''
 END TRY
@@ -1325,8 +1325,8 @@ EXEC _begin
 BEGIN TRY
 	BEGIN TRANSACTION test
 		EXEC SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT
-			'Test aspect',
-			'Test effect'
+			'Test aspect2',
+			'Test effect2'
 	ROLLBACK TRANSACTION
 	EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 1, 'Juiste delete van effect', ''
 END TRY
@@ -1344,12 +1344,12 @@ BEGIN TRY
 		EXEC SP_INSERT_ASPECT
 			'Test aspect'
 	ROLLBACK TRANSACTION
-	EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 0, 'Aspect bestaat al', ''
+	EXEC _result 'SP_INSPERT_ASPECT', 0, 'Aspect bestaat al', ''
 END TRY
 BEGIN CATCH
 	ROLLBACK TRANSACTION
 	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-	EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 1, 'Aspect bestaat al', @msg
+	EXEC _result 'SP_INSPERT_ASPECT', 1, 'Aspect bestaat al', @msg
 END CATCH
 EXEC _end 0
 GO
@@ -1360,12 +1360,12 @@ BEGIN TRY
 		EXEC SP_INSERT_ASPECT
 			'Test aspect123'
 	ROLLBACK TRANSACTION
-	EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 1, 'Juiste insert Aspect', ''
+	EXEC _result 'SP_INSPERT_ASPECT', 1, 'Juiste insert Aspect', ''
 END TRY
 BEGIN CATCH
 	ROLLBACK TRANSACTION
 	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-	EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 0, 'Juiste insert Aspect', @msg
+	EXEC _result 'SP_INSPERT_ASPECT', 0, 'Juiste insert Aspect', @msg
 END CATCH
 EXEC _end 1
 GO
