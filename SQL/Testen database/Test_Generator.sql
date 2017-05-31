@@ -27,14 +27,14 @@ CREATE PROCEDURE _begin AS BEGIN
 			INSERT INTO PROJECT(BEDRIJFSNAAM,LOCATIE,PROJECTOMSCHRIJVING)
 				VALUES('EURATEX','Duiven','Test'),
 				('EURATEX', 'Duiven', 'Test2')
-			DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING LIKE 'Test')
+			DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
 
 			--rapport
 			SET @tabel = 'RAPPORT'
 			INSERT INTO RAPPORT
 				VALUES (@projectnummer, 1, 'Organisatie'),
 				(@projectnummer, 2, 'Visuele beoordeling'),
-					(@projectnummer, 3, 'Organisatie')
+					(@projectnummer, 3, 'Machineveiligheid')
 
 			--aspect
 			SET @tabel = 'ASPECT'
@@ -52,8 +52,8 @@ CREATE PROCEDURE _begin AS BEGIN
 			--risicoregel
 			SET @tabel = 'RISICOREGEL'
 			INSERT INTO RISICOREGEL(PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, ASPECTNAAM, EFFECTNAAM, ARBO_ONDERWERP, RISICO_OMSCHRIJVING_OF_BEVINDING, HUIDIGE_BEHEERSMAATREGEL, VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL, VOOR_ERNST_VAN_ONGEVAL, VOOR_KANS_OP_BLOOTSTELLING, VOOR_KANS_OP_WAARSCHIJNLIJKHEID, AFWIJKENDE_ACTIE_TER_UITVOERING, RESTRISICO, NA_ERNST_VAN_ONGEVAL, NA_KANS_OP_BLOOTSTELLING, NA_KANS_OP_WAARSCHIJNLIJKHEID)
-				VALUES(@projectnummer, 1, 1, 'Beverages', 'Add. Words', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00, 'pars transit.', 'novum', 15.00, 1.00, 10.00),
-					(@projectnummer, 2, 1, 'Beverages', 'Add. Words', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00, 'pars transit.', 'novum', 15.00, 1.00, 10.00)
+				VALUES(@projectnummer, 1, 1, 'Test aspect', 'Test effect', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00, 'pars transit.', 'novum', 15.00, 1.00, 10.00),
+					(@projectnummer, 2, 1, 'Test aspect', 'Test effect', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00, 'pars transit.', 'novum', 15.00, 1.00, 10.00)
 			INSERT INTO VISUELE_BEOORDELING
 				VALUES(@projectnummer, 2, 1, '', 'test', '')
 
@@ -105,7 +105,7 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 		SELECT Test + ' #'+ CONVERT(VARCHAR, Number) AS Test, IIF(success = 1, 'OK', 'ERROR') AS Status, Reden AS Reden, message AS Melding FROM testData ORDER BY Success, id, Number
 	BEGIN TRY
 		DECLARE @tabel VARCHAR(255) = 'VISUELE BEOORDELING'
-		DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING LIKE 'Test')
+		DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
 
 		DELETE FROM VISUELE_BEOORDELING
 		WHERE PROJECTNUMMER = @projectnummer
