@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $stmt->execute();
-        header('Location: rd_risicoregels.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
+        header('Location: rd_rapportages.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
