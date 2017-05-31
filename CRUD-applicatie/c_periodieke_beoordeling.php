@@ -26,6 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $meldingStatus = true;
         $melding = "Periodieke beoordeling opgeslagen.";
+
+        header('Location: u_plan_van_aanpak.php?projectnummer=' . $_GET['projectnummer'] . '&rapportnummer=' . $_GET['rapportnummer'] . '&regelnummer=' . $_GET['regelnummer']);
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Periodieke beoordeling niet opgeslagen. Foutmelding: " . $e->getMessage();
