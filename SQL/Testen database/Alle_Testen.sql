@@ -150,7 +150,8 @@ BEGIN CATCH
 	EXEC _result 'SP_UPDATE_BEDRIJF', 0, '', @msg
 END CATCH
 EXEC _end 0
-GOEXEC _begin
+GO
+EXEC _begin
 BEGIN TRY
 	BEGIN TRANSACTION test
 		EXEC SP_UPDATE_BEDRIJF @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem', @uBedrijfsnaam = 'HAN', @uLocatie =  'Nijmegen'
