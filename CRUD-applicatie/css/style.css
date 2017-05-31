@@ -183,3 +183,7 @@ h1 {
     border: #e59400;
     background: #e59400;
 }
+
+checkbox {
+  font-size: 10px !important;
+}
