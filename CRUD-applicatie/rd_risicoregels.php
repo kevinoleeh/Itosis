@@ -1,6 +1,6 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  error_reporting(E_ALL); ini_set('display_errors', TRUE); ini_set('display_startup_errors', TRUE);
+
   session_start();
   include_once('PHPExcel/Classes/PHPExcel.php');
   include_once('include/pdo-connect.php');
@@ -122,16 +122,6 @@ try {
     $regelnummers = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 } catch (PDOException $e) {
     echo "Foutmelding: " . $e->getMessage();
-}
-
-if ($type['RAPPORT_TYPE'] === 'Organisatie') {
-    $url = 'organisatie_risicoregel.php';
-} else if ($type['RAPPORT_TYPE'] === 'Visuele beoordeling') {
-    $url = 'visuele_beoordeling_risicoregel.php';
-} else if ($type['RAPPORT_TYPE'] === 'Machineveiligheid'){
-    $url = 'machineveiligheid_risicoregel.php';
-    $meldingStatus = false;
-    $melding = "Foutmelding: " . $e->getMessage();
 }
 
 ?>
