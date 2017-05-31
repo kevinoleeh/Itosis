@@ -4,7 +4,8 @@ CREATE PROCEDURE SP_UPDATE_PERIODIEKE_BEOORDELING
     @PROJECTNUMMER int,
     @RAPPORTNUMMER int,
     @REGELNUMMER int,
-    @DATUM_BEOORDELING date,
+    @DATUM_BEOORDELING_OUD date,
+    @DATUM_BEOORDELING_NIEUW date,
     @INSPECTIE_IS_DE_ACTIE_UITGEVOERD bit,
     @OPMERKING_STAND_VAN_ZAKEN text,
     @STAND_VAN_ZAKEN varchar(255),
@@ -29,10 +30,10 @@ AS
                WHERE projectnummer = @PROJECTNUMMER
                      AND rapportnummer = @RAPPORTNUMMER
                      AND regelnummer = @REGELNUMMER
-					 AND datum_beoordeling = @DATUM_BEOORDELING)
+					 AND datum_beoordeling = @DATUM_BEOORDELING_OUD)
       BEGIN
         UPDATE PERIODIEKE_BEOORDELING
-        SET inspectie_is_de_actie_uitgevoerd = @INSPECTIE_IS_DE_ACTIE_UITGEVOERD, opmerking_stand_van_zaken = @OPMERKING_STAND_VAN_ZAKEN, stand_van_zaken = @STAND_VAN_ZAKEN, score = @SCORE
+        SET datum_beoordeling = @DATUM_BEOORDELING_NIEUW, inspectie_is_de_actie_uitgevoerd = @INSPECTIE_IS_DE_ACTIE_UITGEVOERD, opmerking_stand_van_zaken = @OPMERKING_STAND_VAN_ZAKEN, stand_van_zaken = @STAND_VAN_ZAKEN, score = @SCORE
 		WHERE projectnummer = @PROJECTNUMMER
                      AND rapportnummer = @RAPPORTNUMMER
                      AND regelnummer = @REGELNUMMER

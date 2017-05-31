@@ -1,8 +1,8 @@
 
 
    /*=========================================*/
-  /*	Drop alle stored procedures			 */
- /*											*/
+  /*	Drop alle stored procedures			       */
+ /*											                    */
 /*=========================================*/
 
 IF OBJECT_ID('SP_DELETE_ASPECT', 'P') IS NOT NULL
@@ -10,6 +10,18 @@ DROP PROC SP_DELETE_ASPECT
 GO
 IF OBJECT_ID('SP_DELETE_BEDRIJF', 'P') IS NOT NULL
 DROP PROC SP_DELETE_BEDRIJF
+GO
+
+IF OBJECT_ID('SP_UPDATE_PERIODIEKE_BEOORDELING', 'P') IS NOT NULL
+DROP PROC SP_UPDATE_PERIODIEKE_BEOORDELING
+GO
+
+IF OBJECT_ID('SP_INSERT_PERIODIEKE_BEOORDELING', 'P') IS NOT NULL
+DROP PROC SP_INSERT_PERIODIEKE_BEOORDELING
+GO
+
+IF OBJECT_ID('SP_UPDATE_PLAN_VAN_AANPAK', 'P') IS NOT NULL
+DROP PROC SP_UPDATE_PLAN_VAN_AANPAK
 GO
 
 IF OBJECT_ID('SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 'P') IS NOT NULL
@@ -39,10 +51,7 @@ DROP PROC SP_INSERT_EFFECT
 GO
 IF OBJECT_ID('SP_INSERT_ORGANISATIE_RISICOREGEL', 'P') IS NOT NULL
 DROP PROC SP_INSERT_ORGANISATIE_RISICOREGEL
-GO
-IF OBJECT_ID('SP_INSERT_PLAN_VAN_AANPAK', 'P') IS NOT NULL
-DROP PROC SP_INSERT_PLAN_VAN_AANPAK
-GO
+
 IF OBJECT_ID('SP_INSERT_PROJECT', 'P') IS NOT NULL
 DROP PROC SP_INSERT_PROJECT
 GO
@@ -78,8 +87,8 @@ GO
 
 
    /*=========================================*/
-  /*	Create alle stored procedures		 */
- /*											*/
+  /*	Create alle stored procedures		        */
+ /*											                    */
 /*=========================================*/
 
 
@@ -948,7 +957,7 @@ AS BEGIN
 					RISICO_OMSCHRIJVING_OF_BEVINDING = @RISICO_OMSCHRIJVING_OF_BEVINDING,
 					HUIDIGE_BEHEERSMAATREGEL = @HUIDIGE_BEHEERSMAATREGEL,
 					VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL = @VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL,
-					VOOR_ERNST_VAN_HET_ONGEVAL = @VOOR_ERNST_VAN_ONGEVAL,
+					VOOR_ERNST_VAN_ONGEVAL = @VOOR_ERNST_VAN_ONGEVAL,
 					VOOR_KANS_OP_BLOOTSTELLING = @VOOR_KANS_OP_BLOOTSTELLING,
 					VOOR_KANS_OP_WAARSCHIJNLIJKHEID = @VOOR_KANS_OP_WAARSCHIJNLIJKHEID,
 					AFWIJKENDE_ACTIE_TER_UITVOERING = @AFWIJKENDE_ACTIE_TER_UITVOERING,
@@ -1080,7 +1089,7 @@ AS BEGIN
 					RISICO_OMSCHRIJVING_OF_BEVINDING = @RISICO_OMSCHRIJVING_OF_BEVINDING,
 					HUIDIGE_BEHEERSMAATREGEL = @HUIDIGE_BEHEERSMAATREGEL,
 					VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL = @VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL,
-					VOOR_ERNST_VAN_HET_ONGEVAL = @VOOR_ERNST_VAN_ONGEVAL,
+					VOOR_ERNST_VAN_ONGEVAL = @VOOR_ERNST_VAN_ONGEVAL,
 					VOOR_KANS_OP_BLOOTSTELLING = @VOOR_KANS_OP_BLOOTSTELLING,
 					VOOR_KANS_OP_WAARSCHIJNLIJKHEID = @VOOR_KANS_OP_WAARSCHIJNLIJKHEID,
 					AFWIJKENDE_ACTIE_TER_UITVOERING = @AFWIJKENDE_ACTIE_TER_UITVOERING,
@@ -1126,3 +1135,201 @@ END
 GO
 
 /*=================================================================================================*/
+GO
+
+CREATE PROCEDURE SP_UPDATE_PLAN_VAN_AANPAK
+@PROJECTNUMMER int,
+@RAPPORTNUMMER int,
+@REGELNUMMER int,
+@UITGEVOERD_DOOR varchar(255),
+@EINDVERANTWOORDELIJKE varchar(255),
+@DATUM_GEREED_GEPLAND date,
+@PBM varchar(255),
+@VOORLICHTING varchar(255),
+@WERKINSTRUCTIE_PROCEDURE varchar(255),
+@TRA varchar(255),
+@CONTRACT_LIJST_ varchar(255)
+AS
+BEGIN
+  SET NOCOUNT, XACT_ABORT ON
+
+  DECLARE @TranCounter int;
+
+  SET @TranCounter = @@TRANCOUNT;
+
+  IF @TranCounter > 0
+    SAVE TRANSACTION proceduresave;
+  ELSE
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+      IF EXISTS (SELECT
+          1
+        FROM PLAN_VAN_AANPAK
+        WHERE projectnummer = @PROJECTNUMMER
+        AND rapportnummer = @RAPPORTNUMMER
+        AND regelnummer = @REGELNUMMER)
+      BEGIN
+        UPDATE PLAN_VAN_AANPAK
+        SET projectnummer = @PROJECTNUMMER, rapportnummer = @RAPPORTNUMMER, regelnummer = @REGELNUMMER, uitgevoerd_door = @UITGEVOERD_DOOR, eindverantwoordelijke = @EINDVERANTWOORDELIJKE, datum_gereed_gepland = @DATUM_GEREED_GEPLAND,PBM = @PBM, voorlichting = @VOORLICHTING, werkinstructie_procedure = @WERKINSTRUCTIE_PROCEDURE, TRA = @TRA, contract_lijst_ = @CONTRACT_LIJST_
+        WHERE projectnummer = @PROJECTNUMMER AND rapportnummer = @RAPPORTNUMMER AND regelnummer = @REGELNUMMER
+      END
+      ELSE
+      BEGIN
+        RAISERROR ('Om deze SP te kunnen gebruiken dient de combinatie projectnummer+rapportnummer+regelnummer te bestaan.', 16, 1)
+      END
+
+      IF @TranCounter = 0
+        AND XACT_STATE() = 1
+      COMMIT TRANSACTION;
+  END TRY
+
+  BEGIN CATCH
+    IF @TranCounter = 0
+    BEGIN
+      IF XACT_STATE() = 1
+        ROLLBACK TRANSACTION;
+    END;
+    ELSE
+    BEGIN
+      IF XACT_STATE() <> -1
+        ROLLBACK TRANSACTION proceduresave;
+    END;
+
+    THROW
+  END CATCH
+END
+GO
+/*=================================================================================================*/
+
+GO
+
+CREATE PROCEDURE SP_INSERT_PERIODIEKE_BEOORDELING
+    @PROJECTNUMMER int,
+    @RAPPORTNUMMER int,
+    @REGELNUMMER int,
+    @DATUM_BEOORDELING date,
+    @INSPECTIE_IS_DE_ACTIE_UITGEVOERD bit,
+    @OPMERKING_STAND_VAN_ZAKEN text,
+    @STAND_VAN_ZAKEN varchar(255),
+    @SCORE numeric
+AS
+  BEGIN
+    SET NOCOUNT, XACT_ABORT ON
+
+    DECLARE @TranCounter int;
+
+    SET @TranCounter = @@TRANCOUNT;
+
+    IF @TranCounter > 0
+      SAVE TRANSACTION proceduresave;
+    ELSE
+      BEGIN TRANSACTION;
+
+    BEGIN TRY
+    IF EXISTS (SELECT
+                 1
+               FROM PLAN_VAN_AANPAK
+               WHERE projectnummer = @PROJECTNUMMER
+                     AND rapportnummer = @RAPPORTNUMMER
+                     AND regelnummer = @REGELNUMMER)
+      BEGIN
+        INSERT PERIODIEKE_BEOORDELING
+        VALUES (@PROJECTNUMMER, @RAPPORTNUMMER, @REGELNUMMER, @DATUM_BEOORDELING, @INSPECTIE_IS_DE_ACTIE_UITGEVOERD, @OPMERKING_STAND_VAN_ZAKEN, @STAND_VAN_ZAKEN, @SCORE)
+	  END
+    ELSE
+      BEGIN
+        RAISERROR ('Om deze SP te kunnen gebruiken dient het plan van aanpak te bestaan.', 16, 1)
+      END
+
+    IF @TranCounter = 0
+       AND XACT_STATE() = 1
+      COMMIT TRANSACTION;
+    END TRY
+
+    BEGIN CATCH
+    IF @TranCounter = 0
+      BEGIN
+        IF XACT_STATE() = 1
+          ROLLBACK TRANSACTION;
+      END;
+    ELSE
+      BEGIN
+        IF XACT_STATE() <> -1
+          ROLLBACK TRANSACTION proceduresave;
+      END;
+
+    THROW
+    END CATCH
+  END
+GO
+
+/*=================================================================================================*/
+
+GO
+
+CREATE PROCEDURE SP_UPDATE_PERIODIEKE_BEOORDELING
+    @PROJECTNUMMER int,
+    @RAPPORTNUMMER int,
+    @REGELNUMMER int,
+    @DATUM_BEOORDELING_OUD date,
+    @DATUM_BEOORDELING_NIEUW date,
+    @INSPECTIE_IS_DE_ACTIE_UITGEVOERD bit,
+    @OPMERKING_STAND_VAN_ZAKEN text,
+    @STAND_VAN_ZAKEN varchar(255),
+    @SCORE numeric
+AS
+  BEGIN
+    SET NOCOUNT, XACT_ABORT ON
+
+    DECLARE @TranCounter int;
+
+    SET @TranCounter = @@TRANCOUNT;
+
+    IF @TranCounter > 0
+      SAVE TRANSACTION proceduresave;
+    ELSE
+      BEGIN TRANSACTION;
+
+    BEGIN TRY
+    IF EXISTS (SELECT
+                 1
+               FROM PERIODIEKE_BEOORDELING
+               WHERE projectnummer = @PROJECTNUMMER
+                     AND rapportnummer = @RAPPORTNUMMER
+                     AND regelnummer = @REGELNUMMER
+					 AND datum_beoordeling = @DATUM_BEOORDELING_OUD)
+      BEGIN
+        UPDATE PERIODIEKE_BEOORDELING
+        SET datum_beoordeling = @DATUM_BEOORDELING_NIEUW, inspectie_is_de_actie_uitgevoerd = @INSPECTIE_IS_DE_ACTIE_UITGEVOERD, opmerking_stand_van_zaken = @OPMERKING_STAND_VAN_ZAKEN, stand_van_zaken = @STAND_VAN_ZAKEN, score = @SCORE
+		WHERE projectnummer = @PROJECTNUMMER
+                     AND rapportnummer = @RAPPORTNUMMER
+                     AND regelnummer = @REGELNUMMER
+					 AND datum_beoordeling = @DATUM_BEOORDELING
+	  END
+    ELSE
+      BEGIN
+        RAISERROR ('Om deze SP te kunnen gebruiken dient het desbetreffende periodieke beoordeling te bestaan.', 16, 1)
+      END
+
+    IF @TranCounter = 0
+       AND XACT_STATE() = 1
+      COMMIT TRANSACTION;
+    END TRY
+
+    BEGIN CATCH
+    IF @TranCounter = 0
+      BEGIN
+        IF XACT_STATE() = 1
+          ROLLBACK TRANSACTION;
+      END;
+    ELSE
+      BEGIN
+        IF XACT_STATE() <> -1
+          ROLLBACK TRANSACTION proceduresave;
+      END;
+
+    THROW
+    END CATCH
+  END
+GO

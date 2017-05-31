@@ -1,6 +1,7 @@
 <?php include_once('include/header.php') ?>
 
 <?php
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $query = "EXEC dbo.INSERT_RAPPORT
              :PROJECTNUMMER,
@@ -17,14 +18,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $meldingStatus = false;
         $melding = "Rapport niet opgeslagen. Foutmelding: " . $e->getMessage();
     }
-    header('Location: rd_rapportages.php?projectnummer='.$_GET['projectnummer']);
+}
+
+$query = "SELECT *
+          FROM RAPPORT_TYPE";
+$stmt = $dbh->prepare($query);
+
+try {
+    $stmt->execute();
+    $result = $stmt->fetchAll();
+} catch (PDOException $e) {
+    $meldingStatus = false;
+    $melding = "Foutmelding: " . $e->getMessage();
 }
 
 ?>
 
 <div class="container">
     <div class="page-header">
-        <h1>Rapport toevoegen</h1>
+        <h1>Rapportage toevoegen</h1>
         <h4>Projectnummer <?= $_GET['projectnummer'] ?></h4>
     </div>
 
@@ -34,8 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="form-group">
             <label for="ASPECT">Rapport type</label>
             <select class="form-control" name="RAPPORT_TYPE">
-                <option>Organisatie</option>
-                <option>Visuele beoordeling</option>
+                <?php foreach ($result as $value) { ?>
+                    <option><?= $value['RAPPORT_TYPE'] ?></option>
+                <?php } ?>
             </select>
         </div>
 

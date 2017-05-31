@@ -1,8 +1,7 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2014                    */
-/* Created on:     29-5-2017 12:27:45                           */
+/* Created on:     30-5-2017 14:15:19                           */
 /*==============================================================*/
-
 
 use master
 
@@ -36,9 +35,9 @@ go
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('MACHINE_VEILIGHEID') and o.name = 'FK_MACHINE__IS_EEN_VI_VISUELE_')
-alter table MACHINE_VEILIGHEID
-   drop constraint FK_MACHINE__IS_EEN_VI_VISUELE_
+   where r.fkeyid = object_id('MACHINEVEILIGHEID') and o.name = 'FK_MACHINEV_IS_EEN_VI_VISUELE_')
+alter table MACHINEVEILIGHEID
+   drop constraint FK_MACHINEV_IS_EEN_VI_VISUELE_
 go
 
 if exists (select 1
@@ -161,9 +160,9 @@ go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('MACHINE_VEILIGHEID')
+           where  id = object_id('MACHINEVEILIGHEID')
             and   type = 'U')
-   drop table MACHINE_VEILIGHEID
+   drop table MACHINEVEILIGHEID
 go
 
 if exists (select 1
@@ -269,12 +268,20 @@ if exists (select 1
    drop table VISUELE_BEOORDELING
 go
 
+if exists(select 1 from systypes where name='AANVULLENDE_OMSCHRIJVING')
+   drop type AANVULLENDE_OMSCHRIJVING
+go
+
 if exists(select 1 from systypes where name='AFBEELDING_TYPE')
    drop type AFBEELDING_TYPE
 go
 
 if exists(select 1 from systypes where name='AFDELING')
    drop type AFDELING
+go
+
+if exists(select 1 from systypes where name='AFSCHERMING')
+   drop type AFSCHERMING
 go
 
 if exists(select 1 from systypes where name='AFWIJKENDE_ACTIE_TER_UITVOER')
@@ -341,6 +348,10 @@ if exists(select 1 from systypes where name='INSPECTIE_IS_DE_ACTIE_UITGEVOERD')
    drop type INSPECTIE_IS_DE_ACTIE_UITGEVOERD
 go
 
+if exists(select 1 from systypes where name='INSTRUCTIE')
+   drop type INSTRUCTIE
+go
+
 if exists(select 1 from systypes where name='KEUZE')
    drop type KEUZE
 go
@@ -349,12 +360,20 @@ if exists(select 1 from systypes where name='LEVERANCIER')
    drop type LEVERANCIER
 go
 
+if exists(select 1 from systypes where name='LIJN')
+   drop type LIJN
+go
+
 if exists(select 1 from systypes where name='LOCATIE')
    drop type LOCATIE
 go
 
 if exists(select 1 from systypes where name='MACHINE')
    drop type MACHINE
+go
+
+if exists(select 1 from systypes where name='MACHINE_CODE')
+   drop type MACHINE_CODE
 go
 
 if exists(select 1 from systypes where name='MACHINE_ONDERDEEL')
@@ -393,6 +412,10 @@ if exists(select 1 from systypes where name='NA_RISICO')
    drop type NA_RISICO
 go
 
+if exists(select 1 from systypes where name='ONTWERP')
+   drop type ONTWERP
+go
+
 if exists(select 1 from systypes where name='OPMERKING_STAND_VAN_ZAKEN')
    drop type OPMERKING_STAND_VAN_ZAKEN
 go
@@ -403,6 +426,10 @@ go
 
 if exists(select 1 from systypes where name='PERIODIEKE_BEOORDELING')
    drop type PERIODIEKE_BEOORDELING
+go
+
+if exists(select 1 from systypes where name='PID')
+   drop type PID
 go
 
 if exists(select 1 from systypes where name='PLAATS')
@@ -453,6 +480,10 @@ if exists(select 1 from systypes where name='STAND_VAN_ZAKEN')
    drop type STAND_VAN_ZAKEN
 go
 
+if exists(select 1 from systypes where name='TAKEN')
+   drop type TAKEN
+go
+
 if exists(select 1 from systypes where name='TRA')
    drop type TRA
 go
@@ -498,6 +529,13 @@ if exists(select 1 from systypes where name='WERKINSTRUCTIE_PROCEDURE')
 go
 
 /*==============================================================*/
+/* Domain: AANVULLENDE_OMSCHRIJVING                             */
+/*==============================================================*/
+create type AANVULLENDE_OMSCHRIJVING
+   from varchar(8000)
+go
+
+/*==============================================================*/
 /* Domain: AFBEELDING_TYPE                                      */
 /*==============================================================*/
 create type AFBEELDING_TYPE
@@ -508,6 +546,13 @@ go
 /* Domain: AFDELING                                             */
 /*==============================================================*/
 create type AFDELING
+   from varchar(255)
+go
+
+/*==============================================================*/
+/* Domain: AFSCHERMING                                          */
+/*==============================================================*/
+create type AFSCHERMING
    from varchar(255)
 go
 
@@ -624,6 +669,13 @@ create type INSPECTIE_IS_DE_ACTIE_UITGEVOERD
 go
 
 /*==============================================================*/
+/* Domain: INSTRUCTIE                                           */
+/*==============================================================*/
+create type INSTRUCTIE
+   from varchar(8000)
+go
+
+/*==============================================================*/
 /* Domain: KEUZE                                                */
 /*==============================================================*/
 create type KEUZE
@@ -638,6 +690,13 @@ create type LEVERANCIER
 go
 
 /*==============================================================*/
+/* Domain: LIJN                                                 */
+/*==============================================================*/
+create type LIJN
+   from varchar(255)
+go
+
+/*==============================================================*/
 /* Domain: LOCATIE                                              */
 /*==============================================================*/
 create type LOCATIE
@@ -648,6 +707,13 @@ go
 /* Domain: MACHINE                                              */
 /*==============================================================*/
 create type MACHINE
+   from varchar(255)
+go
+
+/*==============================================================*/
+/* Domain: MACHINE_CODE                                         */
+/*==============================================================*/
+create type MACHINE_CODE
    from varchar(255)
 go
 
@@ -715,10 +781,17 @@ create type NA_RISICO
 go
 
 /*==============================================================*/
+/* Domain: ONTWERP                                              */
+/*==============================================================*/
+create type ONTWERP
+   from varchar(255)
+go
+
+/*==============================================================*/
 /* Domain: OPMERKING_STAND_VAN_ZAKEN                            */
 /*==============================================================*/
 create type OPMERKING_STAND_VAN_ZAKEN
-   from Varchar(max)
+   from varchar(8000)
 go
 
 /*==============================================================*/
@@ -732,6 +805,13 @@ go
 /* Domain: PERIODIEKE_BEOORDELING                               */
 /*==============================================================*/
 create type PERIODIEKE_BEOORDELING
+   from varchar(255)
+go
+
+/*==============================================================*/
+/* Domain: PID                                                  */
+/*==============================================================*/
+create type PID
    from varchar(255)
 go
 
@@ -760,7 +840,7 @@ go
 /* Domain: PROJECTOMSCHRIJVING                                  */
 /*==============================================================*/
 create type PROJECTOMSCHRIJVING
-   from Varchar(max)
+   from varchar(8000)
 go
 
 /*==============================================================*/
@@ -788,14 +868,14 @@ go
 /* Domain: RESTRISICO                                           */
 /*==============================================================*/
 create type RESTRISICO
-   from Varchar(max)
+   from varchar(8000)
 go
 
 /*==============================================================*/
 /* Domain: RISICO_OMSCHRIJVING_OF_BEVINDING                     */
 /*==============================================================*/
 create type RISICO_OMSCHRIJVING_OF_BEVINDING
-   from Varchar(max)
+   from varchar(8000)
 go
 
 /*==============================================================*/
@@ -817,6 +897,13 @@ go
 /*==============================================================*/
 create type STAND_VAN_ZAKEN
    from varchar(255)
+go
+
+/*==============================================================*/
+/* Domain: TAKEN                                                */
+/*==============================================================*/
+create type TAKEN
+   from varchar(8000)
 go
 
 /*==============================================================*/
@@ -844,7 +931,7 @@ go
 /* Domain: VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL          */
 /*==============================================================*/
 create type VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL
-   from Varchar(max)
+   from varchar(8000)
 go
 
 /*==============================================================*/
@@ -893,7 +980,7 @@ go
 /* Domain: WERKINSTRUCTIE_PROCEDURE                             */
 /*==============================================================*/
 create type WERKINSTRUCTIE_PROCEDURE
-   from Varchar(max)
+   from varchar(8000)
 go
 
 /*==============================================================*/
@@ -981,33 +1068,45 @@ create table EFFECT (
 go
 
 /*==============================================================*/
-/* Table: MACHINE_VEILIGHEID                                    */
+/* Table: MACHINEVEILIGHEID                                     */
 /*==============================================================*/
-create table MACHINE_VEILIGHEID (
+create table MACHINEVEILIGHEID (
    PROJECTNUMMER        PROJECTNUMMER        not null,
    RAPPORTNUMMER        RAPPORTNUMMER        not null,
    REGELNUMMER          REGELNUMMER          not null,
+   PID                  PID                  not null,
+   LIJN                 LIJN                 not null,
+   MACHINE_CODE         MACHINE_CODE         not null,
    MACHINE              MACHINE              not null,
-   MODEL___TYPE         MODEL___TYPE         not null,
+   MODEL_TYPE           MODEL___TYPE         not null,
    SERIENUMMER          SERIENUMMER          not null,
    LEVERANCIER          LEVERANCIER          not null,
    CE_MARKERING         CE_MARKERING         not null,
    CE_DOCUCHECK         CE_DOCUCHECK         not null,
+   AANVULLENDE_OMSCHRIJVING AANVULLENDE_OMSCHRIJVING null,
+   TAKEN                TAKEN                null,
    TRANSPORT            KEUZE                not null,
    MONTAGE              KEUZE                not null,
-   IN_BEDRIJFNAME       KEUZE                not null,
+   IN_BEDRIJFSNAME      KEUZE                not null,
    TIJDENS_PRODUCTIE    KEUZE                not null,
    TIJDENS_ONDERHOUD    KEUZE                not null,
    TIJDENS_STORING      KEUZE                not null,
-   TIJDENS_REININGEN    KEUZE                not null,
+   TIJDENS_REINIGEN     KEUZE                not null,
    TIJDENS_AFSTELLEN    KEUZE                not null,
    DEMONTAGE            KEUZE                not null,
-   FREQUENTIE           FREQUENTIE           not null,
-   MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS not null,
-   MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE not null,
+   ONTWERP              ONTWERP              null,
+   AFSCHERMING          AFSCHERMING          null,
+   INSTRUCTIE           INSTRUCTIE           null,
+   FREQUENTIE           FREQUENTIE           not null 
+      constraint CKC_FREQUENTIE_MACHINEV check (FREQUENTIE in (1,2,3,4,5)),
+   MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS not null 
+      constraint CKC_MOGELIJKHEID_OPTR_MACHINEV check (MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS in (1,2,3,4,5)),
+   MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE not null 
+      constraint CKC_MOGELIJKHEID_VOOR_MACHINEV check (MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE in (1,3,5)),
    CI                   CI                   not null,
-   ERNST_VAN_DE_GEVOLGEN ERNST_VAN_DE_GEVOLGEN not null,
-   constraint PK_MACHINE_VEILIGHEID primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+   ERNST_VAN_DE_GEVOLGEN ERNST_VAN_DE_GEVOLGEN not null 
+      constraint CKC_ERNST_VAN_DE_GEVO_MACHINEV check (ERNST_VAN_DE_GEVOLGEN in (1,2,3,4)),
+   constraint PK_MACHINEVEILIGHEID primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
 )
 go
 
@@ -1062,7 +1161,7 @@ go
 /* Table: PROJECT                                               */
 /*==============================================================*/
 create table PROJECT (
-   PROJECTNUMMER        PROJECTNUMMER        identity,
+   PROJECTNUMMER        PROJECTNUMMER        not null,
    BEDRIJFSNAAM         BEDRIJFSNAAM         not null,
    LOCATIE              LOCATIE              not null,
    PROJECTOMSCHRIJVING  PROJECTOMSCHRIJVING  not null,
@@ -1134,19 +1233,22 @@ create table RISICOREGEL (
    RISICO_OMSCHRIJVING_OF_BEVINDING RISICO_OMSCHRIJVING_OF_BEVINDING not null,
    HUIDIGE_BEHEERSMAATREGEL HUIDIGE_BEHEERSMAATREGEL null,
    VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL not null,
-   VOOR_ERNST_VAN_HET_ONGEVAL VOOR_ERNST_VAN_ONGEVAL not null
-      constraint CKC_VOOR_ERNST_VAN_HE_RISICORE check (VOOR_ERNST_VAN_HET_ONGEVAL in (100,40,15,7,3,1)),
-   VOOR_KANS_OP_BLOOTSTELLING VOOR_KANS_OP_BLOOTSTELLING not null
-      constraint CKC_VOOR_KANS_OP_BLOO_RISICORE check (VOOR_KANS_OP_BLOOTSTELLING in (10,6,3,2,1,0,5)),
-   VOOR_KANS_OP_WAARSCHIJNLIJKHEID VOOR_KANS_OP_WAARSCHIJNLIJKHEID not null
-      constraint CKC_VOOR_KANS_OP_WAAR_RISICORE check (VOOR_KANS_OP_WAARSCHIJNLIJKHEID in (10,6,3,1,0,5,0,2)),
+   VOOR_ERNST_VAN_ONGEVAL VOOR_ERNST_VAN_ONGEVAL not null 
+      constraint CKC_VOOR_ERNST_VAN_ON_RISICORE check (VOOR_ERNST_VAN_ONGEVAL in (100,40,15,7,3,1)),
+   VOOR_KANS_OP_BLOOTSTELLING VOOR_KANS_OP_BLOOTSTELLING not null 
+      constraint CKC_VOOR_KANS_OP_BLOO_RISICORE check (VOOR_KANS_OP_BLOOTSTELLING in (10,6,3,2,1,0.5)),
+   VOOR_KANS_OP_WAARSCHIJNLIJKHEID VOOR_KANS_OP_WAARSCHIJNLIJKHEID not null 
+      constraint CKC_VOOR_KANS_OP_WAAR_RISICORE check (VOOR_KANS_OP_WAARSCHIJNLIJKHEID in (10,6,3,1,0.5,0.2)),
    VOOR_RISICO          VOOR_RISICO          not null,
    VOOR_PRIORITEIT      VOOR_PRIORITEIT      not null,
    AFWIJKENDE_ACTIE_TER_UITVOERING AFWIJKENDE_ACTIE_TER_UITVOER null,
    RESTRISICO           RESTRISICO           null,
-   NA_ERNST_VAN_ONGEVAL VOOR_ERNST_VAN_ONGEVAL not null,
-   NA_KANS_OP_BLOOTSTELLING NA_KANS_OP_BLOOTSTELLING not null,
-   NA_KANS_OP_WAARSCHIJNLIJKHEID NA_KANS_OP_WAARSCHIJNLIJKHEID not null,
+   NA_ERNST_VAN_ONGEVAL VOOR_ERNST_VAN_ONGEVAL not null 
+      constraint CKC_NA_ERNST_VAN_ONGE_RISICORE check (NA_ERNST_VAN_ONGEVAL in (100,40,15,7,3,1)),
+   NA_KANS_OP_BLOOTSTELLING NA_KANS_OP_BLOOTSTELLING not null 
+      constraint CKC_NA_KANS_OP_BLOOTS_RISICORE check (NA_KANS_OP_BLOOTSTELLING in (10,6,3,2,1,0.5)),
+   NA_KANS_OP_WAARSCHIJNLIJKHEID NA_KANS_OP_WAARSCHIJNLIJKHEID not null 
+      constraint CKC_NA_KANS_OP_WAARSC_RISICORE check (NA_KANS_OP_WAARSCHIJNLIJKHEID in (10,6,3,1,0.5,0.2)),
    NA_RISICO            NA_RISICO            not null,
    NA_PRIORITEIT        NA_PRIORITEIT        not null,
    constraint PK_RISICOREGEL primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
@@ -1182,11 +1284,11 @@ create table VISUELE_BEOORDELING (
    PROJECTNUMMER        PROJECTNUMMER        not null,
    RAPPORTNUMMER        RAPPORTNUMMER        not null,
    REGELNUMMER          REGELNUMMER          not null,
-   PROCES               PROCES               null
+   PROCES               PROCES               null 
       constraint CKC_PROCES_VISUELE_ check (PROCES is null or (PROCES >= '1')),
-   MACHINE_ONDERDEEL_   MACHINE_ONDERDEEL    null
+   MACHINE_ONDERDEEL_   MACHINE_ONDERDEEL    null 
       constraint CKC_MACHINE_ONDERDEEL_VISUELE_ check (MACHINE_ONDERDEEL_ is null or (MACHINE_ONDERDEEL_ >= '1')),
-   AFDELING             AFDELING             null
+   AFDELING             AFDELING             null 
       constraint CKC_AFDELING_VISUELE_ check (AFDELING is null or (AFDELING >= '1')),
    constraint PK_VISUELE_BEOORDELING primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
 )
@@ -1207,8 +1309,8 @@ alter table ASPECT_EFFECT
       references EFFECT (EFFECTNAAM)
 go
 
-alter table MACHINE_VEILIGHEID
-   add constraint FK_MACHINE__IS_EEN_VI_VISUELE_ foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+alter table MACHINEVEILIGHEID
+   add constraint FK_MACHINEV_IS_EEN_VI_VISUELE_ foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
       references VISUELE_BEOORDELING (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
 go
 
@@ -1252,4 +1354,3 @@ alter table VISUELE_BEOORDELING
       references RISICOREGEL (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
 go
 
-use master

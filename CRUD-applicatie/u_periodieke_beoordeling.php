@@ -6,7 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                  :PROJECTNUMMER,
                  :RAPPORTNUMMER,
                  :REGELNUMMER,
-                 :DATUM_BEOORDELING,
+                 :DATUM_BEOORDELING_OUD,
+                 :DATUM_BEOORDELING_NIEUW,
                  :INSPECTIE_IS_DE_ACTIE_UITGEVOERD,
                  :OPMERKING_STAND_VAN_ZAKEN,
                  :STAND_VAN_ZAKEN,
@@ -15,7 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
     $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
     $stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
-    $stmt->bindParam(':DATUM_BEOORDELING', $_GET['datum']);
+    $stmt->bindParam(':DATUM_BEOORDELING_OUD', $_GET['datum']);
+    $stmt->bindParam(':DATUM_BEOORDELING_NIEUW', $_POST['DATUM_BEOORDELING']);
     $stmt->bindParam(':INSPECTIE_IS_DE_ACTIE_UITGEVOERD', $_POST['INSPECTIE_IS_DE_ACTIE_UITGEVOERD']);
     $stmt->bindParam(':OPMERKING_STAND_VAN_ZAKEN', $_POST['OPMERKING_STAND_VAN_ZAKEN']);
     $stmt->bindParam(':STAND_VAN_ZAKEN', $_POST['STAND_VAN_ZAKEN']);
@@ -26,6 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $meldingStatus = true;
         $melding = "Periodieke beoordeling opgeslagen.";
+        header('Location: u_plan_van_aanpak.php?projectnummer=' . $_GET['projectnummer'] . '&rapportnummer=' . $_GET['rapportnummer'] . '&regelnummer=' . $_GET['regelnummer']);
+        
+
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Periodieke beoordeling niet opgeslagen. Foutmelding: " . $e->getMessage();
@@ -90,20 +95,19 @@ try {
     </div>
     <hr>
     <div class="row">
-        <form action="u_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?>&datum=<?= $_GET['datum'] ?> "
+        <form action="u_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?>&datum=<?= $_GET['datum'] ?>"
               method="post">
-            <h3>Periodieke beoordeling toevoegen</h3>
+
             <div class="form-group">
-                <label for="DATUM_BEOORDELING">Datum laatste beoordeling</label>
+                <label for="DATUM_BEOORDELING">Datum beoordeling</label>
                 <input type="date" class="form-control" name="DATUM_BEOORDELING"
                        value="<?php if (isset($result['DATUM_BEOORDELING'])) {
                            echo strftime('%Y-%m-%d', strtotime($result['DATUM_BEOORDELING']));
                        } ?>">
             </div>
-            <?= $result['DATUM_BEOORDELING'] ?>
 
 
-            <label for="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">Is de actie uitgevoerd?</label>
+            <label for="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">Is de actie uitgevoerd?</label><br>
             <div class="btn-group" data-toggle="buttons">
                 <label class="btn btn-success">
                     <input type="radio" name="INSPECTIE_IS_DE_ACTIE_UITGEVOERD" value="1"> Ja

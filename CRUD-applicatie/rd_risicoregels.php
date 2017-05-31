@@ -98,41 +98,28 @@ $query = "SELECT *
 $stmt = $dbh->prepare($query);
 $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
 $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+$result = null;
 
 try {
     $stmt->execute();
     $result = $stmt->fetchAll();
 } catch (PDOException $e) {
-    echo "Foutmelding: " . $e->getMessage();
+    $meldingStatus = false;
+    $melding = "Foutmelding: " . $e->getMessage();
 }
 
-$query = "SELECT RAPPORT_TYPE
-          FROM RAPPORT
+$query = "SELECT REGELNUMMER
+          FROM PLAN_VAN_AANPAK
           WHERE PROJECTNUMMER = :PROJECTNUMMER
-          AND RAPPORTNUMMER = :RAPPORTNUMMER";
-$stmt = $dbh->prepare($query);
-$stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
-$stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
-
-try {
-    $stmt->execute();
-    $type = $stmt->fetch();
-} catch (PDOException $e) {
-    echo "Foutmelding: " . $e->getMessage();
-}
-
-$query = "SELECT regelnummer
-FROM PLAN_VAN_AANPAK
- WHERE PROJECTNUMMER = :PROJECTNUMMER
           AND RAPPORTNUMMER = :RAPPORTNUMMER ";
 $stmt = $dbh->prepare($query);
 $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
 $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+$regelnummers = null;
 
 try {
     $stmt->execute();
     $regelnummers = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-
 } catch (PDOException $e) {
     echo "Foutmelding: " . $e->getMessage();
 }
@@ -143,10 +130,11 @@ if ($type['RAPPORT_TYPE'] === 'Organisatie') {
     $url = 'visuele_beoordeling_risicoregel.php';
 } else if ($type['RAPPORT_TYPE'] === 'Machineveiligheid'){
     $url = 'machineveiligheid_risicoregel.php';
+    $meldingStatus = false;
+    $melding = "Foutmelding: " . $e->getMessage();
 }
 
 ?>
-
         <div class="container">
             <div class="page-header">
                 <h1>Regels</h1>
@@ -235,7 +223,7 @@ if ($type['RAPPORT_TYPE'] === 'Organisatie') {
             var projectnummer = "<?php echo $_GET['projectnummer']; ?>";
             var rapportnummer = "<?php echo $_GET['rapportnummer']; ?>";
         </script>
-        <?php
+<?php
    include_once('include/footer.php');
  }
 ?>

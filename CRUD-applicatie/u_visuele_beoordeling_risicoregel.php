@@ -1,4 +1,4 @@
-<?php include_once('include/pdo-connect.php') ?>
+<?php include_once('include/header.php') ?>
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -116,8 +116,6 @@ foreach ($effectaspecten as $row) {
 }
 
 ?>
-
-<?php include_once('include/header.php') ?>
 
 <div class="container">
     <div class="page-header">
