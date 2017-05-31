@@ -3,7 +3,7 @@
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $query = "EXEC dbo.INSERT_RAPPORT
+    $query = "EXEC dbo.SP_INSERT_RAPPORT
              :PROJECTNUMMER,
              :RAPPORT_TYPE";
     $stmt = $dbh->prepare($query);
