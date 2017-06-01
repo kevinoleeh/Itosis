@@ -30,14 +30,14 @@ SET IDENTITY_INSERT Euratex.dbo.PROJECT ON
 			DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
 			--rapport
 			SET @tabel = 'RAPPORT'
-			INSERT INTO RAPPORT
+			INSERT INTO RAPPORT(PROJECTNUMMER, RAPPORTNUMMER, RAPPORT_TYPE)
 				VALUES (@projectnummer, 1, 'Organisatie'),
 				(@projectnummer, 2, 'Visuele beoordeling'),
 					(@projectnummer, 3, 'Machineveiligheid')
 
 			--aspect
 			SET @tabel = 'ASPECT'
-			INSERT INTO ASPECT VALUES('Test aspect2')
+			INSERT INTO ASPECT VALUES('Test aspect 2')
 			INSERT INTO ASPECT VALUES('Test aspect')
 
 			--effect
@@ -48,7 +48,7 @@ SET IDENTITY_INSERT Euratex.dbo.PROJECT ON
 			--aspect_effect
 			SET @tabel = 'ASPECT_EFFECT'
 			INSERT INTO ASPECT_EFFECT VALUES('Test aspect', 'Test effect')
-			INSERT INTO ASPECT_EFFECT VALUES('Test aspect2', 'Test effect 2')
+			INSERT INTO ASPECT_EFFECT VALUES('Test aspect 2', 'Test effect 2')
 
 			--risicoregel
 			SET @tabel = 'RISICOREGEL'
@@ -144,9 +144,9 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 
 		SET @tabel = 'ASPECT_EFFECT'
 		DELETE FROM ASPECT_EFFECT
-		WHERE ASPECTNAAM = 'Test aspect';
+		WHERE ASPECTNAAM = 'Test aspect' AND EFFECTNAAM = 'Test effect';
 		DELETE FROM ASPECT_EFFECT
-		WHERE ASPECTNAAM = 'Test aspect2'
+		WHERE ASPECTNAAM = 'Test aspect 2' AND EFFECTNAAM = 'Test effect 2';
 
 		SET @tabel = 'EFFECT'
 		DELETE FROM EFFECT
@@ -158,7 +158,7 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 		DELETE FROM ASPECT
 		WHERE ASPECTNAAM = 'Test aspect';
 		DELETE FROM ASPECT
-		WHERE ASPECTNAAM = 'Test aspect2';
+		WHERE ASPECTNAAM = 'Test aspect 2';
 
 
 

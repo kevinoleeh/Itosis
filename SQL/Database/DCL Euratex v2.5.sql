@@ -1,19 +1,53 @@
-USE Euratex
+USE master
 GO
+
+IF EXISTS (SELECT * FROM sys.syslogins WHERE name = N'BeheerderLogin')
+DROP LOGIN BeheerderLogin
+
+IF EXISTS (SELECT * FROM sys.syslogins WHERE name = N'GebruikerLogin')
+DROP LOGIN GebruikerLogin
+
+IF EXISTS (SELECT * FROM sys.syslogins WHERE name = N'StagiairLogin')
+DROP LOGIN StagiairLogin
+
+
+IF EXISTS (SELECT * FROM sys.syslogins WHERE name = N'EenStagiair')
+DROP LOGIN EenStagiair
+
+IF EXISTS (SELECT * FROM sys.syslogins WHERE name = N'TweeStagiair')
+DROP LOGIN TweeStagiair
+
+IF EXISTS (SELECT * FROM sys.syslogins WHERE name = N'StagiairLogin')
+DROP LOGIN StagiairLogin
+
+
+
+
+
+USE master
+GO
+
+CREATE LOGIN TweeStagiair WITH PASSWORD = 'Euratex12345'
+CREATE USER TweeStagiair FOR LOGIN TweeStagiair
+EXEC sp_addrolemember 'STAGIAIR', 'TweeStagiair'
+GO
+
+
+
 
 /*==============================================================*/
 /* LOGIN							                            */
 /*==============================================================*/
-CREATE LOGIN BeheerderLogin WITH PASSWORD = 'BeheerderLogin'
-CREATE LOGIN GebruikerLogin WITH PASSWORD = 'GebruikerLogin'
-CREATE LOGIN StagiairLogin WITH PASSWORD = 'StagiairLogin'
+CREATE LOGIN BeheerderLogin WITH PASSWORD = 'wachtwoord'
+CREATE LOGIN GebruikerLogin WITH PASSWORD = 'wachtwoord'
+CREATE LOGIN StagiairLogin WITH PASSWORD = 'wachtwoord'
 
 /*==============================================================*/
 /* USER								                            */
 /*==============================================================*/
-CREATE USER BeheerderUser FOR LOGIN BeheerderLogin
-CREATE USER GebruikerUser FOR LOGIN GebruikerLogin
-CREATE USER StagiairUser FOR LOGIN StagiairLogin
+CREATE USER BeheerderGebruiker FOR LOGIN BeheerderLogin
+CREATE USER GebruikerGebruiker FOR LOGIN GebruikerLogin
+CREATE USER StagiairGebruiker FOR LOGIN StagiairLogin
 
 /*==============================================================*/
 /* ROLLEN							                            */
@@ -22,9 +56,9 @@ CREATE ROLE BEHEERDER
 CREATE ROLE GEBRUIKER
 CREATE ROLE STAGIAIR
 
-EXEC sp_addrolemember 'BEHEERDER', 'BeheerderUser'
-EXEC sp_addrolemember 'GEBRUIKER', 'GebruikerUser'
-EXEC sp_addrolemember 'STAGIAIR', 'StagiairUser'
+EXEC sp_addrolemember 'BEHEERDER', 'BeheerderGebruiker'
+EXEC sp_addrolemember 'GEBRUIKER', 'GebruikerGebruiker'
+EXEC sp_addrolemember 'STAGIAIR', 'StagiairGebruiker'
 
 /*==============================================================*/
 /* TOEWIJZEN ROLLEN					                            */
@@ -137,7 +171,6 @@ GRANT DELETE ON PERIODIEKE_BEOORDELING TO BEHEERDER
 GRANT EXECUTE TO GEBRUIKER
 REVOKE EXECUTE ON SP_DELETE_BEDRIJF TO GEBRUIKER
 REVOKE EXECUTE ON SP_DELETE_PROJECT TO GEBRUIKER
-REVOKE EXECUTE ON SP_DELETE_RAPPORT TO GEBRUIKER
 
 /*================================*/
 /* Tabel BEDRIJF				  */
@@ -220,25 +253,11 @@ GRANT SELECT ON PERIODIEKE_BEOORDELING TO GEBRUIKER
 GRANT INSERT ON PERIODIEKE_BEOORDELING TO GEBRUIKER
 GRANT UPDATE ON PERIODIEKE_BEOORDELING TO GEBRUIKER
 GRANT DELETE ON PERIODIEKE_BEOORDELING TO GEBRUIKER
-
-
-GRANT SELECT ON PROJECT TO GEBRUIKER
-GRANT SELECT ON RAPPORT TO GEBRUIKER
-GRANT SELECT ON RAPPORT_TYPE TO GEBRUIKER
-GRANT SELECT ON RISICOREGEL TO GEBRUIKER
-GRANT SELECT ON VISUELE_BEOORDELING TO GEBRUIKER
-GRANT SELECT ON MACHINE_VEILIGHEID TO GEBRUIKER
-GRANT SELECT ON AFBEELDING TO GEBRUIKER
-GRANT SELECT ON ASPECT TO GEBRUIKER
-GRANT SELECT ON EFFECT TO GEBRUIKER
-GRANT SELECT ON ASPECT_EFFECT TO GEBRUIKER
-GRANT SELECT ON PLAN_VAN_AANPAK TO GEBRUIKER
 GRANT SELECT ON PERIODIEKE_BEOORDELING TO GEBRUIKER
 
-GRANT EXECUTE ON SP_INSERT_ORGANISATIE_RISICOREGEL TO GEBRUIKER
-GRANT EXECUTE ON SP_UPDATE_ORGANISATIE_RISICOREGEL TO GEBRUIKER
-GRANT EXECUTE ON SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL TO GEBRUIKER
-GRANT EXECUTE ON SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL TO GEBRUIKER
+
+
+
 
 
 /*==============================================================*/
@@ -281,8 +300,6 @@ REVOKE EXECUTE ON SP_INSERT_ASPECT TO STAGIAIR
 REVOKE EXECUTE ON SP_UPDATE_ASPECT TO STAGIAIR
 
 
-
-REVOKE EXECUTE ON SP_DELETE_RAPPORT TO STAGIAIR
 
 
 
