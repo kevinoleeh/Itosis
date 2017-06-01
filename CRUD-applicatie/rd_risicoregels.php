@@ -165,27 +165,12 @@ try {
                         <tbody>
                             <?php foreach ($result as &$value) { ?>
                             <tr>
-                                <td style="display: none;">
-                                    <?= $value['REGELNUMMER'] ?>
-                                </td>
-                                <td>
-                                    <?= $value['REGELNUMMER'] ?>
-                                </td>
-                                <td>
-                                    <?= $value['ARBO_ONDERWERP'] ?>
-                                </td>
-                                <td>
-                                    <?= $value['ASPECTNAAM'] ?>
-                                </td>
-                                <td>
-                                    <?= $value['EFFECTNAAM'] ?>
-                                </td>
-                                <td>
-                                    <?= $value['VOOR_RISICO'] ?>
-                                </td>
-                                <td>
-                                    <?= $value['VOOR_PRIORITEIT'] ?>
-                                </td>
+                                <td><?= $value['REGELNUMMER'] ?></td>
+                                <td><?= $value['ARBO_ONDERWERP'] ?></td>
+                                <td><?= $value['ASPECTNAAM'] ?></td>
+                                <td><?= $value['EFFECTNAAM'] ?></td>
+                                <td><?= $value['VOOR_RISICO'] ?></td>
+                                <td><?= $value['VOOR_PRIORITEIT'] ?></td>
                                 <td>
                                     <?php if (in_array($value['REGELNUMMER'], $regelnummers)) { ?>
 
