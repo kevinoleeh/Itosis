@@ -212,7 +212,7 @@ try {
             </div>
         </div>
         <script type="text/javascript">
-            var projectnummer = "<?php echo $_GET['projectnummer']; ?>";
+            var projectnummer = "<?= $_GET['projectnummer']; ?>";
             var rapportnummer = "<?php echo $_GET['rapportnummer']; ?>";
         </script>
 <?php
