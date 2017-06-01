@@ -249,10 +249,12 @@ try {
         <div class="form-group">
             <label>Risico</label>
             <input type="text" class="form-control" style="<?php if (isset($result['VOOR_PRIORITEIT'])) { echo getPrioriteitStyle($result['VOOR_PRIORITEIT']); } ?>" value="<?php if (isset($result['VOOR_RISICO'])) { echo $result['VOOR_RISICO']; } ?>" disabled>
+            <small class="form-text text-muted">Automatisch berekend</small>
         </div>
         <div class="form-group">
             <label>Prioriteit</label>
             <input type="text" class="form-control" style="<?php if (isset($result['VOOR_PRIORITEIT'])) { echo getPrioriteitStyle($result['VOOR_PRIORITEIT']); } ?>" value="<?php if (isset($result['VOOR_PRIORITEIT'])) { echo $result['VOOR_PRIORITEIT']; } ?>" disabled>
+            <small class="form-text text-muted">Automatisch berekend</small>
         </div>
         <h3>Risico na maatregelen</h3>
         <h4>Fine en Kinney</h4>
@@ -284,10 +286,12 @@ try {
         <div class="form-group">
             <label>Risico</label>
             <input type="text" class="form-control" style="<?php if (isset($result['VOOR_PRIORITEIT'])) { echo getPrioriteitStyle($result['NA_PRIORITEIT']); } ?>" value="<?php if (isset($result['NA_RISICO'])) { echo $result['NA_RISICO']; } ?>" disabled>
+            <small class="form-text text-muted">Automatisch berekend</small>
         </div>
         <div class="form-group">
             <label>Prioriteit</label>
             <input type="text" class="form-control" style="<?php if (isset($result['VOOR_PRIORITEIT'])) { echo getPrioriteitStyle($result['NA_PRIORITEIT']); } ?>" value="<?php if (isset($result['NA_PRIORITEIT'])) { echo $result['NA_PRIORITEIT']; } ?>" disabled>
+            <small class="form-text text-muted">Automatisch berekend</small>
         </div>
         <div class="form-group">
             <label for="AFWIJKENDE_ACTIE_TER_UITVOERING">Afwijkende actie ter uitvoering</label>
