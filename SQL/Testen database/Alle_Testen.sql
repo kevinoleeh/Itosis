@@ -966,7 +966,7 @@ BEGIN CATCH
 END CATCH
 EXEC _end 0
 GO
--- Insert organisatie risicoregel tests
+-- Insert visuele risicoregel tests
 EXEC _begin
 BEGIN TRY
 	DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
@@ -1426,4 +1426,39 @@ BEGIN CATCH
 	EXEC _result 'SP_INSPERT_ASPECT', 0, 'Juiste insert Aspect', @msg
 END CATCH
 EXEC _end 1
+GO
+
+EXEC _begin
+BEGIN TRY
+	DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
+	BEGIN TRANSACTION test
+		EXEC SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL
+			@projectnummer,
+			2,
+			'Test aspect',
+			'Test effect',
+			'Test',
+			'Test',
+			'Test',
+			'Test',
+			'Test',
+			'Test',
+			'Test',
+			'Test',
+			'Test',
+			1,
+			1,
+			1,
+			1,
+			1,
+			1
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 1, '', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 0, '', @msg
+END CATCH
+EXEC _end 0
 GO
