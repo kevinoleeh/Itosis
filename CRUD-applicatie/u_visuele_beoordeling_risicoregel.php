@@ -126,10 +126,10 @@ function getPrioriteitStyle($prioriteit)
             return 'background-color: #ffa000; color: #fff;';
             break;
         case 'P 4':
-            return 'background-color: #ffc800; color: #000;';
+            return 'background-color: #ffc800; color: #fff;';
             break;
         case 'P 5':
-            return 'background-color: #00a000; color: #000;';
+            return 'background-color: #00a000; color: #fff;';
             break;
     }
 
