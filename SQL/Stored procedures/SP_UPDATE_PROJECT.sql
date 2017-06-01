@@ -1,7 +1,9 @@
 CREATE PROCEDURE SP_UPDATE_PROJECT
-		@Bedrijfsnaam        VARCHAR(255),
+	  @Projectnummer	     int,
+	  @Bedrijfsnaam        VARCHAR(255),
     @Locatie             VARCHAR(255),
-    @Omschrijving        VARCHAR(255)
+	  @omschrijvingOud     Varchar(255),
+    @OmschrijvingNew     VARCHAR(255)
 AS
 	BEGIN
 		SET NOCOUNT, XACT_ABORT ON
@@ -15,8 +17,8 @@ AS
 
 		BEGIN TRY
 		--1. Project Update
-		UPDATE Project SET Omschrijving = @Omschrijving
-		WHERE BEDRIJFSNAAM = @Bedrijfsnaam AND LOCATIE = @Locatie
+		UPDATE Project SET PROJECTOMSCHRIJVING = @OmschrijvingNew
+		WHERE BEDRIJFSNAAM = @Bedrijfsnaam AND LOCATIE = @Locatie AND Projectomschrijving = @omschrijvingOud AND PROJECTNUMMER = @Projectnummer
 		IF @TranCounter = 0 AND XACT_STATE() = 1
 			COMMIT TRANSACTION;
 		END TRY
