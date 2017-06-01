@@ -1,5 +1,17 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if(isset($_GET['delete'])) {
+        $query = "DELETE RISICOREGEL
+                  WHERE PROJECTNUMMER = :PROJECTNUMMER
+                  AND RAPPORTNUMMER = :RAPPORTNUMMER
+                  AND REGELNUMMER = :REGELNUMMER";
+        $stmt = $dbh->prepare($query);
+        $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+        $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+        $stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
+        $stmt->execute();
+    }
+
 
   session_start();
   include_once('PHPExcel/Classes/PHPExcel.php');
@@ -183,6 +195,7 @@ function getPrioriteitStyle($prioriteit)
                                 <th>Risico voor maatregel</th>
                                 <th>Prioriteit voor maatregel</th>
                                 <th>Plan van aanpak</th>
+                                <th style="text-align: center">D</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -197,21 +210,20 @@ function getPrioriteitStyle($prioriteit)
                                 <td>
                                     <?php if (in_array($value['REGELNUMMER'], $regelnummers)) { ?>
 
-                                    <div class="">
-                                        <a id="pvabutton" href="u_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>" class="btn btn-block btn-primary">PvA wijzigen</a>
+                                    <div>
+                                        <a id="pvabutton" class="btn btn-primary" style="padding: 0;" href="u_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>">Wijzigen</a>
                                     </div>
 
                                     <?php
                                 } else {
                                     ?>
-                                        <div class="">
-                                            <a id="pvabutton"
-                                               href="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"
-                                               class="btn btn-block btn-primary">PvA toevoegen</a>
+                                        <div>
+                                            <a id="pvabutton" class="btn btn-block btn-primary" style="padding: 0 12px; margin: 0;" href="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>">Toevoegen</a>
                                         </div>
                                         <?php
                                 } ?>
                                 </td>
+                                <td><a href=""><span class="glyphicon glyphicon-remove widintable red"></span></a></td>
                             </tr>
                             <?php } ?>
                         </tbody>
