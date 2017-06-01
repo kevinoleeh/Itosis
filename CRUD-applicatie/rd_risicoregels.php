@@ -102,7 +102,7 @@ exit();
 
         try {
             $stmt->execute();
-            
+
             header('Location: rd_risicoregels.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
         } catch (PDOException $e) {
             $meldingStatus = false;
@@ -209,7 +209,7 @@ function getPrioriteitStyle($prioriteit)
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($result as &$value) { ?>
+                            <?php foreach ($result as $value) { ?>
                             <tr>
                                 <td><?= $value['REGELNUMMER'] ?></td>
                                 <td><?= $value['ARBO_ONDERWERP'] ?></td>
