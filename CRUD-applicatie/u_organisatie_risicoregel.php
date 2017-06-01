@@ -311,7 +311,7 @@ try {
     </form>
     <hr>
 
-    <button class="btn btn-block btn-primary" onclick="ShowDiv()">Versiegeschiedenis weergeven</button>
+    <button class="btn btn-block btn-default" onclick="ShowDiv()">Versiegeschiedenis weergeven</button>
     <div style="overflow: auto; display: none;" id="versiebeheer">
         <br>
         <h1>Versiegeschiedenis</h1>
