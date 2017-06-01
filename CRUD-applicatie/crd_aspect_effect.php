@@ -133,8 +133,27 @@ if (isset($_POST["EFFECTNAAMNEW"])) {
         $melding = "Effect niet geupdatet. Foutmelding: " . $e->getMessage();
     }
 }
+try {
+$rs = $dbh->query("SELECT * FROM ASPECT");
+$aspecten = $rs->fetchAll();
+}catch (PDOException $e) {
+    $meldingStatus = false;
+    $melding = "Foutmelding: " . $e->getMessage();
+}
+if (isset($_GET["inserteffect"])) {
+try{
+$stmt = $dbh->query("SELECT EFFECTNAAM FROM ASPECT_EFFECT WHERE ASPECTNAAM = '$ASPECTNAAMKEUS'");
 
+$effecten = $stmt->fetchAll();
 
+$rss = $dbh->query("SELECT * FROM EFFECT");
+$alleEffecten = $rss->fetchAll();
+}
+catch (PDOException $e) {
+  $meldingStatus = false;
+  $melding = "Foutmelding: " . $e->getMessage();
+}
+}
 ?>
 <div class="container">
     <div class="page-header">
@@ -163,9 +182,9 @@ if (isset($_POST["EFFECTNAAMNEW"])) {
             <div class="table-responsive marginTop">
                 <table id="table" class="table table-striped table-bordered">
                     <thead>
-                    <tr class="borderwhite">
-                        <th>Aspect</th>
-                    </tr>
+                        <tr class="borderwhite">
+                            <th>Aspect</th>
+                        </tr>
                     </thead>
                     <?php
 
@@ -186,16 +205,17 @@ if (isset($_POST["EFFECTNAAMNEW"])) {
                         echo '</tr>';
                         echo '</form>';
                     }
-
-                    $rs = $dbh->query("SELECT * FROM ASPECT");
-                    $aspecten = $rs->fetchAll();
+                    if(isset($aspecten)){
                     foreach ($aspecten as $aspecten) {
-                        echo '<tr>';
-                        echo' <td><a href="crd_aspect_effect.php?aspectnaam='.$aspecten["ASPECTNAAM"].'"> '.$aspecten["ASPECTNAAM"].'</a>';
-                        echo'   <a href="?removeAspect='.$aspecten["ASPECTNAAM"].'&checkAspect=1"><span class="glyphicon glyphicon-remove widintable red"></span></a>
-                                <a href="?editAspect='.$aspecten["ASPECTNAAM"].'&"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
-                        echo '  </tr>';
-                    } ?>
+                        echo '<tr>
+                              <td><a href="crd_aspect_effect.php?aspectnaam='.$aspecten["ASPECTNAAM"].'"> '.$aspecten["ASPECTNAAM"].'</a>
+                              <a href="?removeAspect='.$aspecten["ASPECTNAAM"].'&checkAspect=1"><span class="glyphicon glyphicon-remove widintable red"></span></a>
+                                <a href="?editAspect='.$aspecten["ASPECTNAAM"].'&"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>
+                              </tr>';
+                    }
+                  }
+                  ?>
+
                 </table>
             </div>
         </div>
@@ -206,21 +226,15 @@ if (isset($_POST["EFFECTNAAMNEW"])) {
             <div class="table-responsive marginTop">
                 <table id="table" class="table table-striped table-bordered">
                     <thead>
-                    <tr class="borderwhite">
-                        <th>Effect</th>
-                    </tr>
+                        <tr class="borderwhite">
+                            <th>Effect</th>
+                        </tr>
                     </thead>
                     <?php
 
 
                     $ASPECTNAAMKEUS = $_GET['aspectnaam'];
-                    $stmt = $dbh->query("SELECT EFFECTNAAM FROM ASPECT_EFFECT WHERE ASPECTNAAM = '$ASPECTNAAMKEUS'");
-                    $effecten = $stmt->fetchAll();
-
-                    $rss = $dbh->query("SELECT * FROM EFFECT");
-                    $alleEffecten = $rss->fetchAll();
                     $i = 1;
-
                     if (isset($_GET["inserteffect"])) {
                         echo '<form action="crd_aspect_effect.php?control=1&aspectnaam=' . $_GET['aspectnaam'] . '" method="post">';
                         echo '<tr>';
@@ -232,6 +246,7 @@ if (isset($_POST["EFFECTNAAMNEW"])) {
                         echo '</tr>';
                         echo '</form>';
                     }
+
 
 
                     if (isset($_GET["inserteffect"])) {
@@ -258,14 +273,14 @@ if (isset($_POST["EFFECTNAAMNEW"])) {
 
                         <tr>
                             <td>
-                              <?php echo $effectnaam["EFFECTNAAM"];
+                                <?php echo $effectnaam["EFFECTNAAM"];
                               echo'  <a href="?removeEffect='.$effectnaam["EFFECTNAAM"].'&removeAspect='.$_GET["aspectnaam"].'&aspectnaam='.$_GET["aspectnaam"].'"><span class="glyphicon glyphicon-remove widintable red"></span></a>
                                      <a href="?editEffect='.$effectnaam["EFFECTNAAM"].'&aspectnaam='.$_GET['aspectnaam'].'"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
                               ?>
                             </td>
 
                         </tr>
-                    <?php }
+                        <?php }
                     } ?>
                 </table>
             </div>
