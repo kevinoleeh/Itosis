@@ -61,12 +61,15 @@ SET IDENTITY_INSERT Euratex.dbo.PROJECT ON
 				--plan van aanpak
 				SET @tabel = 'PLAN_VAN_AANPAK'
 				INSERT INTO PLAN_VAN_AANPAK
-				VALUES(@projectnummer, 1, 1, 'Testpersoon', 'Testpersoon', '2017-12-12', 'PBMTEST', 'Voorlichting test', 'Werkinstructie voorbeeld test', 'Tra testje', 'de test die het testen heeft willen testen test de test die getest is om te testen of de test getest kan worden')
+				VALUES(@projectnummer, 1, 1, 'Testpersoon', 'Testpersoon', '2099-12-12', 'PBMTEST', 'Voorlichting test', 'Werkinstructie voorbeeld test', 'Tra testje', 'de test die het testen heeft willen testen test de test die getest is om te testen of de test getest kan worden')
 
 	    --periodieke beoordeling
 				SET @tabel = 'PERIODIEKE_BEOORDELING'
 				INSERT INTO PERIODIEKE_BEOORDELING
-				VALUES(@projectnummer, 1, 1, '2017-05-30', 1, 'Geen opmerkingen', 'Probleem nog niet opgelost', 10)
+				VALUES(@projectnummer, 1, 1, '2099-11-11', 1, 'Geen opmerkingen', 'Probleem nog niet opgelost', 10)
+
+				INSERT INTO PERIODIEKE_BEOORDELING
+				VALUES(@projectnummer, 1, 1, '2099-11-12', 1, 'Geen opmerkingen2222', 'Probleem nog niet opgelost22222', 5)
 
 		END TRY
 		BEGIN CATCH
@@ -115,7 +118,7 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 
   SET @tabel = 'PERIODIEKE_BEOORDELING'
 		DELETE FROM PERIODIEKE_BEOORDELING
-		WHERE PROJECTNUMMER = @projectnummer AND RAPPORTNUMMER = 1 AND REGELNUMMER = 1 AND DATUM_BEOORDELING = '2017-05-30'
+		WHERE PROJECTNUMMER = 99999999
 
 		SET @tabel = 'PLAN_VAN_AANPAK'
 		DELETE FROM PLAN_VAN_AANPAK
