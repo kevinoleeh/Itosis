@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              :VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL,
              :AFWIJKENDE_ACTIE_TER_UITVOERING,
              :RESTRISICO,
-             :VOOR_ERNST_VAN_HET_ONGEVAL,
+             :VOOR_ERNST_VAN_ONGEVAL,
              :VOOR_KANS_OP_BLOOTSTELLING,
              :VOOR_KANS_OP_WAARSCHIJNLIJKHEID,
              :NA_ERNST_VAN_ONGEVAL,
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL', $_POST['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL']);
     $stmt->bindParam(':AFWIJKENDE_ACTIE_TER_UITVOERING', $_POST['AFWIJKENDE_ACTIE_TER_UITVOERING']);
     $stmt->bindParam(':RESTRISICO', $_POST['RESTRISICO']);
-    $stmt->bindParam(':VOOR_ERNST_VAN_HET_ONGEVAL', $_POST['VOOR_ERNST_VAN_HET_ONGEVAL']);
+    $stmt->bindParam(':VOOR_ERNST_VAN_ONGEVAL', $_POST['VOOR_ERNST_VAN_ONGEVAL']);
     $stmt->bindParam(':VOOR_KANS_OP_BLOOTSTELLING', $_POST['VOOR_KANS_OP_BLOOTSTELLING']);
     $stmt->bindParam(':VOOR_KANS_OP_WAARSCHIJNLIJKHEID', $_POST['VOOR_KANS_OP_WAARSCHIJNLIJKHEID']);
     $stmt->bindParam(':NA_ERNST_VAN_ONGEVAL', $_POST['NA_ERNST_VAN_ONGEVAL']);
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'] = $_POST['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'];
         $result['AFWIJKENDE_ACTIE_TER_UITVOERING'] = $_POST['AFWIJKENDE_ACTIE_TER_UITVOERING'];
         $result['RESTRISICO'] = $_POST['RESTRISICO'];
-        $result['VOOR_ERNST_VAN_HET_ONGEVAL'] = $_POST['VOOR_ERNST_VAN_HET_ONGEVAL'];
+        $result['VOOR_ERNST_VAN_ONGEVAL'] = $_POST['VOOR_ERNST_VAN_ONGEVAL'];
         $result['VOOR_KANS_OP_BLOOTSTELLING'] = $_POST['VOOR_KANS_OP_BLOOTSTELLING'];
         $result['VOOR_KANS_OP_WAARSCHIJNLIJKHEID'] = $_POST['VOOR_KANS_OP_WAARSCHIJNLIJKHEID'];
         $result['NA_ERNST_VAN_ONGEVAL'] = $_POST['NA_ERNST_VAN_ONGEVAL'];
@@ -124,7 +124,34 @@ function getPrioriteitStyle($prioriteit)
     return '';
 }
 
+$query = "SELECT *
+          FROM RISICOREGEL_HISTORY
+          WHERE PROJECTNUMMER = :PROJECTNUMMER
+          AND RAPPORTNUMMER = :RAPPORTNUMMER
+          AND REGELNUMMER = :REGELNUMMER
+          ORDER BY DATUM DESC";
+$stmt = $dbh->prepare($query);
+$stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+$stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+$stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
+
+$history = null;
+
+try {
+    $stmt->execute();
+    $history = $stmt->fetchAll();
+} catch (PDOException $e) {
+    $meldingStatus = false;
+    $melding = "Foutmelding: " . $e->getMessage();
+}
+
 ?>
+
+<script>
+    function ShowDiv() {
+        document.getElementById("versiebeheer").style.display = "";
+    }
+</script>
 
 <div class="container">
     <div class="page-header">
@@ -195,10 +222,10 @@ function getPrioriteitStyle($prioriteit)
         </div>
         <h4>Fine en Kinney</h4>
         <div class="form-group">
-            <label for="VOOR_ERNST_VAN_HET_ONGEVAL">Ernst van ongeval</label>
-            <input type="text" class="form-control" name="VOOR_ERNST_VAN_HET_ONGEVAL"
-                   value="<?php if (isset($result['VOOR_ERNST_VAN_HET_ONGEVAL'])) {
-                       echo $result['VOOR_ERNST_VAN_HET_ONGEVAL'];
+            <label for="VOOR_ERNST_VAN_ONGEVAL">Ernst van ongeval</label>
+            <input type="text" class="form-control" name="VOOR_ERNST_VAN_ONGEVAL"
+                   value="<?php if (isset($result['VOOR_ERNST_VAN_ONGEVAL'])) {
+                       echo $result['VOOR_ERNST_VAN_ONGEVAL'];
                    } ?>">
             <small id="VOOR_ERNST_VAN_ONGEVAL" class="form-text text-muted">Keuze uit 100, 40, 15, 7, 3 of 1</small>
         </div>
@@ -282,6 +309,71 @@ function getPrioriteitStyle($prioriteit)
                 echo 'Regel opslaan';
             } ?></button>
     </form>
+    <hr>
+
+    <button class="btn btn-block btn-default" onclick="ShowDiv()">Versiegeschiedenis weergeven</button>
+    <div style="overflow: auto; display: none;" id="versiebeheer">
+        <br>
+        <h1>Versiegeschiedenis</h1>
+        <?php if(count($history) > 0) { ?>
+            <table class="table table-striped table-bordered" style="margin: 0; padding: 0;">
+                <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Gebruiker</th>
+                    <th>Actie</th>
+                    <th>Arbo onderwerp</th>
+                    <th>Aspect</th>
+                    <th>Effect</th>
+                    <th>Risico omschrijving of bevinding</th>
+                    <th>Huidige beheersmaatregel</th>
+                    <th>Voorgestelde actie ter uitvoering</th>
+                    <th>Voor ernst van ongeval</th>
+                    <th>Voor kans op blootstelling</th>
+                    <th>Voor kans op waarschijnlijkheid</th>
+                    <th>Voor risico</th>
+                    <th>Voor prioriteit</th>
+                    <th>Na ernst van ongeval</th>
+                    <th>Na kans op blootstelling</th>
+                    <th>Na kans op waarschijnlijkheid</th>
+                    <th>Na risico</th>
+                    <th>Na prioriteit</th>
+                    <th>Afwijkende actie ter uitvoering</th>
+                    <th>Rest risico</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($history as $value) { ?>
+                    <tr>
+                        <td><?= $value['DATUM'] ?></td>
+                        <td><?= $value['GEBRUIKER'] ?></td>
+                        <td><?= $value['ACTIE'] ?></td>
+                        <td><?= $value['ARBO_ONDERWERP'] ?></td>
+                        <td><?= $value['ASPECTNAAM'] ?></td>
+                        <td><?= $value['EFFECTNAAM'] ?></td>
+                        <td><?= $value['RISICO_OMSCHRIJVING_OF_BEVINDING'] ?></td>
+                        <td><?= $value['HUIDIGE_BEHEERSMAATREGEL'] ?></td>
+                        <td><?= $value['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'] ?></td>
+                        <td><?= $value['VOOR_ERNST_VAN_ONGEVAL'] ?></td>
+                        <td><?= $value['VOOR_KANS_OP_BLOOTSTELLING'] ?></td>
+                        <td><?= $value['VOOR_KANS_OP_WAARSCHIJNLIJKHEID'] ?></td>
+                        <td><?= $value['VOOR_RISICO'] ?></td>
+                        <td><?= $value['VOOR_PRIORITEIT'] ?></td>
+                        <td><?= $value['NA_ERNST_VAN_ONGEVAL'] ?></td>
+                        <td><?= $value['NA_KANS_OP_BLOOTSTELLING'] ?></td>
+                        <td><?= $value['NA_KANS_OP_WAARSCHIJNLIJKHEID'] ?></td>
+                        <td><?= $value['NA_RISICO'] ?></td>
+                        <td><?= $value['NA_PRIORITEIT'] ?></td>
+                        <td><?= $value['AFWIJKENDE_ACTIE_TER_UITVOERING'] ?></td>
+                        <td><?= $value['RESTRISICO'] ?></td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        <?php } else { ?>
+            <p>Er zijn geen oudere versies.</p>
+        <?php } ?>
+    </div>
     <br>
 </div>
 <?php include_once('include/footer.php'); ?>

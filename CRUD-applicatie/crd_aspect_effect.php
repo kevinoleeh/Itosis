@@ -247,8 +247,7 @@ if (isset($_POST["EFFECTNAAMNEW"])) {
                         echo '<form action="crd_aspect_effect.php?edit=1" method="post">';
                         echo '<input type="hidden" value="' . $_GET["editEffect"] . '" name="EFFECTNAAMOUD"></td>';
                         echo '<tr>';
-                      
-                        echo '<td><input type="text" value="' . $_GET["editEffect"] . '" name="EFFECTNAAMNEW">';
+                        echo '<td><input class="form-control" type="text" value="' . $_GET["editEffect"] . '" name="EFFECTNAAMNEW">';
                         echo '<button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
                         echo '</tr>';
                         echo '</form>';

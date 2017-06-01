@@ -1,6 +1,5 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
   session_start();
   include_once('PHPExcel/Classes/PHPExcel.php');
   include_once('include/pdo-connect.php');
@@ -91,6 +90,27 @@ exit();
     <?php include_once('include/header.php'); ?>
     <?php
 
+    if(isset($_GET['delete'])) {
+        $query = "DELETE RISICOREGEL
+                  WHERE PROJECTNUMMER = :PROJECTNUMMER
+                  AND RAPPORTNUMMER = :RAPPORTNUMMER
+                  AND REGELNUMMER = :REGELNUMMER";
+        $stmt = $dbh->prepare($query);
+        $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+        $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+        $stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
+
+        try {
+            $stmt->execute();
+
+            header('Location: rd_risicoregels.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
+        } catch (PDOException $e) {
+            $meldingStatus = false;
+            $melding = "Foutmelding: " . $e->getMessage();
+        }
+    }
+
+
 $query = "SELECT *
           FROM RISICOREGEL
           WHERE PROJECTNUMMER = :PROJECTNUMMER
@@ -157,6 +177,8 @@ function getPrioriteitStyle($prioriteit)
                 </h4>
             </div>
 
+            <?php include_once('include/melding.php') ?>
+
             <div class="row">
                 <div class="col-md-4">
                     <a id="regelopenenbutton" class="btn btn-block btn-primary">Regel openen</a>
@@ -183,10 +205,11 @@ function getPrioriteitStyle($prioriteit)
                                 <th>Risico voor maatregel</th>
                                 <th>Prioriteit voor maatregel</th>
                                 <th>Plan van aanpak</th>
+                                <th style="text-align: center">D</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($result as &$value) { ?>
+                            <?php foreach ($result as $value) { ?>
                             <tr>
                                 <td><?= $value['REGELNUMMER'] ?></td>
                                 <td><?= $value['ARBO_ONDERWERP'] ?></td>
@@ -197,21 +220,20 @@ function getPrioriteitStyle($prioriteit)
                                 <td>
                                     <?php if (in_array($value['REGELNUMMER'], $regelnummers)) { ?>
 
-                                    <div class="">
-                                        <a id="pvabutton" href="u_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>" class="btn btn-block btn-primary">PvA wijzigen</a>
+                                    <div>
+                                        <a id="pvabutton" class="btn btn-block btn-primary" style="padding: 0 12px;" href="u_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>">Wijzigen</a>
                                     </div>
 
                                     <?php
                                 } else {
                                     ?>
-                                        <div class="">
-                                            <a id="pvabutton"
-                                               href="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"
-                                               class="btn btn-block btn-primary">PvA toevoegen</a>
+                                        <div>
+                                            <a id="pvabutton" class="btn btn-block btn-primary" style="padding: 0 12px;" href="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>">Toevoegen</a>
                                         </div>
                                         <?php
                                 } ?>
                                 </td>
+                                <td><a href="rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>&delete=1"><span class="glyphicon glyphicon-remove widintable red"></span></a></td>
                             </tr>
                             <?php } ?>
                         </tbody>
@@ -220,7 +242,7 @@ function getPrioriteitStyle($prioriteit)
             </div>
         </div>
         <script type="text/javascript">
-            var projectnummer = "<?= $_GET['projectnummer']; ?>";
+            var projectnummer = "<?php echo $_GET['projectnummer']; ?>";
             var rapportnummer = "<?php echo $_GET['rapportnummer']; ?>";
         </script>
 <?php
