@@ -1,5 +1,25 @@
- <?php include_once('include/header.php'); ?>
+<?php include_once('include/header.php'); ?>
 <?php include_once('include/excelGenerator.php');
+    if(isset($_GET['delete'])) {
+        $query = "DELETE RISICOREGEL
+                  WHERE PROJECTNUMMER = :PROJECTNUMMER
+                  AND RAPPORTNUMMER = :RAPPORTNUMMER
+                  AND REGELNUMMER = :REGELNUMMER";
+        $stmt = $dbh->prepare($query);
+        $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+        $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+        $stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
+
+        try {
+            $stmt->execute();
+
+            header('Location: rd_risicoregels.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
+        } catch (PDOException $e) {
+            $meldingStatus = false;
+            $melding = "Foutmelding: " . $e->getMessage();
+        }
+    }
+
 
 $query = "SELECT *
           FROM RISICOREGEL
@@ -34,6 +54,29 @@ try {
     echo "Foutmelding: " . $e->getMessage();
 }
 
+function getPrioriteitStyle($prioriteit)
+{
+    switch ($prioriteit) {
+        case 'P 1':
+            return 'color: #ff0000;';
+            break;
+        case 'P 2':
+            return 'color: #ff5500;';
+            break;
+        case 'P 3':
+            return 'color: #ffa000;';
+            break;
+        case 'P 4':
+            return 'color: #ffc800;';
+            break;
+        case 'P 5':
+            return 'color: #00a000;';
+            break;
+    }
+
+    return '';
+}
+
 ?>
         <div class="container">
             <div class="page-header">
@@ -43,6 +86,8 @@ try {
                         <?= $_GET['rapportnummer'] ?>
                 </h4>
             </div>
+
+            <?php include_once('include/melding.php') ?>
 
             <div class="row">
                 <div class="col-md-4">
@@ -70,50 +115,35 @@ try {
                                 <th>Risico voor maatregel</th>
                                 <th>Prioriteit voor maatregel</th>
                                 <th>Plan van aanpak</th>
+                                <th style="text-align: center">D</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($result as &$value) { ?>
                             <tr>
-                                <td style="display: none;">
-                                    <?= $value['REGELNUMMER'] ?>
-                                </td>
-                                <td>
-                                    <?= $value['REGELNUMMER'] ?>
-                                </td>
-                                <td>
-                                    <?= $value['ARBO_ONDERWERP'] ?>
-                                </td>
-                                <td>
-                                    <?= $value['ASPECTNAAM'] ?>
-                                </td>
-                                <td>
-                                    <?= $value['EFFECTNAAM'] ?>
-                                </td>
-                                <td>
-                                    <?= $value['VOOR_RISICO'] ?>
-                                </td>
-                                <td>
-                                    <?= $value['VOOR_PRIORITEIT'] ?>
-                                </td>
+                                <td><?= $value['REGELNUMMER'] ?></td>
+                                <td><?= $value['ARBO_ONDERWERP'] ?></td>
+                                <td><?= $value['ASPECTNAAM'] ?></td>
+                                <td><?= $value['EFFECTNAAM'] ?></td>
+                                <td style="<?php if (isset($value['VOOR_PRIORITEIT'])) { echo getPrioriteitStyle($value['VOOR_PRIORITEIT']); } ?>"><?= $value['VOOR_RISICO'] ?></td>
+                                <td style="<?php if (isset($value['VOOR_PRIORITEIT'])) { echo getPrioriteitStyle($value['VOOR_PRIORITEIT']); } ?>"><?= $value['VOOR_PRIORITEIT'] ?></td>
                                 <td>
                                     <?php if (in_array($value['REGELNUMMER'], $regelnummers)) { ?>
 
-                                    <div class="">
-                                        <a id="pvabutton" href="u_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>" class="btn btn-block btn-primary">PvA wijzigen</a>
+                                    <div>
+                                        <a id="pvabutton" class="btn btn-block btn-primary" style="padding: 0 12px;" href="u_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>">Wijzigen</a>
                                     </div>
 
                                     <?php
                                 } else {
                                     ?>
-                                        <div class="">
-                                            <a id="pvabutton"
-                                               href="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>"
-                                               class="btn btn-block btn-primary">PvA toevoegen</a>
+                                        <div>
+                                            <a id="pvabutton" class="btn btn-block btn-primary" style="padding: 0 12px;" href="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>">Toevoegen</a>
                                         </div>
                                         <?php
                                 } ?>
                                 </td>
+                                <td><a href="rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>&delete=1"><span class="glyphicon glyphicon-remove widintable red"></span></a></td>
                             </tr>
                             <?php } ?>
                         </tbody>

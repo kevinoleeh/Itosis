@@ -187,3 +187,11 @@ h1 {
 checkbox {
   font-size: 10px !important;
 }
+
+.glyphicon {
+    padding-top: 3px;
+}
+
+.glyphicon-ok {
+    padding-top: 10px;
+}

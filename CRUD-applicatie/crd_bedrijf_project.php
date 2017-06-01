@@ -102,6 +102,30 @@ if (isset($_GET["removeProject"])) {
         $melding = "Project niet verwijderd. Foutmelding: " . $e->getMessage();
     }
 }
+
+if(isset($_POST["omschrijvingNew"])){
+  $query = 'EXEC dbo.SP_UPDATE_PROJECT
+            :BEDRIJFSNAAM,
+            :LOCATIE,
+            :OMSCHRIJVINGOUD,
+            :OMSCHRIJVINGNEW';
+  $stmt = $dbh->prepare($query);
+  $stmt->bindParam(':BEDRIJFSNAAM', $_POST['UBEDRIJFSNAAM']);
+  $stmt->bindParam(':LOCATIE', $_POST['ULOCATIE']);
+  $stmt->bindParam(':OMSCHRIJVINGOUD', $_POST['omschrijvingOud']);
+  $stmt->bindParam(':OMSCHRIJVINGNEW', $_POST['omschrijvingNew']);
+  try {
+
+      $stmt->execute();
+
+      $meldingStatus = true;
+      $melding = "Project geüpdate.";
+  } catch (PDOException $e) {
+      $meldingStatus = false;
+      $melding = "Project niet geüpdate. Foutmelding: " . $e->getMessage();
+  }
+}
+
 ?>
 <div class="container">
     <div class="page-header">
@@ -182,6 +206,18 @@ if (isset($_GET["removeProject"])) {
                         echo '</tr>';
                         echo '</form>';
                     }
+
+                    if (isset($_GET["editProject"])) {
+                        echo '<form action="crd_bedrijf_project.php?edit=1" method="post">';
+                        echo '<input type="hidden" value="' . $_GET["project"] . '" name="UBEDRIJFSNAAM"></td>';
+                        echo '<input type="hidden" value="' . $_GET["locatie"] . '" name="ULOCATIE"></td>';
+                        echo '<input type="hidden" value="' . $_GET["editProject"] .'" name="omschrijvingOud"></td>';
+                        echo '<tr>';
+                        echo '<td>' . $_GET["projectnummer1"] . '</a></td>';
+                        echo '<td><input class="form-control" type="text" value="' . $_GET["editProject"] . '" name="omschrijvingNew"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
+                        echo '</tr>';
+                        echo '</form>';
+                    }
                     $stmt = $dbh->prepare("SELECT * FROM PROJECT WHERE BEDRIJFSNAAM = :BEDRIJFSNAAM AND LOCATIE = :LOCATIE");
                     $stmt->execute(array(':BEDRIJFSNAAM' => $_GET['project'], ':LOCATIE' => $_GET['locatie']));
                     $projecten = $stmt->fetchAll();
@@ -190,7 +226,7 @@ if (isset($_GET["removeProject"])) {
                         echo '<td><a href=rd_rapportages.php?projectnummer=' . $project["PROJECTNUMMER"] . '>' . $project["PROJECTNUMMER"] . '</a></td>';
                         echo '<td>' . $project["PROJECTOMSCHRIJVING"] . '
                       <a href="?removeProject=' . $project["PROJECTNUMMER"] . '&project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '"><span class="glyphicon glyphicon-remove widintable red"></span></a>
-                      <a href="?editProject=' . $project["PROJECTNUMMER"] . '&project=' . $_GET['project'] . '"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
+                      <a href="?editProject=' . $project["PROJECTOMSCHRIJVING"] . '&project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '&projectnummer1=' . $project["PROJECTNUMMER"] .   '"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
                     }
                     }
                     ?>
