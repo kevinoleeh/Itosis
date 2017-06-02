@@ -1309,9 +1309,11 @@ alter table ASPECT_EFFECT
       references EFFECT (EFFECTNAAM)
 go
 
+
 alter table MACHINEVEILIGHEID
    add constraint FK_MACHINEV_IS_EEN_VI_VISUELE_ foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
       references VISUELE_BEOORDELING (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+         on update cascade on delete cascade
 go
 
 alter table PERIODIEKE_BEOORDELING
@@ -1352,5 +1354,5 @@ go
 alter table VISUELE_BEOORDELING
    add constraint FK_VISUELE__IS_EEN_RI_RISICORE foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
       references RISICOREGEL (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+         on update cascade on delete cascade
 go
-

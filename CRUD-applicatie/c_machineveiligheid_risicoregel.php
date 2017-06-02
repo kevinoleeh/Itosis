@@ -2,9 +2,11 @@
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $query = "EXEC dbo.SP_INSERT_MACHINE_VEILIGHEID_RISICOREGEL
+    $query = "EXEC dbo.SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL
              :PROJECTNUMMER,
              :RAPPORTNUMMER,
+             :PID,
+             :LIJN,
              :ASPECTNAAM,
              :EFFECTNAAM,
              :ARBO_ONDERWERP,
@@ -16,12 +18,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              :PROCES,
              :MACHINE_ONDERDEEL,
              :AFDELING,
+             :MACHINE_CODE,
              :MACHINE,
-             :MODEL__TYPE,
+             :MODEL_TYPE,
              :SERIENUMMER,
              :LEVERANCIER,
              :CE_MARKERING,
              :CE_DOCUCHECK,
+             :AANVULLENDE_OMSCHRIJVING,
+             :TAKEN,
              :TRANSPORT,
              :MONTAGE,
              :IN_BEDRIJFSNAME,
@@ -31,6 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              :TIJDENS_REINIGEN,
              :TIJDENS_AFSTELLEN,
              :DEMONTAGE,
+             :ONTWERP,
+             :AFSCHERMING,
+             :INSTRUCTIE,
              :FREQUENTIE,
              :MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS,
              :MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE,
@@ -44,6 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $dbh->prepare($query);
     $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
     $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+    $stmt->bindParam(':PID', $_POST['PID']);
+    $stmt->bindParam(':LIJN', $_POST['LIJN']);
     $stmt->bindParam(':ASPECTNAAM', $_POST['ASPECTNAAM']);
     $stmt->bindParam(':EFFECTNAAM', $_POST['EFFECTNAAM']);
     $stmt->bindParam(':ARBO_ONDERWERP', $_POST['ARBO_ONDERWERP']);
@@ -55,21 +65,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':PROCES', $_POST['PROCES']);
     $stmt->bindParam(':MACHINE_ONDERDEEL', $_POST['MACHINE_ONDERDEEL']);
     $stmt->bindParam(':AFDELING', $_POST['AFDELING']);
-    $stmt->bindParam(':MODEL__TYPE', $_POST['MODEL__TYPE']);
+    $stmt->bindParam(':MACHINE_CODE', $_POST['MACHINE_CODE']);
+    $stmt->bindParam(':MACHINE', $_POST['MACHINE']);
+    $stmt->bindParam(':MODEL_TYPE', $_POST['MODEL_TYPE']);
     $stmt->bindParam(':SERIENUMMER', $_POST['SERIENUMMER']);
     $stmt->bindParam(':LEVERANCIER', $_POST['LEVERANCIER']);
     $stmt->bindParam(':CE_MARKERING', $_POST['CE_MARKERING']);
     $stmt->bindParam(':CE_DOCUCHECK', $_POST['CE_DOCUCHECK']);
-    $stmt->bindParam(':TRANSPORT', $_POST['TRANSPORT']);
-    $stmt->bindParam(':MONTAGE', $_POST['MONTAGE']);
-    $stmt->bindParam(':IN_BEDRIJFSNAME', $_POST['IN_BEDRIJFSNAME']);
-    $stmt->bindParam(':TIJDENS_PRODUCTIE', $_POST['TIJDENS_PRODUCTIE']);
-    $stmt->bindParam(':TIJDENS_ONDERHOUD', $_POST['TIJDENS_ONDERHOUD']);
-    $stmt->bindParam(':TIJDENS_STORING', $_POST['TIJDENS_STORING']);
-    $stmt->bindParam(':TIJDENS_REINIGEN', $_POST['TIJDENS_REINIGEN']);
-    $stmt->bindParam(':TIJDENS_AFSTELLEN', $_POST['TIJDENS_AFSTELLEN']);
-    $stmt->bindParam(':DEMONTAGE', $_POST['DEMONTAGE']);
-    $stmt->bindParam(':FREQUENTIE', $_POST['FREQUENTIE']);
+    $stmt->bindParam(':AANVULLENDE_OMSCHRIJVING', $_POST['AANVULLENDE_OMSCHRIJVING']);
+    $stmt->bindParam(':TAKEN', $_POST['TAKEN']);
+    $stmt->bindParam(':TRANSPORT', $_POST['TRANSPORT'], PDO::PARAM_INT);
+    $stmt->bindParam(':MONTAGE', $_POST['MONTAGE'], PDO::PARAM_INT);
+    $stmt->bindParam(':IN_BEDRIJFSNAME', $_POST['IN_BEDRIJFSNAME'], PDO::PARAM_INT);
+    $stmt->bindParam(':TIJDENS_PRODUCTIE', $_POST['TIJDENS_PRODUCTIE'], PDO::PARAM_INT);
+    $stmt->bindParam(':TIJDENS_ONDERHOUD', $_POST['TIJDENS_ONDERHOUD'], PDO::PARAM_INT);
+    $stmt->bindParam(':TIJDENS_STORING', $_POST['TIJDENS_STORING'], PDO::PARAM_INT);
+    $stmt->bindParam(':TIJDENS_REINIGEN', $_POST['TIJDENS_REINIGEN'], PDO::PARAM_INT);
+    $stmt->bindParam(':TIJDENS_AFSTELLEN', $_POST['TIJDENS_AFSTELLEN'], PDO::PARAM_INT);
+    $stmt->bindParam(':DEMONTAGE', $_POST['DEMONTAGE'], PDO::PARAM_INT);
+    $stmt->bindParam(':ONTWERP', $_POST['ONTWERP'], PDO::PARAM_INT);
+    $stmt->bindParam(':AFSCHERMING', $_POST['AFSCHERMING'], PDO::PARAM_INT);
+    $stmt->bindParam(':INSTRUCTIE', $_POST['INSTRUCTIE'], PDO::PARAM_INT);
+    $stmt->bindParam(':FREQUENTIE', $_POST['FREQUENTIE'], PDO::PARAM_INT);
     $stmt->bindParam(':MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS', $_POST['MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS']);
     $stmt->bindParam(':MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE', $_POST['MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE']);
     $stmt->bindParam(':ERNST_VAN_DE_GEVOLGEN', $_POST['ERNST_VAN_DE_GEVOLGEN']);
@@ -79,7 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':NA_ERNST_VAN_ONGEVAL', $_POST['NA_ERNST_VAN_ONGEVAL']);
     $stmt->bindParam(':NA_KANS_OP_BLOOTSTELLING', $_POST['NA_KANS_OP_BLOOTSTELLING']);
     $stmt->bindParam(':NA_KANS_OP_WAARSCHIJNLIJKHEID', $_POST['NA_KANS_OP_WAARSCHIJNLIJKHEID']);
-
     try {
         $stmt->execute();
         header('Location: rd_risicoregels.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
@@ -87,6 +103,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $meldingStatus = false;
         $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
 
+        $result['PID'] = $_POST['PID'];
+        $result['LIJN'] = $_POST['LIJN'];
         $result['ASPECTNAAM'] = $_POST['ASPECTNAAM'];
         $result['EFFECTNAAM'] = $_POST['EFFECTNAAM'];
         $result['ARBO_ONDERWERP'] = $_POST['ARBO_ONDERWERP'];
@@ -95,6 +113,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result['PROCES'] = $_POST['PROCES'];
         $result['MACHINE_ONDERDEEL'] = $_POST['MACHINE_ONDERDEEL'];
         $result['AFDELING'] = $_POST['AFDELING'];
+        $result['MACHINE'] = $_POST['MACHINE'];
+        $result['MACHINE_CODE'] = $_POST['MACHINE_CODE'];
+        $result['MODEL_TYPE'] = $_POST['MODEL_TYPE'];
         $result['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'] = $_POST['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'];
         $result['AFWIJKENDE_ACTIE_TER_UITVOERING'] = $_POST['AFWIJKENDE_ACTIE_TER_UITVOERING'];
         $result['RESTRISICO'] = $_POST['RESTRISICO'];
@@ -104,11 +125,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result['NA_ERNST_VAN_ONGEVAL'] = $_POST['NA_ERNST_VAN_ONGEVAL'];
         $result['NA_KANS_OP_BLOOTSTELLING'] = $_POST['NA_KANS_OP_BLOOTSTELLING'];
         $result['NA_KANS_OP_WAARSCHIJNLIJKHEID'] = $_POST['NA_KANS_OP_WAARSCHIJNLIJKHEID'];
-        $result['MODEL__TYPE'] = $_POST['MODEL__TYPE'];
         $result['SERIENUMMER'] = $_POST['SERIENUMMER'];
         $result['LEVERANCIER'] = $_POST['LEVERANCIER'];
         $result['CE_MARKERING'] = $_POST['CE_MARKERING'];
         $result['CE_DOCUCHECK'] = $_POST['CE_DOCUCHECK'];
+        $result['AANVULLENDE_OMSCHRIJVING'] = $_POST['AANVULLENDE_OMSCHRIJVING'];
+        $result['TAKEN'] = $_POST['TAKEN'];
         $result['TRANSPORT'] = $_POST['TRANSPORT'];
         $result['MONTAGE'] = $_POST['MONTAGE'];
         $result['IN_BEDRIJFSNAME'] = $_POST['IN_BEDRIJFSNAME'];
@@ -118,6 +140,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result['TIJDENS_REINIGEN'] = $_POST['TIJDENS_REINIGEN'];
         $result['TIJDENS_AFSTELLEN'] = $_POST['TIJDENS_AFSTELLEN'];
         $result['DEMONTAGE'] = $_POST['DEMONTAGE'];
+        $result['ONTWERP'] = $_POST['ONTWERP'];
+        $result['AFSCHERMING'] = $_POST['ONTWERP'];
+        $result['INSTRUCTIE'] = $_POST['INSTRUCTIE'];
+        $result['FREQUENTIE'] = $_POST['FREQUENTIE'];
         $result['MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS'] = $_POST['MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS'];
         $result['MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE'] = $_POST['MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE'];
         $result['ERNST_VAN_DE_GEVOLGEN'] = $_POST['ERNST_VAN_DE_GEVOLGEN'];
@@ -189,8 +215,8 @@ foreach ($effectaspecten as $row) {
             <input type="text" class="form-control" name="AFDELING" value="<?php if(isset($result['AFDELING'])) { echo $result['AFDELING']; } ?>">
         </div>
         <div class="form-group">
-            <label for="MACHINE_ONDERDEEL">Machine(onderdeel)</label>
-            <input type="text" class="form-control" name="MACHINE_ONDERDEEL" value="<?php if(isset($result['MACHINE_ONDERDEEL_'])) { echo $result['MACHINE_ONDERDEEL_']; } ?>">
+            <label for="MACHINE_ONDERDEEL_">Machine(onderdeel)</label>
+            <input type="text" class="form-control" name="MACHINE_ONDERDEEL_" value="<?php if(isset($result['MACHINE_ONDERDEEL_'])) { echo $result['MACHINE_ONDERDEEL_']; } ?>">
         </div>
         <div class="form-group">
             <label for="RISICO_OMSCHRIJVING_OF_BEVINDING">Risico omschrijving of bevinding</label>
@@ -202,8 +228,24 @@ foreach ($effectaspecten as $row) {
         </div>
         <h3>Machine veiligheid</h3>
         <div class="form-group">
-            <label for="MODEL__TYPE">MODEL__TYPE</label>
-            <input type="text" class="form-control" name="MODEL__TYPE" value="<?php if(isset($result['MODEL__TYPE'])) { echo $result['MODEL__TYPE']; } ?>">
+            <label for="PID">PID</label>
+            <input type="text" class="form-control" name="PID" value="<?php if(isset($result['PID'])) { echo $result['PID']; } ?>">
+        </div>
+        <div class="form-group">
+            <label for="LIJN">Lijn</label>
+            <input type="text" class="form-control" name="LIJN" value="<?php if(isset($result['LIJN'])) { echo $result['LIJN']; } ?>">
+        </div>
+        <div class="form-group">
+            <label for="MACHINE_CODE">Machine code</label>
+            <input type="text" class="form-control" name="MACHINE_CODE" value="<?php if(isset($result['MACHINE_CODE'])) { echo $result['MACHINE_CODE']; } ?>">
+        </div>
+        <div class="form-group">
+            <label for="MACHINE">Machine</label>
+            <input type="text" class="form-control" name="MACHINE" value="<?php if(isset($result['MACHINE'])) { echo $result['MACHINE']; } ?>">
+        </div>
+        <div class="form-group">
+            <label for="MODEL_TYPE">Model type</label>
+            <input type="text" class="form-control" name="MODEL_TYPE" value="<?php if(isset($result['MODEL_TYPE'])) { echo $result['MODEL_TYPE']; } ?>">
         </div>
         <div class="form-group">
             <label for="SERIENUMMER">Serienummer</label>
@@ -222,56 +264,84 @@ foreach ($effectaspecten as $row) {
             <input type="text" class="form-control" name="CE_DOCUCHECK" value="<?php if(isset($result['CE_DOCUCHECK'])) { echo $result['CE_DOCUCHECK']; } ?>">
         </div>
         <div class="form-group">
+            <label for="AANVULLENDE_OMSCHRIJVING">Aanvullende omschrijving</label>
+            <input type="text" class="form-control" name="AANVULLENDE_OMSCHRIJVING" value="<?php if(isset($result['AANVULLENDE_OMSCHRIJVING'])) { echo $result['AANVULLENDE_OMSCHRIJVING']; } ?>">
+        </div>
+        <div class="form-group">
+            <label for="TAKEN">Taken</label>
+            <input type="text" class="form-control" name="TAKEN" value="<?php if(isset($result['TAKEN'])) { echo $result['TAKEN']; } ?>">
+        </div>
+        <div class="form-group">
             <label for="TRANSPORT">Transport</label>
-            <input type="checkbox" class="form-control" name="TRANSPORT" value="<?php if(isset($result['TRANSPORT'])) { echo $result['TRANSPORT']; } ?>">
+            <input type="checkbox" class="form-control" rel="TRANSPORT" <?php if(isset($result['TRANSPORT'])) { echo 'checked'; } ?>>
         </div>
         <div class="form-group">
             <label for="MONTAGE">Montage</label>
-            <input type="checkbox" class="form-control" name="MONTAGE" value="<?php if(isset($result['Montage'])) { echo $result['Montage']; } ?>">
+            <input type="checkbox" class="form-control" rel="MONTAGE" <?php if(isset($result['Montage'])) { echo 'checked'; } ?>>
         </div>
         <div class="form-group">
             <label for="IN_BEDRIJFSNAME">In bedrijfsname</label>
-            <input type="checkbox" class="form-control" name="MONTAGE" value="<?php if(isset($result['IN_BEDRIJFSNAME'])) { echo $result['IN_BEDRIJFSNAME']; } ?>">
+            <input type="checkbox" class="form-control" rel="IN_BEDRIJFSNAME" <?php if(isset($result['IN_BEDRIJFSNAME'])) { echo 'checked'; } ?>>
         </div>
         <div class="form-group">
             <label for="TIJDENS_PRODUCTIE">Tijdens productie</label>
-            <input type="checkbox" class="form-control" name="TIJDENS_PRODUCTIE" value="<?php if(isset($result['TIJDENS_PRODUCTIE'])) { echo $result['TIJDENS_PRODCUTIE']; } ?>">
+            <input type="checkbox" class="form-control" rel="TIJDENS_PRODUCTIE" <?php if(isset($result['TIJDENS_PRODUCTIE'])) { echo 'checked'; } ?>>
         </div>
         <div class="form-group">
             <label for="TIJDENS_ONDERHOUD">Tijdens onderhoud</label>
-            <input type="checkbox" class="form-control" name="TIJDENS_ONDERHOUD" value="<?php if(isset($result['TIJDENS_ONDERHOUD'])) { echo $result['TIJDENS_ONDERHOUD']; } ?>">
+            <input type="checkbox" class="form-control" rel="TIJDENS_ONDERHOUD" <?php if(isset($result['TIJDENS_ONDERHOUD'])) { echo 'checked'; } ?>>
         </div>
         <div class="form-group">
             <label for="TIJDENS_STORING">Tijdens storing</label>
-            <input type="checkbox" class="form-control" name="TIJDENS_STORING" value="<?php if(isset($result['TIJDENS_STORING'])) { echo $result['TIJDENS_STORING']; } ?>">
+            <input type="checkbox" class="form-control" rel="TIJDENS_STORING" <?php if(isset($result['TIJDENS_STORING'])) { echo 'checked'; } ?>>
         </div>
         <div class="form-group">
             <label for="TIJDENS_REINIGEN">Tijdens reinigen</label>
-            <input type="checkbox" class="form-control" name="TIJDENS_REINIGEN" value="<?php if(isset($result['TIJDENS_REINIGEN'])) { echo $result['TIJDENS_REINIGEN']; } ?>">
+            <input type="checkbox" class="form-control" rel="TIJDENS_REINIGEN" <?php if(isset($result['TIJDENS_REINIGEN'])) { echo 'checked'; } ?>>
         </div>
         <div class="form-group">
             <label for="TIJDENS_AFSTELLEN">Tijdens afstellen</label>
-            <input type="checkbox" class="form-control" name="TIJDENS_AFSTELLEN" value="<?php if(isset($result['TIJDENS_AFSTELLEN'])) { echo $result['TIJDENS_AFSTELLEN']; } ?>">
+            <input type="checkbox" class="form-control" rel="TIJDENS_AFSTELLEN" <?php if(isset($result['TIJDENS_AFSTELLEN'])) { echo 'checked'; } ?>>
         </div>
         <div class="form-group">
             <label for="DEMONTAGE">Demontage</label>
-            <input type="checkbox" class="form-control" name="DEMONTAGE" value="<?php if(isset($result['DEMONTAGE'])) { echo $result['DEMONTAGE']; } ?>">
+            <input type="checkbox" class="form-control" rel="DEMONTAGE" <?php if(isset($result['DEMONTAGE'])) { echo 'checked'; } ?>>
+        </div>
+        <div class="form-group">
+            <label for="ONTWERP">Ontwerp</label>
+            <input type="checkbox" class="form-control" rel="ONTWERP" <?php if(isset($result['ONTWERP'])) { echo 'checked'; } ?>>
+        </div>
+        <div class="form-group">
+            <label for="AFSCHERMING">Afscherming</label>
+            <input type="checkbox" class="form-control" rel="AFSCHERMING" <?php if(isset($result['AFSCHERMING'])) { echo 'checked'; } ?>>
+        </div>
+        <div class="form-group">
+            <label for="INSTRUCTIE">Instructie</label>
+            <input type="checkbox" class="form-control" rel="INSTRUCTIE" <?php if(isset($result['INSTRUCTIE'])) { echo 'checked'; } ?>>
         </div>
         <div class="form-group">
             <label for="FREQUENTIE">Frequentie</label>
             <input type="text" class="form-control" name="FREQUENTIE" value="<?php if(isset($result['FREQUENTIE'])) { echo $result['FREQUENTIE']; } ?>">
+            <small id="VOOR_ERNST_VAN_ONGEVAL" class="form-text text-muted">Keuze uit 1, 2, 3, 4, 5</small>
         </div>
         <div class="form-group">
-            <label for="MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS">MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS</label>
+            <label for="MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS">Mogelijkheid optreden gevaarlijke gebeurtenis</label>
             <input type="text" class="form-control" name="MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS" value="<?php if(isset($result['MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS'])) { echo $result['MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS']; } ?>">
+            <small id="VOOR_ERNST_VAN_ONGEVAL" class="form-text text-muted">Keuze uit 1, 2, 3, 4, 5</small>
         </div>
         <div class="form-group">
-            <label for="MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE">MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE</label>
+            <label for="MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE">Mogelijkheid voorkomen of beperken schade</label>
             <input type="text" class="form-control" name="MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE" value="<?php if(isset($result['MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE'])) { echo $result['MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE']; } ?>">
+            <small id="VOOR_ERNST_VAN_ONGEVAL" class="form-text text-muted">Keuze uit 1, 3, 5</small>
         </div>
         <div class="form-group">
             <label for="ERNST_VAN_DE_GEVOLGEN">Ernst van de gevolgen</label>
             <input type="text" class="form-control" name="ERNST_VAN_DE_GEVOLGEN" value="<?php if(isset($result['ERNST_VAN_DE_GEVOLGEN'])) { echo $result['ERNST_VAN_DE_GEVOLGEN']; } ?>">
+            <small id="VOOR_ERNST_VAN_ONGEVAL" class="form-text text-muted">Keuze uit 1, 2, 3, 4</small>
+        </div>
+        <div class="form-group">
+            <label for="CI">CI</label>
+            <input type="text" class="form-control" name="CI" value="<?php if(isset($result['CI'])) { echo $result['CI']; } ?>" disabled>
         </div>
         <h3>Risico voor maatregelen</h3>
         <div class="form-group">
@@ -280,8 +350,8 @@ foreach ($effectaspecten as $row) {
         </div>
         <h4>Fine en Kinney</h4>
         <div class="form-group">
-            <label for="VOOR_ERNST_VAN_HET_ONGEVAL">Ernst van ongeval</label>
-            <input type="text" class="form-control" name="VOOR_ERNST_VAN_HET_ONGEVAL" value="<?php if(isset($result['VOOR_ERNST_VAN_HET_ONGEVAL'])) { echo $result['VOOR_ERNST_VAN_HET_ONGEVAL']; } ?>">
+            <label for="VOOR_ERNST_VAN_ONGEVAL">Ernst van ongeval</label>
+            <input type="text" class="form-control" name="VOOR_ERNST_VAN_ONGEVAL" value="<?php if(isset($result['VOOR_ERNST_VAN_ONGEVAL'])) { echo $result['VOOR_ERNST_VAN_ONGEVAL']; } ?>">
             <small id="VOOR_ERNST_VAN_ONGEVAL" class="form-text text-muted">Keuze uit 100, 40, 15, 7, 3 of 1</small>
         </div>
         <div class="form-group">
@@ -324,5 +394,17 @@ foreach ($effectaspecten as $row) {
     </form>
     <br>
 </div>
-
 <?php include_once('include/footer.php'); ?>
+<script>
+$(document).ready(function() {
+var chk = $('input[type="checkbox"]');
+    chk.each(function(){
+        var v = $(this).attr('checked') == 'checked'?1:0;
+        $(this).after('<input type="hidden" class="form-control" name="'+$(this).attr('rel')+'" value="'+v+'" />');
+    });
+chk.change(function(){
+        var v = $(this).is(':checked')?1:0;
+        $(this).next('input[type="hidden"]').val(v);
+    });
+});
+</script>

@@ -105,19 +105,19 @@ function getPrioriteitStyle($prioriteit)
 {
     switch ($prioriteit) {
         case 'P 1':
-            return 'background-color: #ff0000; color: #fff;';
+            return 'color: #ff0000;';
             break;
         case 'P 2':
-            return 'background-color: #ff5500; color: #fff;';
+            return 'color: #ff5500;';
             break;
         case 'P 3':
-            return 'background-color: #ffa000; color: #fff;';
+            return 'color: #ffa000;';
             break;
         case 'P 4':
-            return 'background-color: #ffc800; color: #fff;';
+            return 'color: #ffc800;';
             break;
         case 'P 5':
-            return 'background-color: #00a000; color: #fff;';
+            return 'color: #00a000;';
             break;
     }
 
@@ -249,10 +249,12 @@ try {
         <div class="form-group">
             <label>Risico</label>
             <input type="text" class="form-control" style="<?php if (isset($result['VOOR_PRIORITEIT'])) { echo getPrioriteitStyle($result['VOOR_PRIORITEIT']); } ?>" value="<?php if (isset($result['VOOR_RISICO'])) { echo $result['VOOR_RISICO']; } ?>" disabled>
+            <small class="form-text text-muted">Automatisch berekend</small>
         </div>
         <div class="form-group">
             <label>Prioriteit</label>
             <input type="text" class="form-control" style="<?php if (isset($result['VOOR_PRIORITEIT'])) { echo getPrioriteitStyle($result['VOOR_PRIORITEIT']); } ?>" value="<?php if (isset($result['VOOR_PRIORITEIT'])) { echo $result['VOOR_PRIORITEIT']; } ?>" disabled>
+            <small class="form-text text-muted">Automatisch berekend</small>
         </div>
         <h3>Risico na maatregelen</h3>
         <h4>Fine en Kinney</h4>
@@ -284,10 +286,12 @@ try {
         <div class="form-group">
             <label>Risico</label>
             <input type="text" class="form-control" style="<?php if (isset($result['VOOR_PRIORITEIT'])) { echo getPrioriteitStyle($result['NA_PRIORITEIT']); } ?>" value="<?php if (isset($result['NA_RISICO'])) { echo $result['NA_RISICO']; } ?>" disabled>
+            <small class="form-text text-muted">Automatisch berekend</small>
         </div>
         <div class="form-group">
             <label>Prioriteit</label>
             <input type="text" class="form-control" style="<?php if (isset($result['VOOR_PRIORITEIT'])) { echo getPrioriteitStyle($result['NA_PRIORITEIT']); } ?>" value="<?php if (isset($result['NA_PRIORITEIT'])) { echo $result['NA_PRIORITEIT']; } ?>" disabled>
+            <small class="form-text text-muted">Automatisch berekend</small>
         </div>
         <div class="form-group">
             <label for="AFWIJKENDE_ACTIE_TER_UITVOERING">Afwijkende actie ter uitvoering</label>
@@ -311,68 +315,70 @@ try {
     </form>
     <hr>
 
-    <button class="btn btn-block btn-primary" onclick="ShowDiv()">Versiegeschiedenis weergeven</button>
-    <div style="overflow: auto; display: none;" id="versiebeheer">
+    <button class="btn btn-block btn-default" onclick="ShowDiv()">Versiegeschiedenis weergeven</button>
+    <div style="display: none;" id="versiebeheer">
         <br>
         <h1>Versiegeschiedenis</h1>
-        <?php if(count($history) > 0) { ?>
-            <table class="table table-striped table-bordered" style="margin: 0; padding: 0;">
-                <thead>
-                <tr>
-                    <th>Datum</th>
-                    <th>Gebruiker</th>
-                    <th>Actie</th>
-                    <th>Arbo onderwerp</th>
-                    <th>Aspect</th>
-                    <th>Effect</th>
-                    <th>Risico omschrijving of bevinding</th>
-                    <th>Huidige beheersmaatregel</th>
-                    <th>Voorgestelde actie ter uitvoering</th>
-                    <th>Voor ernst van ongeval</th>
-                    <th>Voor kans op blootstelling</th>
-                    <th>Voor kans op waarschijnlijkheid</th>
-                    <th>Voor risico</th>
-                    <th>Voor prioriteit</th>
-                    <th>Na ernst van ongeval</th>
-                    <th>Na kans op blootstelling</th>
-                    <th>Na kans op waarschijnlijkheid</th>
-                    <th>Na risico</th>
-                    <th>Na prioriteit</th>
-                    <th>Afwijkende actie ter uitvoering</th>
-                    <th>Rest risico</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($history as $value) { ?>
+        <div style="overflow: auto; border: 1px solid #ccc;">
+            <?php if(count($history) > 0) { ?>
+                <table class="table table-striped table-bordered" style="margin: 0; padding: 0;">
+                    <thead>
                     <tr>
-                        <td><?= $value['DATUM'] ?></td>
-                        <td><?= $value['GEBRUIKER'] ?></td>
-                        <td><?= $value['ACTIE'] ?></td>
-                        <td><?= $value['ARBO_ONDERWERP'] ?></td>
-                        <td><?= $value['ASPECTNAAM'] ?></td>
-                        <td><?= $value['EFFECTNAAM'] ?></td>
-                        <td><?= $value['RISICO_OMSCHRIJVING_OF_BEVINDING'] ?></td>
-                        <td><?= $value['HUIDIGE_BEHEERSMAATREGEL'] ?></td>
-                        <td><?= $value['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'] ?></td>
-                        <td><?= $value['VOOR_ERNST_VAN_ONGEVAL'] ?></td>
-                        <td><?= $value['VOOR_KANS_OP_BLOOTSTELLING'] ?></td>
-                        <td><?= $value['VOOR_KANS_OP_WAARSCHIJNLIJKHEID'] ?></td>
-                        <td><?= $value['VOOR_RISICO'] ?></td>
-                        <td><?= $value['VOOR_PRIORITEIT'] ?></td>
-                        <td><?= $value['NA_ERNST_VAN_ONGEVAL'] ?></td>
-                        <td><?= $value['NA_KANS_OP_BLOOTSTELLING'] ?></td>
-                        <td><?= $value['NA_KANS_OP_WAARSCHIJNLIJKHEID'] ?></td>
-                        <td><?= $value['NA_RISICO'] ?></td>
-                        <td><?= $value['NA_PRIORITEIT'] ?></td>
-                        <td><?= $value['AFWIJKENDE_ACTIE_TER_UITVOERING'] ?></td>
-                        <td><?= $value['RESTRISICO'] ?></td>
+                        <th>Datum</th>
+                        <th>Gebruiker</th>
+                        <th>Actie</th>
+                        <th>Arbo onderwerp</th>
+                        <th>Aspect</th>
+                        <th>Effect</th>
+                        <th>Risico omschrijving of bevinding</th>
+                        <th>Huidige beheersmaatregel</th>
+                        <th>Voorgestelde actie ter uitvoering</th>
+                        <th>Voor ernst van ongeval</th>
+                        <th>Voor kans op blootstelling</th>
+                        <th>Voor kans op waarschijnlijkheid</th>
+                        <th>Voor risico</th>
+                        <th>Voor prioriteit</th>
+                        <th>Na ernst van ongeval</th>
+                        <th>Na kans op blootstelling</th>
+                        <th>Na kans op waarschijnlijkheid</th>
+                        <th>Na risico</th>
+                        <th>Na prioriteit</th>
+                        <th>Afwijkende actie ter uitvoering</th>
+                        <th>Rest risico</th>
                     </tr>
-                <?php } ?>
-                </tbody>
-            </table>
-        <?php } else { ?>
-            <p>Er zijn geen oudere versies.</p>
-        <?php } ?>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($history as $value) { ?>
+                        <tr>
+                            <td><?= $value['DATUM'] ?></td>
+                            <td><?= $value['GEBRUIKER'] ?></td>
+                            <td><?= $value['ACTIE'] ?></td>
+                            <td><?= $value['ARBO_ONDERWERP'] ?></td>
+                            <td><?= $value['ASPECTNAAM'] ?></td>
+                            <td><?= $value['EFFECTNAAM'] ?></td>
+                            <td><?= $value['RISICO_OMSCHRIJVING_OF_BEVINDING'] ?></td>
+                            <td><?= $value['HUIDIGE_BEHEERSMAATREGEL'] ?></td>
+                            <td><?= $value['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'] ?></td>
+                            <td><?= $value['VOOR_ERNST_VAN_ONGEVAL'] ?></td>
+                            <td><?= $value['VOOR_KANS_OP_BLOOTSTELLING'] ?></td>
+                            <td><?= $value['VOOR_KANS_OP_WAARSCHIJNLIJKHEID'] ?></td>
+                            <td><?= $value['VOOR_RISICO'] ?></td>
+                            <td><?= $value['VOOR_PRIORITEIT'] ?></td>
+                            <td><?= $value['NA_ERNST_VAN_ONGEVAL'] ?></td>
+                            <td><?= $value['NA_KANS_OP_BLOOTSTELLING'] ?></td>
+                            <td><?= $value['NA_KANS_OP_WAARSCHIJNLIJKHEID'] ?></td>
+                            <td><?= $value['NA_RISICO'] ?></td>
+                            <td><?= $value['NA_PRIORITEIT'] ?></td>
+                            <td><?= $value['AFWIJKENDE_ACTIE_TER_UITVOERING'] ?></td>
+                            <td><?= $value['RESTRISICO'] ?></td>
+                        </tr>
+                    <?php } ?>
+                    </tbody>
+                </table>
+            <?php } else { ?>
+                <p>Er zijn geen oudere versies.</p>
+            <?php } ?>
+        </div>
     </div>
     <br>
 </div>

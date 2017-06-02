@@ -154,21 +154,21 @@ h1 {
 
 .btn-primary {
     color: white;
-    border: #FFA500;
-    background: #FFA500;
+    border: #0090E3;
+    background: #0090E3;
 }
 
 .btn-primary:hover {
     color: white;
-    border: #e59400;
-    background: #e59400;
+    border: #0080ca;
+    background: #0080ca;
 }
 .btn-primary:active,
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
     color: white;
-    border: #e59400;
-    background: #e59400;
+    border: #0080ca;
+    background: #0080ca;
 }
 .btn-primary:active:hover,
 .btn-primary.active:hover,
@@ -180,8 +180,8 @@ h1 {
 .btn-primary.active.focus,
 .open > .dropdown-toggle.btn-primary.focus {
     color: white;
-    border: #e59400;
-    background: #e59400;
+    border: #0080ca;
+    background: #0080ca;
 }
 
 checkbox {
@@ -195,3 +195,42 @@ checkbox {
 .glyphicon-ok {
     padding-top: 10px;
 }
+
+
+.navbar-default {
+    background: orange;
+}
+
+@media (min-width: 768px) {
+    .navbar-default {
+        border-radius: 0;
+    }
+}
+
+
+.navbar-default .navbar-nav>li>a {
+    color: white;
+}
+
+.footer {
+    background: orange;
+}
+
+.footer .container .text-muted {
+    margin-top: 10px;
+    color: white;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #0090E3;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #0090E3;
+}
+
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    background-color: #e69500;
+}
+
