@@ -12,6 +12,8 @@ CREATE PROCEDURE SP_UPDATE_PERIODIEKE_BEOORDELING
     @SCORE numeric
 AS
   BEGIN
+    SET TRANSACTION ISOLATION LEVEL REPEATABLE READ
+    -- Dit vermijd dat DATUM_BEOORDELING_OUD veranderd kan worden door een andere transactie gedurende deze transactie
     SET NOCOUNT, XACT_ABORT ON
 
     DECLARE @TranCounter int;
