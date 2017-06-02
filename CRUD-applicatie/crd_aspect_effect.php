@@ -112,13 +112,12 @@ if (isset($_POST["ASPECTNAAMNEW"])) {
     }
 }
 
-if (isset($_POST["EFFECTNAAMNEW"])) {
+if (isset($_GET["edit"])) {
     $query = 'EXEC dbo.SP_UPDATE_EFFECT
               :EFFECTNAAMOUD,
               :EFFECTNAAMNEW
               ';
     $stmt = $dbh->prepare($query);
-
     $stmt->bindParam(':EFFECTNAAMOUD', $_POST['EFFECTNAAMOUD']);
 
     $stmt->bindParam(':EFFECTNAAMNEW', $_POST['EFFECTNAAMNEW']);
@@ -140,7 +139,8 @@ $aspecten = $rs->fetchAll();
     $meldingStatus = false;
     $melding = "Foutmelding: " . $e->getMessage();
 }
-if (isset($_GET["inserteffect"])) {
+if (isset($_GET["aspectnaam"])) {
+    $ASPECTNAAMKEUS = $_GET['aspectnaam'];
 try{
 $stmt = $dbh->query("SELECT EFFECTNAAM FROM ASPECT_EFFECT WHERE ASPECTNAAM = '$ASPECTNAAMKEUS'");
 
@@ -233,7 +233,6 @@ catch (PDOException $e) {
                     <?php
 
 
-                    $ASPECTNAAMKEUS = $_GET['aspectnaam'];
                     $i = 1;
                     if (isset($_GET["inserteffect"])) {
                         echo '<form action="crd_aspect_effect.php?control=1&aspectnaam=' . $_GET['aspectnaam'] . '" method="post">';

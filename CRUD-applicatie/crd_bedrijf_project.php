@@ -106,14 +106,10 @@ if (isset($_GET["removeProject"])) {
 if(isset($_POST["omschrijvingNew"])){
   $query = 'EXEC dbo.SP_UPDATE_PROJECT
             :PROJECTNUMMER,
-            :BEDRIJFSNAAM,
-            :LOCATIE,
             :OMSCHRIJVINGOUD,
             :OMSCHRIJVINGNEW';
   $stmt = $dbh->prepare($query);
   $stmt->bindParam(':PROJECTNUMMER', $_POST['UPROJECTNUMMER']);
-  $stmt->bindParam(':BEDRIJFSNAAM', $_POST['UBEDRIJFSNAAM']);
-  $stmt->bindParam(':LOCATIE', $_POST['ULOCATIE']);
   $stmt->bindParam(':OMSCHRIJVINGOUD', $_POST['omschrijvingOud']);
   $stmt->bindParam(':OMSCHRIJVINGNEW', $_POST['omschrijvingNew']);
   try {
@@ -230,8 +226,6 @@ catch (PDOException $e) {
                     if (isset($_GET["editProject"])) {
                         echo '<form action="crd_bedrijf_project.php?edit=1" method="post">';
                         echo '<input type="hidden" value="' . $_GET["projectnummer1"] .'" name="UPROJECTNUMMER"></td>';
-                        echo '<input type="hidden" value="' . $_GET["project"] . '" name="UBEDRIJFSNAAM"></td>';
-                        echo '<input type="hidden" value="' . $_GET["locatie"] . '" name="ULOCATIE"></td>';
                         echo '<input type="hidden" value="' . $_GET["editProject"] .'" name="omschrijvingOud"></td>';
                         echo '<tr>';
                         echo '<td>' . $_GET["projectnummer1"] . '</a></td>';

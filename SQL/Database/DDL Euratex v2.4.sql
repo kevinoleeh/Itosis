@@ -1014,7 +1014,8 @@ go
 /*==============================================================*/
 create table ASPECT (
    ASPECTNAAM           ASPECTNAAM           not null,
-   constraint PK_ASPECT primary key (ASPECTNAAM)
+   constraint PK_ASPECT primary key (ASPECTNAAM),
+    constraint CK_ASPECTNAAM check (ASPECTNAAM > '')
 )
 go
 
@@ -1024,7 +1025,8 @@ go
 create table ASPECT_EFFECT (
    ASPECTNAAM           ASPECTNAAM           not null,
    EFFECTNAAM           EFFECTNAAM           not null,
-   constraint PK_ASPECT_EFFECT primary key (ASPECTNAAM, EFFECTNAAM)
+   constraint PK_ASPECT_EFFECT primary key (ASPECTNAAM, EFFECTNAAM),
+    constraint CK_EFFECTNAAM check (EFFECTNAAM > '')
 )
 go
 
@@ -1054,7 +1056,8 @@ go
 create table BEDRIJF (
    BEDRIJFSNAAM         BEDRIJFSNAAM         not null,
    LOCATIE              LOCATIE              not null,
-   constraint PK_BEDRIJF primary key (BEDRIJFSNAAM, LOCATIE)
+   constraint PK_BEDRIJF primary key (BEDRIJFSNAAM, LOCATIE),
+    constraint CK_BEDRIJFNAAM check (BEDRIJFSNAAM > '')
 )
 go
 
@@ -1165,7 +1168,8 @@ create table PROJECT (
    BEDRIJFSNAAM         BEDRIJFSNAAM         not null,
    LOCATIE              LOCATIE              not null,
    PROJECTOMSCHRIJVING  PROJECTOMSCHRIJVING  not null,
-   constraint PK_PROJECT primary key (PROJECTNUMMER)
+   constraint PK_PROJECT primary key (PROJECTNUMMER),
+    constraint CK_PROJECTOMSCHRIJVING check (PROJECTOMSCHRIJVING > '')
 )
 go
 
