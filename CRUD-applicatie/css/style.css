@@ -220,3 +220,17 @@ checkbox {
     margin-top: 10px;
     color: white;
 }
+
+.navbar-default .navbar-toggle {
+    border-color: #0090E3;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #0090E3;
+}
+
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    background-color: #e69500;
+}
+

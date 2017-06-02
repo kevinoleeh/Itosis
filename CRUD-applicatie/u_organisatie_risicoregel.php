@@ -319,9 +319,7 @@ try {
     <div style="display: none;" id="versiebeheer">
         <br>
         <h1>Versiegeschiedenis</h1>
-        <div style="overflow: auto">
-
-
+        <div style="overflow: auto; border: 1px solid #ccc;">
             <?php if(count($history) > 0) { ?>
                 <table class="table table-striped table-bordered" style="margin: 0; padding: 0;">
                     <thead>
