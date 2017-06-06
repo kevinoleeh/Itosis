@@ -27,11 +27,6 @@ DROP LOGIN StagiairLogin
 USE master
 GO
 
-CREATE LOGIN TweeStagiair WITH PASSWORD = 'Euratex12345'
-CREATE USER TweeStagiair FOR LOGIN TweeStagiair
-EXEC sp_addrolemember 'STAGIAIR', 'TweeStagiair'
-GO
-
 
 
 
@@ -45,9 +40,9 @@ CREATE LOGIN StagiairLogin WITH PASSWORD = 'wachtwoord'
 /*==============================================================*/
 /* USER								                            */
 /*==============================================================*/
-CREATE USER BeheerderGebruiker FOR LOGIN BeheerderLogin
-CREATE USER GebruikerGebruiker FOR LOGIN GebruikerLogin
-CREATE USER StagiairGebruiker FOR LOGIN StagiairLogin
+CREATE USER BeheerderGebruiker FOR LOGIN BeheerderLogin WITH DEFAULT_SCHEMA = EURATEX
+CREATE USER GebruikerGebruiker FOR LOGIN GebruikerLogin WITH DEFAULT_SCHEMA = EURATEX
+CREATE USER StagiairGebruiker FOR LOGIN StagiairLogin WITH DEFAULT_SCHEMA = EURATEX
 
 /*==============================================================*/
 /* ROLLEN							                            */
@@ -56,16 +51,15 @@ CREATE ROLE BEHEERDER
 CREATE ROLE GEBRUIKER
 CREATE ROLE STAGIAIR
 
-EXEC sp_addrolemember 'BEHEERDER', 'BeheerderGebruiker'
-EXEC sp_addrolemember 'GEBRUIKER', 'GebruikerGebruiker'
-EXEC sp_addrolemember 'STAGIAIR', 'StagiairGebruiker'
 
 /*==============================================================*/
 /* TOEWIJZEN ROLLEN					                            */
 /*==============================================================*/
 
 
-
+EXEC sp_addrolemember 'BEHEERDER', 'BeheerderGebruiker'
+EXEC sp_addrolemember 'GEBRUIKER', 'GebruikerGebruiker'
+EXEC sp_addrolemember 'STAGIAIR', 'StagiairGebruiker'
 
 
 /*==============================================================*/
