@@ -14,6 +14,14 @@ CREATE PROCEDURE _begin AS BEGIN
 			Message VARCHAR(200),
 			CONSTRAINT PK_Test PRIMARY KEY (Number, Test)
 		)
+	IF NOT EXISTS(SELECT * FROM sysobjects WHERE name = 'testCount') BEGIN
+		CREATE TABLE Euratex.dbo.testCount(
+			Totaal INT,
+			Goed   INT,
+			Fout   INT
+		)
+		INSERT INTO testCount(Totaal,Goed, Fout) VALUES(0,0,0)
+	END
 SET IDENTITY_INSERT Euratex.dbo.PROJECT ON
 		--bedrijf
 		BEGIN TRY
@@ -96,7 +104,11 @@ CREATE PROCEDURE _result @name VARCHAR(50),	@success BIT, @reden VARCHAR(200), @
 	SET NOCOUNT ON
 	DECLARE @number INT = (SELECT COUNT(*)+1 FROM testData WHERE Test = @name)
 	INSERT INTO testData(Number, Test, Success, Message, Reden)
-		VALUES(@number, @name, @success, IIF(@msg = '', IIF(@success = 0, 'ERROR - Transactie geslaagd terwijl hij zou moeten falen!', @msg), @msg), @reden);
+		VALUES(@number, @name, @success, IIF(@msg = '', IIF(@success = 0, 'ERROR - Transactie geslaagd terwijl hij zou moeten falen!', @msg), @msg), @reden)
+	IF(@success = 1)
+	INSERT testCount(TOTAAL, GOED) VALUES((SELECT COUNT(Totaal)+1 FROM testCount), (SELECT COUNT(Goed)+1 FROM testCount))
+	IF(@success = 0)
+	INSERT testCount(TOTAAL, FOUT) VALUES((SELECT COUNT(Totaal)+1 FROM testCount),(SELECT COUNT(Fout)+1 FROM testCount))
 	SET NOCOUNT OFF
 END
 GO
@@ -109,6 +121,7 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 		RETURN
 	--IF EXISTS(SELECT 'Error occurred' FROM testData WHERE Success = 0)
 		SELECT Test + ' #'+ CONVERT(VARCHAR, Number) AS Test, IIF(success = 1, 'OK', 'ERROR') AS Status, Reden AS Reden, message AS Melding FROM testData ORDER BY Success, id, Number
+		SELECT Totaal AS Totaal_aantal_tests, Goed AS Geslaagde_tests, Fout AS Gefaalde_tests, (Goed/Totaal)*100 AS Percentage_geslaagde_tests, GETDATE() AS Datum_getest FROM testCount WHERE Totaal = (select max(totaal) from testCount)
 	BEGIN TRY
 		DECLARE @tabel VARCHAR(255) = 'VISUELE BEOORDELING'
 		DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
@@ -160,13 +173,12 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 		DELETE FROM ASPECT
 		WHERE ASPECTNAAM = 'Test aspect 2';
 
-
-
 	END TRY
 	BEGIN CATCH
 		RAISERROR ('Fout bij verwijderen van testdata in tabel %s!', 16, 1, @tabel)
 	END CATCH
 	DROP TABLE testData
+	DROP TABLE testCount
 	SET NOCOUNT OFF
 END
 GO

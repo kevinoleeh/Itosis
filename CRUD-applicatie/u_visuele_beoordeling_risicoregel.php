@@ -1,6 +1,8 @@
-<?php include_once('include/header.php') ?>
-
 <?php
+
+include_once('include/header.php');
+include_once('include/risicoregel/effect_aspect.php');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $query = "EXEC dbo.SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL
              :PROJECTNUMMER,
@@ -35,29 +37,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL', $_POST['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL']);
     $stmt->bindParam(':AFWIJKENDE_ACTIE_TER_UITVOERING', $_POST['AFWIJKENDE_ACTIE_TER_UITVOERING']);
     $stmt->bindParam(':RESTRISICO', $_POST['RESTRISICO']);
-    $stmt->bindParam(':PROCES', $_POST['PROCES']);
-    $stmt->bindParam(':MACHINE_ONDERDEEL', $_POST['MACHINE_ONDERDEEL']);
-    $stmt->bindParam(':AFDELING', $_POST['AFDELING']);
     $stmt->bindParam(':VOOR_ERNST_VAN_HET_ONGEVAL', $_POST['VOOR_ERNST_VAN_HET_ONGEVAL']);
     $stmt->bindParam(':VOOR_KANS_OP_BLOOTSTELLING', $_POST['VOOR_KANS_OP_BLOOTSTELLING']);
     $stmt->bindParam(':VOOR_KANS_OP_WAARSCHIJNLIJKHEID', $_POST['VOOR_KANS_OP_WAARSCHIJNLIJKHEID']);
     $stmt->bindParam(':NA_ERNST_VAN_ONGEVAL', $_POST['NA_ERNST_VAN_ONGEVAL']);
     $stmt->bindParam(':NA_KANS_OP_BLOOTSTELLING', $_POST['NA_KANS_OP_BLOOTSTELLING']);
     $stmt->bindParam(':NA_KANS_OP_WAARSCHIJNLIJKHEID', $_POST['NA_KANS_OP_WAARSCHIJNLIJKHEID']);
+    $stmt->bindParam(':PROCES', $_POST['PROCES']);
+    $stmt->bindParam(':MACHINE_ONDERDEEL', $_POST['MACHINE_ONDERDEEL']);
+    $stmt->bindParam(':AFDELING', $_POST['AFDELING']);
 
     try {
         $stmt->execute();
+        // Redirect om de parameters uit de URL te halen
         header('Location: rd_risicoregels.php?projectnummer=' . $_GET['projectnummer'] . '&rapportnummer=' . $_GET['rapportnummer']);
     } catch (PDOException $e) {
         $meldingStatus = false;
-        $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
+        $melding = "Regel niet geüpdatet. Foutmelding: " . $e->getMessage();
 
         $result['ARBO_ONDERWERP'] = $_POST['ARBO_ONDERWERP'];
         $result['ASPECTNAAM'] = $_POST['ASPECTNAAM'];
         $result['EFFECTNAAM'] = $_POST['EFFECTNAAM'];
-        $result['PROCES'] = $_POST['PROCES'];
-        $result['MACHINE_ONDERDEEL'] = $_POST['MACHINE_ONDERDEEL'];
-        $result['AFDELING'] = $_POST['AFDELING'];
         $result['RISICO_OMSCHRIJVING_OF_BEVINDING'] = $_POST['RISICO_OMSCHRIJVING_OF_BEVINDING'];
         $result['HUIDIGE_BEHEERSMAATREGEL'] = $_POST['HUIDIGE_BEHEERSMAATREGEL'];
         $result['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'] = $_POST['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'];
@@ -69,74 +69,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result['NA_ERNST_VAN_ONGEVAL'] = $_POST['NA_ERNST_VAN_ONGEVAL'];
         $result['NA_KANS_OP_BLOOTSTELLING'] = $_POST['NA_KANS_OP_BLOOTSTELLING'];
         $result['NA_KANS_OP_WAARSCHIJNLIJKHEID'] = $_POST['NA_KANS_OP_WAARSCHIJNLIJKHEID'];
+        $result['PROCES'] = $_POST['PROCES'];
+        $result['MACHINE_ONDERDEEL'] = $_POST['MACHINE_ONDERDEEL'];
+        $result['AFDELING'] = $_POST['AFDELING'];
     }
 }
 
-try {
-    $query = "SELECT *
-              FROM RISICOREGEL RR INNER JOIN VISUELE_BEOORDELING VB
-              ON RR.PROJECTNUMMER = VB.PROJECTNUMMER
-              AND RR.RAPPORTNUMMER = VB.RAPPORTNUMMER
-              AND RR.REGELNUMMER = VB.REGELNUMMER
-              WHERE RR.PROJECTNUMMER = :PROJECTNUMMER
-              AND RR.RAPPORTNUMMER = :RAPPORTNUMMER
-              AND RR.REGELNUMMER = :REGELNUMMER";
-    $stmt = $dbh->prepare($query);
-    $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
-    $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
-    $stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
+$query = "SELECT *
+          FROM RISICOREGEL RR INNER JOIN VISUELE_BEOORDELING VB
+          ON RR.PROJECTNUMMER = VB.PROJECTNUMMER
+          AND RR.RAPPORTNUMMER = VB.RAPPORTNUMMER
+          AND RR.REGELNUMMER = VB.REGELNUMMER
+          WHERE RR.PROJECTNUMMER = :PROJECTNUMMER
+          AND RR.RAPPORTNUMMER = :RAPPORTNUMMER
+          AND RR.REGELNUMMER = :REGELNUMMER";
+$stmt = $dbh->prepare($query);
+$stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+$stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+$stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
+$result = null;
 
+try {
     $stmt->execute();
     $result = $stmt->fetch();
 } catch (PDOException $e) {
     $meldingStatus = false;
-    $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
-}
-$rs = $dbh->query('SELECT ASPECTNAAM, EFFECTNAAM FROM ASPECT_EFFECT GROUP BY ASPECTNAAM, EFFECTNAAM ORDER BY ASPECTNAAM');
-$effectaspecten = $rs->fetchAll();
-global $effecten;
-foreach ($effectaspecten as $row) {
-    if (!isset($aspecten)) {
-        $effectrow = 0;
-        $number = 0;
-        $aspecten[$number] = $row[0];
-        $aspectlast = $row[0];
-    }
-    $effecten[$number][$effectrow] = $row[1];
-    if ($aspectlast != $row[0]) {
-        $effectrow = 0;
-        $aspecten[$number] = $row[0];
-        $aspectlast = $row[0];
-        $number++;
-    } else {
-        $effectrow++;
-    }
+    $melding = "Foutmelding: " . $e->getMessage();
 }
 
-function getPrioriteitStyle($prioriteit)
-{
-    switch ($prioriteit) {
-        case 'P 1':
-            return 'background-color: #ff0000; color: #fff;';
-            break;
-        case 'P 2':
-            return 'background-color: #ff5500; color: #fff;';
-            break;
-        case 'P 3':
-            return 'background-color: #ffa000; color: #fff;';
-            break;
-        case 'P 4':
-            return 'background-color: #ffc800; color: #fff;';
-            break;
-        case 'P 5':
-            return 'background-color: #00a000; color: #fff;';
-            break;
-    }
+$query = "SELECT *
+          FROM RISICOREGEL_HISTORY
+          WHERE PROJECTNUMMER = :PROJECTNUMMER
+          AND RAPPORTNUMMER = :RAPPORTNUMMER
+          AND REGELNUMMER = :REGELNUMMER
+          ORDER BY DATUM DESC";
+$stmt = $dbh->prepare($query);
+$stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+$stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+$stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
+$history = null;
 
-    return '';
+try {
+    $stmt->execute();
+    $history = $stmt->fetchAll();
+} catch (PDOException $e) {
+    $meldingStatus = false;
+    $melding = "Foutmelding: " . $e->getMessage();
 }
 
 ?>
+
+<script>
+    function ShowDiv() {
+        document.getElementById("versiebeheer").style.display = "";
+    }
+</script>
 
 <div class="container">
     <div class="page-header">
@@ -145,190 +132,87 @@ function getPrioriteitStyle($prioriteit)
 
     <?php include_once('include/melding.php') ?>
 
-    <form action="u_visuele_beoordeling_risicoregel.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?>"
-          method="post" id="uvisuelebeoordeling">
-        <h3>Risico inventarisatie</h3>
-        <div class="form-group">
-            <label for="ARBO_ONDERWERP">Arbo onderwerp</label>
-            <input type="text" class="form-control" name="ARBO_ONDERWERP"
-                   value="<?php if (isset($result['ARBO_ONDERWERP'])) {
-                       echo $result['ARBO_ONDERWERP'];
-                   } ?>">
-        </div>
-        <div class="form-group">
-            <label for="ASPECT">Aspect</label>
-            <select class="form-control" name="ASPECTNAAM" id="selectcat" form="uvisuelebeoordeling">
-                <?php for ($i = 0; $i < sizeof($aspecten); $i++) {
-                    echo "<option id='$i' value='$aspecten[$i]'";
-                    if (isset($result['ASPECTNAAM']) && $aspecten[$i] == $result['ASPECTNAAM']) {
-                        $id = $i;
-                        echo "selected";
-                    }
-                    echo ">" . $aspecten[$i] . "</option>";
-                } ?>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="EFFECT">Effect</label>
-            <select class="form-control" name="EFFECTNAAM" id="selectprod" form="uvisuelebeoordeling">
-                <?php
-                for ($i = 0; $i < sizeof($effecten); $i++) {
-                    for ($j = 0; $j < sizeof($effecten[$i]); $j++) {
-                        echo "<option value='" . $effecten[$i][$j] . "' id='$i' ";
-                        if (isset($result['EFFECTNAAM']) && $effecten[$i][$j] == $result['EFFECTNAAM']) {
-                            echo "selected";
-                        }
-                        echo ">" . $effecten[$i][$j] . "</option>";
-                    }
-                } ?>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="PROCES">Proces</label>
-            <input type="text" class="form-control" name="PROCES" value="<?php if (isset($result['PROCES'])) {
-                echo $result['PROCES'];
-            } ?>">
-        </div>
-        <div class="form-group">
-            <label for="AFDELING">Afdeling</label>
-            <input type="text" class="form-control" name="AFDELING" value="<?php if (isset($result['AFDELING'])) {
-                echo $result['AFDELING'];
-            } ?>">
-        </div>
-        <div class="form-group">
-            <label for="MACHINE_ONDERDEEL">Machine(onderdeel)</label>
-            <input type="text" class="form-control" name="MACHINE_ONDERDEEL"
-                   value="<?php if (isset($result['MACHINE_ONDERDEEL_'])) {
-                       echo $result['MACHINE_ONDERDEEL_'];
-                   } ?>">
-        </div>
-        <div class="form-group">
-            <label for="RISICO_OMSCHRIJVING_OF_BEVINDING">Risico omschrijving of bevinding</label>
-            <textarea class="form-control" rows="2"
-                      name="RISICO_OMSCHRIJVING_OF_BEVINDING"><?php if (isset($result['RISICO_OMSCHRIJVING_OF_BEVINDING'])) {
-                    echo $result['RISICO_OMSCHRIJVING_OF_BEVINDING'];
-                } ?></textarea>
-        </div>
-        <div class="form-group">
-            <label for="HUIDIGE_BEHEERSMAATREGEL">Huidige beheersmaatregel</label>
-            <textarea class="form-control" rows="2"
-                      name="HUIDIGE_BEHEERSMAATREGEL"><?php if (isset($result['HUIDIGE_BEHEERSMAATREGEL'])) {
-                    echo $result['HUIDIGE_BEHEERSMAATREGEL'];
-                } ?></textarea>
-        </div>
-        <h3>Risico voor maatregelen</h3>
-        <div class="form-group">
-            <label for="VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL">Voorgestelde actie ter uitvoering</label>
-            <textarea class="form-control" rows="2"
-                      name="VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL"><?php if (isset($result['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'])) {
-                    echo $result['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'];
-                } ?></textarea>
-        </div>
-        <h4>Fine en Kinney</h4>
-        <div class="form-group">
-            <label for="VOOR_ERNST_VAN_HET_ONGEVAL">Ernst van ongeval</label>
-            <input type="text" class="form-control" name="VOOR_ERNST_VAN_HET_ONGEVAL"
-                   value="<?php if (isset($result['VOOR_ERNST_VAN_HET_ONGEVAL'])) {
-                       echo $result['VOOR_ERNST_VAN_HET_ONGEVAL'];
-                   } ?>">
-            <small id="VOOR_ERNST_VAN_HET_ONGEVAL" class="form-text text-muted">Keuze uit 100, 40, 15, 7, 3 of 1</small>
-        </div>
-        <div class="form-group">
-            <label for="VOOR_KANS_OP_BLOOTSTELLING">Kans op blootstelling</label>
-            <input type="text" class="form-control" name="VOOR_KANS_OP_BLOOTSTELLING"
-                   value="<?php if (isset($result['VOOR_KANS_OP_BLOOTSTELLING'])) {
-                       echo $result['VOOR_KANS_OP_BLOOTSTELLING'];
-                   } ?>">
-            <small id="VOOR_KANS_OP_BLOOTSTELLING" class="form-text text-muted">Keuze uit 10, 6, 3, 2, 1 of 0.5</small>
-        </div>
-        <div class="form-group">
-            <label for="VOOR_KANS_OP_WAARSCHIJNLIJKHEID">Kans op waarschijnlijkheid</label>
-            <input type="text" class="form-control" name="VOOR_KANS_OP_WAARSCHIJNLIJKHEID"
-                   value="<?php if (isset($result['VOOR_KANS_OP_WAARSCHIJNLIJKHEID'])) {
-                       echo $result['VOOR_KANS_OP_WAARSCHIJNLIJKHEID'];
-                   } ?>">
-            <small id="VOOR_KANS_OP_WAARSCHIJNLIJKHEID" class="form-text text-muted">Keuze uit 10, 6, 3, 1, 0.5 of 0.2
-            </small>
-        </div>
-        <div class="form-group">
-            <label>Risico</label>
-            <input type="text" class="form-control" style="<?php if (isset($result['VOOR_PRIORITEIT'])) {
-                echo getPrioriteitStyle($result['VOOR_PRIORITEIT']);
-            } ?>" value="<?php if (isset($result['VOOR_RISICO'])) {
-                echo $result['VOOR_RISICO'];
-            } ?>" disabled>
-        </div>
-        <div class="form-group">
-            <label>Prioriteit</label>
-            <input type="text" class="form-control" style="<?php if (isset($result['VOOR_PRIORITEIT'])) {
-                echo getPrioriteitStyle($result['VOOR_PRIORITEIT']);
-            } ?>" value="<?php if (isset($result['VOOR_PRIORITEIT'])) {
-                echo $result['VOOR_PRIORITEIT'];
-            } ?>" disabled>
-        </div>
-        <h3>Risico na maatregelen</h3>
-        <h4>Fine en Kinney</h4>
-        <div class="form-group">
-            <label for="NA_ERNST_VAN_ONGEVAL">Ernst van ongeval</label>
-            <input type="text" class="form-control" name="NA_ERNST_VAN_ONGEVAL"
-                   value="<?php if (isset($result['NA_ERNST_VAN_ONGEVAL'])) {
-                       echo $result['NA_ERNST_VAN_ONGEVAL'];
-                   } ?>">
-            <small id="NA_ERNST_VAN_ONGEVAL" class="form-text text-muted">Keuze uit 100, 40, 15, 7, 3 of 1</small>
-        </div>
-        <div class="form-group">
-            <label for="NA_KANS_OP_BLOOTSTELLING">Kans op blootstelling</label>
-            <input type="text" class="form-control" name="NA_KANS_OP_BLOOTSTELLING"
-                   value="<?php if (isset($result['NA_KANS_OP_BLOOTSTELLING'])) {
-                       echo $result['NA_KANS_OP_BLOOTSTELLING'];
-                   } ?>">
-            <small id="NA_KANS_OP_BLOOTSTELLING" class="form-text text-muted">Keuze uit 10, 6, 3, 2, 1 of 0,5</small>
-        </div>
-        <div class="form-group">
-            <label for="NA_KANS_OP_WAARSCHIJNLIJKHEID">Kans op waarschijnlijkheid</label>
-            <input type="text" class="form-control" name="NA_KANS_OP_WAARSCHIJNLIJKHEID"
-                   value="<?php if (isset($result['NA_KANS_OP_WAARSCHIJNLIJKHEID'])) {
-                       echo $result['NA_KANS_OP_WAARSCHIJNLIJKHEID'];
-                   } ?>">
-            <small id="NA_KANS_OP_WAARSCHIJNLIJKHEID" class="form-text text-muted">Keuze uit 10, 6, 3, 1, 0.5 of 0.2
-            </small>
-        </div>
-        <div class="form-group">
-            <label>Risico</label>
-            <input type="text" class="form-control" style="<?php if (isset($result['VOOR_PRIORITEIT'])) {
-                echo getPrioriteitStyle($result['NA_PRIORITEIT']);
-            } ?>" value="<?php if (isset($result['NA_RISICO'])) {
-                echo $result['NA_RISICO'];
-            } ?>" disabled>
-        </div>
-        <div class="form-group">
-            <label>Prioriteit</label>
-            <input type="text" class="form-control" style="<?php if (isset($result['VOOR_PRIORITEIT'])) {
-                echo getPrioriteitStyle($result['NA_PRIORITEIT']);
-            } ?>" value="<?php if (isset($result['NA_PRIORITEIT'])) {
-                echo $result['NA_PRIORITEIT'];
-            } ?>" disabled>
-        </div>
-        <div class="form-group">
-            <label for="AFWIJKENDE_ACTIE_TER_UITVOERING">Afwijkende actie ter uitvoering</label>
-            <textarea class="form-control" rows="2"
-                      name="AFWIJKENDE_ACTIE_TER_UITVOERING"><?php if (isset($result['AFWIJKENDE_ACTIE_TER_UITVOERING'])) {
-                    echo $result['AFWIJKENDE_ACTIE_TER_UITVOERING'];
-                } ?></textarea>
-        </div>
-        <div class="form-group">
-            <label for="RESTRISICO">Rest risico</label>
-            <textarea class="form-control" rows="2" name="RESTRISICO"><?php if (isset($result['RESTRISICO'])) {
-                    echo $result['RESTRISICO'];
-                } ?></textarea>
-        </div>
+    <form method="post" id="uvisuelebeoordeling">
+        <?php include_once('include/risicoregel/form_risicoregel.php') ?>
+        <?php include_once('include/risicoregel/form_visuele_beoordeling.php') ?>
 
-        <button class="btn btn-block btn-primary" name="submit" type="submit"><?php if (isset($_GET['regelnummer'])) {
-                echo 'Regel updaten';
-            } else {
-                echo 'Regel opslaan';
-            } ?></button>
+        <button class="btn btn-block btn-primary" name="submit" type="submit">Regel updaten</button>
     </form>
+
+    <hr>
+
+    <button class="btn btn-block btn-default" onclick="ShowDiv()">Versiegeschiedenis weergeven</button>
+
+    <div style="display: none;" id="versiebeheer">
+        <br>
+        <h1>Versiegeschiedenis</h1>
+        <div style="overflow: auto;">
+            <?php if(count($history) > 0) { ?>
+                <table class="table table-striped table-bordered" style="margin: 0; padding: 0;">
+                    <thead>
+                    <tr>
+                        <th>Datum</th>
+                        <th>Gebruiker</th>
+                        <th>Actie</th>
+                        <th>Arbo onderwerp</th>
+                        <th>Aspect</th>
+                        <th>Effect</th>
+                        <th>Risico omschrijving of bevinding</th>
+                        <th>Huidige beheersmaatregel</th>
+                        <th>Voorgestelde actie ter uitvoering</th>
+                        <th>Voor ernst van ongeval</th>
+                        <th>Voor kans op blootstelling</th>
+                        <th>Voor kans op waarschijnlijkheid</th>
+                        <th>Voor risico</th>
+                        <th>Voor prioriteit</th>
+                        <th>Na ernst van ongeval</th>
+                        <th>Na kans op blootstelling</th>
+                        <th>Na kans op waarschijnlijkheid</th>
+                        <th>Na risico</th>
+                        <th>Na prioriteit</th>
+                        <th>Afwijkende actie ter uitvoering</th>
+                        <th>Rest risico</th>
+                        <th>Proces</th>
+                        <th>Machine(onderdeel)</th>
+                        <th>Afdeling</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($history as $value) { ?>
+                        <tr>
+                            <td><?= $value['DATUM'] ?></td>
+                            <td><?= $value['GEBRUIKER'] ?></td>
+                            <td><?= $value['ACTIE'] ?></td>
+                            <td><?= $value['ARBO_ONDERWERP'] ?></td>
+                            <td><?= $value['ASPECTNAAM'] ?></td>
+                            <td><?= $value['EFFECTNAAM'] ?></td>
+                            <td><?= $value['RISICO_OMSCHRIJVING_OF_BEVINDING'] ?></td>
+                            <td><?= $value['HUIDIGE_BEHEERSMAATREGEL'] ?></td>
+                            <td><?= $value['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'] ?></td>
+                            <td><?= $value['VOOR_ERNST_VAN_ONGEVAL'] ?></td>
+                            <td><?= $value['VOOR_KANS_OP_BLOOTSTELLING'] ?></td>
+                            <td><?= $value['VOOR_KANS_OP_WAARSCHIJNLIJKHEID'] ?></td>
+                            <td><?= $value['VOOR_RISICO'] ?></td>
+                            <td><?= $value['VOOR_PRIORITEIT'] ?></td>
+                            <td><?= $value['NA_ERNST_VAN_ONGEVAL'] ?></td>
+                            <td><?= $value['NA_KANS_OP_BLOOTSTELLING'] ?></td>
+                            <td><?= $value['NA_KANS_OP_WAARSCHIJNLIJKHEID'] ?></td>
+                            <td><?= $value['NA_RISICO'] ?></td>
+                            <td><?= $value['NA_PRIORITEIT'] ?></td>
+                            <td><?= $value['AFWIJKENDE_ACTIE_TER_UITVOERING'] ?></td>
+                            <td><?= $value['RESTRISICO'] ?></td>
+                            <td><?= $value['PROCES'] ?></td>
+                            <td><?= $value['MACHINE_ONDERDEEL'] ?></td>
+                            <td><?= $value['AFDELING'] ?></td>
+                        </tr>
+                    <?php } ?>
+                    </tbody>
+                </table>
+            <?php } else { ?>
+                <p>Er zijn geen oudere versies.</p>
+            <?php } ?>
+        </div>
+    </div>
     <br>
 </div>
 
