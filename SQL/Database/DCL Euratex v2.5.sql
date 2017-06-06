@@ -225,6 +225,14 @@ GRANT DELETE ON EFFECT TO GEBRUIKER
 
 
 /*================================*/
+/* Tabel ASPECT_EFFECT	 		  */
+/*================================*/
+GRANT SELECT ON ASPECT_EFFECT TO BEHEERDER
+GRANT INSERT ON ASPECT_EFFECT TO BEHEERDER
+GRANT UPDATE ON ASPECT_EFFECT TO BEHEERDER
+
+
+/*================================*/
 /* Tabel VISUELE_BEOORDELING	  */
 /*================================*/
 GRANT SELECT ON VISUELE_BEOORDELING TO GEBRUIKER
@@ -343,6 +351,12 @@ GRANT SELECT ON ASPECT TO STAGIAIR
 /* Tabel EFFECT			 		  */
 /*================================*/
 GRANT SELECT ON EFFECT TO STAGIAIR
+
+
+/*================================*/
+/* Tabel ASPECT_EFFECT	 		  */
+/*================================*/
+GRANT SELECT ON ASPECT_EFFECT TO BEHEERDER
 
 
 /*================================*/
