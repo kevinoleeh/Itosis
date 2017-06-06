@@ -8,7 +8,7 @@ if(strstr($_SERVER["PHP_SELF"], 'login.php') != 'login.php') {
     if(isset($_SESSION['gebruikersnaam']) and isset($_SESSION['wachtwoord'])) {
         include_once('pdo-connect.php');
     } else {
-        header('Location: '. 'login.php');
+        header('Location: login.php');
     }
 }
 
