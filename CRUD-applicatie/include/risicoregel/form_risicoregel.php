@@ -8,7 +8,7 @@
 </div>
 <div class="form-group">
     <label for="ASPECT">Aspect</label>
-    <select class="form-control" name="ASPECTNAAM" id="selectcat" form="urisicoregel">
+    <select class="form-control" name="ASPECTNAAM" id="selectcat">
         <?php for ($i = 0; $i < sizeof($aspecten); $i++) {
             echo "<option id='$i' value='$aspecten[$i]'";
             if (isset($result['ASPECTNAAM']) && $aspecten[$i] == $result['ASPECTNAAM']) {
@@ -21,7 +21,7 @@
 </div>
 <div class="form-group">
     <label for="EFFECT">Effect</label>
-    <select class="form-control" name="EFFECTNAAM" id="selectprod" form="urisicoregel">
+    <select class="form-control" name="EFFECTNAAM" id="selectprod">
         <?php
         for ($i = 0; $i < sizeof($effecten); $i++) {
             for ($j = 0; $j < sizeof($effecten[$i]); $j++) {
