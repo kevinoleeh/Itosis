@@ -1108,28 +1108,22 @@ AS BEGIN
 			COMMIT TRANSACTION;
 	END TRY
 	BEGIN CATCH
-<<<<<<< HEAD:SQL/Stored procedures/Alle_storedProcs.sql
 		IF @TranCounter = 0
 			BEGIN
 				IF XACT_STATE() = 1
-=======
 		IF @TranCounter = 0
 			BEGIN
 				IF XACT_STATE() = 1
->>>>>>> d4f56d4915ac48be675fb444c4c8ecbd54a3ef34:SQL/Stored procedures/ALLE_STORED_PROCEDURES.sql
 					ROLLBACK TRANSACTION;
 			END;
 		ELSE
 			BEGIN
-<<<<<<< HEAD:SQL/Stored procedures/Alle_storedProcs.sql
 				IF XACT_STATE() <> -1
 					ROLLBACK TRANSACTION ProcedureSave;
 			END;
-=======
 				IF XACT_STATE() <> -1
 					ROLLBACK TRANSACTION ProcedureSave;
 			END;
->>>>>>> d4f56d4915ac48be675fb444c4c8ecbd54a3ef34:SQL/Stored procedures/ALLE_STORED_PROCEDURES.sql
 		THROW
 	END CATCH
 END
