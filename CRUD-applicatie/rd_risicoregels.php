@@ -112,6 +112,7 @@ function getPrioriteitStyle($prioriteit)
                                 <th>Arbo onderwerp</th>
                                 <th>Aspect</th>
                                 <th>Effect</th>
+                                <th>Voorbeeld</th>
                                 <th>Risico voor maatregel</th>
                                 <th>Prioriteit voor maatregel</th>
                                 <th>Plan van aanpak</th>
@@ -120,11 +121,38 @@ function getPrioriteitStyle($prioriteit)
                         </thead>
                         <tbody>
                             <?php foreach ($result as $value) { ?>
+                                <?php
+
+                                $query = "SELECT URL
+                                          FROM AFBEELDING
+                                          WHERE PROJECTNUMMER = :PROJECTNUMMER
+                                          AND RAPPORTNUMMER = :RAPPORTNUMMER
+                                          AND REGELNUMMER = :REGELNUMMER";
+                                $stmt = $dbh->prepare($query);
+                                $stmt->bindParam(':PROJECTNUMMER', $value['PROJECTNUMMER']);
+                                $stmt->bindParam(':RAPPORTNUMMER', $value['RAPPORTNUMMER']);
+                                $stmt->bindParam(':REGELNUMMER', $value['REGELNUMMER']);
+                                $afbeelding = null;
+
+                                try {
+                                    $stmt->execute();
+                                    $afbeelding = $stmt->fetchColumn();
+                                } catch (PDOException $e) {
+                                    echo "Foutmelding: " . $e->getMessage();
+                                }
+
+                                ?>
                             <tr>
                                 <td><?= $value['REGELNUMMER'] ?></td>
                                 <td><?= $value['ARBO_ONDERWERP'] ?></td>
                                 <td><?= $value['ASPECTNAAM'] ?></td>
                                 <td><?= $value['EFFECTNAAM'] ?></td>
+                                <td>
+                                    <?php if($afbeelding != '') { ?>
+                                        <!-- URL wordt uit de database gehaald, omdat dit test data is wordt deze URL niet getoond maar een placeholder -->
+                                        <a href="images/placeholder.jpg"><img src="images/placeholder_thumbnail.jpg" style="height:75px; width: 75px;"></a>
+                                    <?php } ?>
+                                </td>
                                 <td style="<?php if (isset($value['VOOR_PRIORITEIT'])) { echo getPrioriteitStyle($value['VOOR_PRIORITEIT']); } ?>"><?= $value['VOOR_RISICO'] ?></td>
                                 <td style="<?php if (isset($value['VOOR_PRIORITEIT'])) { echo getPrioriteitStyle($value['VOOR_PRIORITEIT']); } ?>"><?= $value['VOOR_PRIORITEIT'] ?></td>
                                 <td>
