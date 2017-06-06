@@ -1668,4 +1668,239 @@ ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
 EXEC _result 'SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL', 1, 'Verkeerd rapport type', @msg
 END CATCH
+EXEC _end 0
+
+/* trigger tests*/
+
+
+/*PERIODIEKE_BEOORDELING*/
+EXEC _begin
+BEGIN TRY
+BEGIN TRANSACTION test
+
+	 DELETE FROM PERIODIEKE_BEOORDELING WHERE rapportnummer = 1 and regelnummer = 1 AND OPMERKING_STAND_VAN_ZAKEN ='Geen opmerkingen2222'
+
+	 IF NOT EXISTS(select * from PERIODIEKE_BEOORDELING_HISTORY where rapportnummer = 1 and regelnummer = 1 AND OPMERKING_STAND_VAN_ZAKEN ='Geen opmerkingen2222')
+	 RAISERROR ('', -- Message text.
+               16, -- Severity.
+               1 -- State.
+               );
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_PERIODIEKE_BEOORDELING_HISTORY', 1, 'History tabel geupdate', 'on delete'
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_PERIODIEKE_BEOORDELING_HISTORY', 0, '', 'History tabel niet geupdate'
+END CATCH
+EXEC _end 0
+GO
+
+EXEC _begin
+BEGIN TRY
+BEGIN TRANSACTION test
+
+	 UPDATE  PERIODIEKE_BEOORDELING SET OPMERKING_STAND_VAN_ZAKEN = 'test' WHERE rapportnummer = 1 and regelnummer = 1 AND OPMERKING_STAND_VAN_ZAKEN ='Geen opmerkingen2222'
+
+	 IF NOT EXISTS(select * from PERIODIEKE_BEOORDELING_HISTORY where rapportnummer = 1 and regelnummer = 1 AND OPMERKING_STAND_VAN_ZAKEN ='Geen opmerkingen2222')
+	 RAISERROR ('', -- Message text.
+               16, -- Severity.
+               1 -- State.
+               );
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_PERIODIEKE_BEOORDELING_HISTORY', 1, 'History tabel geupdate', 'on update'
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_PERIODIEKE_BEOORDELING_HISTORY', 0, '', 'History tabel niet geupdate'
+END CATCH
+EXEC _end 0
+GO
+
+/*RISICOREGEL*/
+EXEC _begin
+BEGIN TRY
+BEGIN TRANSACTION test
+
+	 DELETE FROM RISICOREGEL WHERE rapportnummer = 1 and regelnummer = 5 AND RESTRISICO ='novum'
+
+	 IF NOT EXISTS(select * from RISICOREGEL_HISTORY where rapportnummer = 1 and regelnummer = 5 AND RESTRISICO = 'novum' )
+	 RAISERROR ('', -- Message text.
+               16, -- Severity.
+               1 -- State.
+               );
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_RISICOREGEL_HISTORY', 1, 'History tabel geupdate', 'on delete'
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+EXEC _result 'TRG_RISICOREGEL_HISTORY', 0, '', 'History tabel niet geupdate'
+END CATCH
+EXEC _end 0
+GO
+
+EXEC _begin
+BEGIN TRY
+BEGIN TRANSACTION test
+
+	UPDATE RISICOREGEL SET RESTRISICO = 'test' WHERE rapportnummer = 1 and regelnummer = 5 AND RESTRISICO ='novum'
+
+	 IF NOT EXISTS(select * from RISICOREGEL_HISTORY where rapportnummer = 1 and regelnummer = 5 AND RESTRISICO = 'novum' )
+	 RAISERROR ('', -- Message text.
+               16, -- Severity.
+               1 -- State.
+               );
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_RISICOREGEL_HISTORY', 1, 'History tabel geupdate', 'on update'
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+EXEC _result 'TRG_RISICOREGEL_HISTORY', 0, '', @msg
+END CATCH
+EXEC _end 0
+GO
+
+
+/*VISUELE BEOORDELING*/
+
+EXEC _begin
+BEGIN TRY
+BEGIN TRANSACTION test
+
+	 DELETE FROM VISUELE_BEOORDELING WHERE rapportnummer = 2 and regelnummer = 1
+
+	 IF NOT EXISTS(select * from VISUELE_BEOORDELING_HISTORY where rapportnummer = 2 and regelnummer = 1)
+	 RAISERROR ('', -- Message text.
+               16, -- Severity.
+               1 -- State.
+               );
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_VISUELE_BEOORDELING', 1, 'History tabel geupdate', 'on delete'
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+EXEC _result 'TRG_VISUELE_BEOORDELING', 0, '', 'History tabel niet geupdate'
+END CATCH
+EXEC _end 0
+GO
+
+EXEC _begin
+BEGIN TRY
+BEGIN TRANSACTION test
+
+	 UPDATE VISUELE_BEOORDELING SET MACHINE_ONDERDEEL_ = 'test123' WHERE rapportnummer = 2 and regelnummer = 1
+
+	 IF NOT EXISTS(select * from VISUELE_BEOORDELING_HISTORY where rapportnummer = 2 and regelnummer = 1 )
+	 RAISERROR ('', -- Message text.
+               16, -- Severity.
+               1 -- State.
+               );
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_VISUELE_BEOORDELING', 1, 'History tabel geupdate', 'on update'
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+
+EXEC _result 'TRG_VISUELE_BEOORDELING', 0, '', 'History tabel niet geupdate'
+END CATCH
+EXEC _end 0
+GO
+
+/*PLAN VAN AANPAK*/
+
+EXEC _begin
+BEGIN TRY
+BEGIN TRANSACTION test
+
+	 DELETE FROM PLAN_VAN_AANPAK WHERE rapportnummer = 2 and regelnummer = 1 AND UITGEVOERD_DOOR = 'Testpersoon'
+	 IF NOT EXISTS(select * from PLAN_VAN_AANPAK_HISTORY where rapportnummer = 2 and regelnummer = 1)
+	 RAISERROR ('', -- Message text.
+               16, -- Severity.
+               1 -- State.
+               );
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_PLAN_VAN_AANPAK_HISTORY', 1, 'History tabel geupdate', 'on delete'
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_PLAN_VAN_AANPAK_HISTORY', 0, '', 'History tabel niet geupdate'
+END CATCH
+EXEC _end 0
+GO
+
+EXEC _begin
+BEGIN TRY
+BEGIN TRANSACTION test
+
+	 UPDATE PLAN_VAN_AANPAK SET UITGEVOERD_DOOR = 'test123' WHERE rapportnummer = 2 and regelnummer = 1
+
+	 IF NOT EXISTS(select * from PLAN_VAN_AANPAK_HISTORY where rapportnummer = 2 and regelnummer = 1 )
+	 RAISERROR ('', -- Message text.
+               16, -- Severity.
+               1 -- State.
+               );
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_PLAN_VAN_AANPAK_HISTORY', 1, 'History tabel geupdate', 'on update'
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_PLAN_VAN_AANPAK_HISTORY', 0, '', 'History tabel niet geupdate'
+END CATCH
+EXEC _end 0
+GO
+
+/*MACHINE VEILIGHEID*/
+
+EXEC _begin
+BEGIN TRY
+DECLARE @projectnummer INT = (SELECT projectnummer
+                              FROM PROJECT
+                              WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
+BEGIN TRANSACTION test
+
+	 EXEC SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL @projectnummer,3,	3,	4,	'Test aspect',	'Test effect',	3,	4,	1,	2,	3,	4,	5,	3,	2,	1,	1	,1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	0,	1,	1,	1,	0,	0,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1
+	 DELETE FROM MACHINEVEILIGHEID WHERE rapportnummer = 3 and PROJECTNUMMER = @projectnummer
+
+	 IF NOT EXISTS(select * from MACHINEVEILIGHEID_HISTORY where rapportnummer = 3 and PROJECTNUMMER = @projectnummer)
+	 RAISERROR ('', -- Message text.
+               16, -- Severity.
+               1 -- State.
+               );
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_MACHINEVEILIGHEID_HISTORY', 1, 'History tabel geupdate', 'on delete'
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_MACHINEVEILIGHEID_HISTORY', 0, '', 'History tabel niet geupdate'
+END CATCH
+EXEC _end 0
+GO
+
+EXEC _begin
+BEGIN TRY
+DECLARE @projectnummer INT = (SELECT projectnummer
+                              FROM PROJECT
+                              WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
+BEGIN TRANSACTION test
+
+	EXEC SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL @projectnummer,3,	3,	4,	'Test aspect',	'Test effect',	3,	4,	1,	2,	3,	4,	5,	3,	2,	1,	1	,1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	0,	1,	1,	1,	0,	0,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1
+
+
+	 UPDATE MACHINEVEILIGHEID SET PID = 2 WHERE rapportnummer = 3 AND PROJECTNUMMER = @Projectnummer
+
+	 IF NOT EXISTS(select * from MACHINEVEILIGHEID_HISTORY where rapportnummer = 3 AND PROJECTNUMMER = @projectnummer )
+	 RAISERROR ('', -- Message text.
+               16, -- Severity.
+               1 -- State.
+               );
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_MACHINEVEILIGHEID_HISTORY', 1, 'History tabel geupdate', 'on update'
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+EXEC _result 'TRG_MACHINEVEILIGHEID_HISTORY', 0, '', 'History tabel niet geupdate'
+END CATCH
 EXEC _end 1
+GO

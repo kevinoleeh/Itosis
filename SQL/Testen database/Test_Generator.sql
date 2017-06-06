@@ -14,14 +14,6 @@ CREATE PROCEDURE _begin AS BEGIN
 			Message VARCHAR(200),
 			CONSTRAINT PK_Test PRIMARY KEY (Number, Test)
 		)
-	IF NOT EXISTS(SELECT * FROM sysobjects WHERE name = 'testCount') BEGIN
-		CREATE TABLE Euratex.dbo.testCount(
-			Totaal INT,
-			Goed   INT,
-			Fout   INT
-		)
-		INSERT INTO testCount(Totaal,Goed, Fout) VALUES(0,0,0)
-	END
 SET IDENTITY_INSERT Euratex.dbo.PROJECT ON
 		--bedrijf
 		BEGIN TRY
@@ -62,15 +54,16 @@ SET IDENTITY_INSERT Euratex.dbo.PROJECT ON
 			SET @tabel = 'RISICOREGEL'
 			INSERT INTO RISICOREGEL(PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, ASPECTNAAM, EFFECTNAAM, ARBO_ONDERWERP, RISICO_OMSCHRIJVING_OF_BEVINDING, HUIDIGE_BEHEERSMAATREGEL, VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL, VOOR_ERNST_VAN_ONGEVAL, VOOR_KANS_OP_BLOOTSTELLING, VOOR_KANS_OP_WAARSCHIJNLIJKHEID, AFWIJKENDE_ACTIE_TER_UITVOERING, RESTRISICO, NA_ERNST_VAN_ONGEVAL, NA_KANS_OP_BLOOTSTELLING, NA_KANS_OP_WAARSCHIJNLIJKHEID)
 				VALUES(@projectnummer, 1, 1, 'Test aspect', 'Test effect', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00, 'pars transit.', 'novum', 15.00, 1.00, 10.00),
-					(@projectnummer, 2, 1, 'Test aspect', 'Test effect', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00, 'pars transit.', 'novum', 15.00, 1.00, 10.00)
+					(@projectnummer, 2, 1, 'Test aspect', 'Test effect', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00, 'pars transit.', 'novum', 15.00, 1.00, 10.00),
+					(@projectnummer, 1, 5, 'Test aspect', 'Test effect', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00, 'pars transit.', 'novum', 15.00, 1.00, 10.00)
 			INSERT INTO VISUELE_BEOORDELING(PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, PROCES, MACHINE_ONDERDEEL_, AFDELING)
 				VALUES(@projectnummer, 2, 1, NULL, 'test', NULL)
 
 				--plan van aanpak
 				SET @tabel = 'PLAN_VAN_AANPAK'
 				INSERT INTO PLAN_VAN_AANPAK
-				VALUES(@projectnummer, 1, 1, 'Testpersoon', 'Testpersoon', '2099-12-12', 'PBMTEST', 'Voorlichting test', 'Werkinstructie voorbeeld test', 'Tra testje', 'de test die het testen heeft willen testen test de test die getest is om te testen of de test getest kan worden')
-
+				VALUES(@projectnummer, 1, 1, 'Testpersoon', 'Testpersoon', '2099-12-12', 'PBMTEST', 'Voorlichting test', 'Werkinstructie voorbeeld test', 'Tra testje', 'de test die het testen heeft willen testen test de test die getest is om te testen of de test getest kan worden'),
+				      (@projectnummer, 2, 1, 'Testpersoon', 'Testpersoon', '2099-12-12', 'PBMTEST', 'Voorlichting test', 'Werkinstructie voorbeeld test', 'Tra testje', 'de test die het testen heeft willen testen test de test die getest is om te testen of de test getest kan worden')
 	    --periodieke beoordeling
 				SET @tabel = 'PERIODIEKE_BEOORDELING'
 				INSERT INTO PERIODIEKE_BEOORDELING
@@ -78,6 +71,7 @@ SET IDENTITY_INSERT Euratex.dbo.PROJECT ON
 
 				INSERT INTO PERIODIEKE_BEOORDELING
 				VALUES(@projectnummer, 1, 1, '2099-11-12', 1, 'Geen opmerkingen2222', 'Probleem nog niet opgelost22222', 5)
+
 
 		END TRY
 		BEGIN CATCH
@@ -104,11 +98,7 @@ CREATE PROCEDURE _result @name VARCHAR(50),	@success BIT, @reden VARCHAR(200), @
 	SET NOCOUNT ON
 	DECLARE @number INT = (SELECT COUNT(*)+1 FROM testData WHERE Test = @name)
 	INSERT INTO testData(Number, Test, Success, Message, Reden)
-		VALUES(@number, @name, @success, IIF(@msg = '', IIF(@success = 0, 'ERROR - Transactie geslaagd terwijl hij zou moeten falen!', @msg), @msg), @reden)
-	IF(@success = 1)
-	INSERT testCount(TOTAAL, GOED) VALUES((SELECT COUNT(Totaal)+1 FROM testCount), (SELECT COUNT(Goed)+1 FROM testCount))
-	IF(@success = 0)
-	INSERT testCount(TOTAAL, FOUT) VALUES((SELECT COUNT(Totaal)+1 FROM testCount),(SELECT COUNT(Fout)+1 FROM testCount))
+		VALUES(@number, @name, @success, IIF(@msg = '', IIF(@success = 0, 'ERROR - Transactie geslaagd terwijl hij zou moeten falen!', @msg), @msg), @reden);
 	SET NOCOUNT OFF
 END
 GO
@@ -121,7 +111,6 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 		RETURN
 	--IF EXISTS(SELECT 'Error occurred' FROM testData WHERE Success = 0)
 		SELECT Test + ' #'+ CONVERT(VARCHAR, Number) AS Test, IIF(success = 1, 'OK', 'ERROR') AS Status, Reden AS Reden, message AS Melding FROM testData ORDER BY Success, id, Number
-		SELECT Totaal AS Totaal_aantal_tests, Goed AS Geslaagde_tests, Fout AS Gefaalde_tests, (Goed/Totaal)*100 AS Percentage_geslaagde_tests, GETDATE() AS Datum_getest FROM testCount WHERE Totaal = (select max(totaal) from testCount)
 	BEGIN TRY
 		DECLARE @tabel VARCHAR(255) = 'VISUELE BEOORDELING'
 		DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
@@ -129,13 +118,13 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 		DELETE FROM VISUELE_BEOORDELING
 		WHERE PROJECTNUMMER = @projectnummer
 
-  SET @tabel = 'PERIODIEKE_BEOORDELING'
+		SET @tabel = 'PERIODIEKE_BEOORDELING'
 		DELETE FROM PERIODIEKE_BEOORDELING
 		WHERE PROJECTNUMMER = 99999999
 
 		SET @tabel = 'PLAN_VAN_AANPAK'
 		DELETE FROM PLAN_VAN_AANPAK
-		WHERE PROJECTNUMMER = @projectnummer AND RAPPORTNUMMER = 1 AND REGELNUMMER = 1
+		WHERE PROJECTNUMMER = @projectnummer
 
 		SET @tabel = 'RISICOREGEL'
 		DELETE FROM RISICOREGEL
@@ -173,15 +162,27 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 		DELETE FROM ASPECT
 		WHERE ASPECTNAAM = 'Test aspect 2';
 
+		SET @tabel = 'PERIODIEKE_BEOORDELING_HISTORY'
+		DELETE FROM PERIODIEKE_BEOORDELING_HISTORY
+		WHERE RAPPORTNUMMER = 1
+
+		SET @tabel = 'PERIODIEKE_BEOORDELING_HISTORY'
+		DELETE FROM RISICOREGEL_HISTORY
+		WHERE PROJECTNUMMER = 99999999
+
+		SET @tabel = 'PLAN_VAN_AANPAK_HISTORY'
+		DELETE FROM PLAN_VAN_AANPAK_HISTORY
+		WHERE PROJECTNUMMER = 99999999
+
+		SET @tabel = 'MACHINEVEILIGHEID'
+		DELETE FROM MACHINEVEILIGHEID
+		WHERE PROJECTNUMMER = 99999999
+
 	END TRY
 	BEGIN CATCH
 		RAISERROR ('Fout bij verwijderen van testdata in tabel %s!', 16, 1, @tabel)
 	END CATCH
 	DROP TABLE testData
-	DROP TABLE testCount
 	SET NOCOUNT OFF
 END
 GO
-
-
-
