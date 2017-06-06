@@ -1,5 +1,7 @@
 <?php
 
+include_once('include/functions.php');
+
 session_start();
 
 if(strstr($_SERVER["PHP_SELF"], 'login.php') != 'login.php') {
