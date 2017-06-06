@@ -13,13 +13,14 @@ foreach ($effectaspecten as $row) {
     $effecten[$number][$effectrow]= $row[1];
     if($aspectlast != $row[0]){
         $effectrow = 0;
+        $number ++;
         $aspecten[$number] = $row[0];
         $aspectlast = $row[0];
-        $number ++;
     }
     else{
-        $effectrow ++;
+        $effectrow ++ 	;
     }
 }
+echo var_dump($aspecten);
 
 ?>
