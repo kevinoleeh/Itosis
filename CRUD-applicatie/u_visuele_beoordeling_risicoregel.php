@@ -17,9 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              :AFWIJKENDE_ACTIE_TER_UITVOERING,
              :RESTRISICO,
              :PROCES,
-	         :MACHINE_ONDERDEEL,
+	         :MACHINE_ONDERDEEL_,
 	         :AFDELING,
-             :VOOR_ERNST_VAN_HET_ONGEVAL,
+             :VOOR_ERNST_VAN_ONGEVAL,
              :VOOR_KANS_OP_BLOOTSTELLING,
              :VOOR_KANS_OP_WAARSCHIJNLIJKHEID,
              :NA_ERNST_VAN_ONGEVAL,
@@ -37,19 +37,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL', $_POST['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL']);
     $stmt->bindParam(':AFWIJKENDE_ACTIE_TER_UITVOERING', $_POST['AFWIJKENDE_ACTIE_TER_UITVOERING']);
     $stmt->bindParam(':RESTRISICO', $_POST['RESTRISICO']);
-    $stmt->bindParam(':VOOR_ERNST_VAN_HET_ONGEVAL', $_POST['VOOR_ERNST_VAN_HET_ONGEVAL']);
+    $stmt->bindParam(':PROCES', $_POST['PROCES']);
+    $stmt->bindParam(':MACHINE_ONDERDEEL_', $_POST['MACHINE_ONDERDEEL_']);
+    $stmt->bindParam(':AFDELING', $_POST['AFDELING']);
+    $stmt->bindParam(':VOOR_ERNST_VAN_ONGEVAL', $_POST['VOOR_ERNST_VAN_ONGEVAL']);
     $stmt->bindParam(':VOOR_KANS_OP_BLOOTSTELLING', $_POST['VOOR_KANS_OP_BLOOTSTELLING']);
     $stmt->bindParam(':VOOR_KANS_OP_WAARSCHIJNLIJKHEID', $_POST['VOOR_KANS_OP_WAARSCHIJNLIJKHEID']);
     $stmt->bindParam(':NA_ERNST_VAN_ONGEVAL', $_POST['NA_ERNST_VAN_ONGEVAL']);
     $stmt->bindParam(':NA_KANS_OP_BLOOTSTELLING', $_POST['NA_KANS_OP_BLOOTSTELLING']);
     $stmt->bindParam(':NA_KANS_OP_WAARSCHIJNLIJKHEID', $_POST['NA_KANS_OP_WAARSCHIJNLIJKHEID']);
-    $stmt->bindParam(':PROCES', $_POST['PROCES']);
-    $stmt->bindParam(':MACHINE_ONDERDEEL', $_POST['MACHINE_ONDERDEEL']);
-    $stmt->bindParam(':AFDELING', $_POST['AFDELING']);
 
     try {
         $stmt->execute();
-        // Redirect om de parameters uit de URL te halen
+        // Redirect om de niet relevante parameters uit de URL te halen
         header('Location: rd_risicoregels.php?projectnummer=' . $_GET['projectnummer'] . '&rapportnummer=' . $_GET['rapportnummer']);
     } catch (PDOException $e) {
         $meldingStatus = false;
@@ -63,15 +63,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'] = $_POST['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'];
         $result['AFWIJKENDE_ACTIE_TER_UITVOERING'] = $_POST['AFWIJKENDE_ACTIE_TER_UITVOERING'];
         $result['RESTRISICO'] = $_POST['RESTRISICO'];
-        $result['VOOR_ERNST_VAN_HET_ONGEVAL'] = $_POST['VOOR_ERNST_VAN_HET_ONGEVAL'];
+        $result['PROCES'] = $_POST['PROCES'];
+        $result['MACHINE_ONDERDEEL_'] = $_POST['MACHINE_ONDERDEEL_'];
+        $result['AFDELING'] = $_POST['AFDELING'];
+        $result['VOOR_ERNST_VAN_ONGEVAL'] = $_POST['VOOR_ERNST_VAN_ONGEVAL'];
         $result['VOOR_KANS_OP_BLOOTSTELLING'] = $_POST['VOOR_KANS_OP_BLOOTSTELLING'];
         $result['VOOR_KANS_OP_WAARSCHIJNLIJKHEID'] = $_POST['VOOR_KANS_OP_WAARSCHIJNLIJKHEID'];
         $result['NA_ERNST_VAN_ONGEVAL'] = $_POST['NA_ERNST_VAN_ONGEVAL'];
         $result['NA_KANS_OP_BLOOTSTELLING'] = $_POST['NA_KANS_OP_BLOOTSTELLING'];
         $result['NA_KANS_OP_WAARSCHIJNLIJKHEID'] = $_POST['NA_KANS_OP_WAARSCHIJNLIJKHEID'];
-        $result['PROCES'] = $_POST['PROCES'];
-        $result['MACHINE_ONDERDEEL'] = $_POST['MACHINE_ONDERDEEL'];
-        $result['AFDELING'] = $_POST['AFDELING'];
     }
 }
 
@@ -97,12 +97,15 @@ try {
     $melding = "Foutmelding: " . $e->getMessage();
 }
 
-$query = "SELECT *
-          FROM RISICOREGEL_HISTORY
-          WHERE PROJECTNUMMER = :PROJECTNUMMER
-          AND RAPPORTNUMMER = :RAPPORTNUMMER
-          AND REGELNUMMER = :REGELNUMMER
-          ORDER BY DATUM DESC";
+$query = "SELECT RRH.*, VBH.PROCES, VBH.MACHINE_ONDERDEEL_, VBH.AFDELING
+          FROM RISICOREGEL_HISTORY RRH INNER JOIN VISUELE_BEOORDELING_HISTORY VBH
+          ON RRH.PROJECTNUMMER = VBH.PROJECTNUMMER
+          AND RRH.RAPPORTNUMMER = VBH.RAPPORTNUMMER
+          AND RRH.REGELNUMMER = VBH.REGELNUMMER
+          WHERE RRH.PROJECTNUMMER = :PROJECTNUMMER
+          AND RRH.RAPPORTNUMMER = :RAPPORTNUMMER
+          AND RRH.REGELNUMMER = :REGELNUMMER
+          ORDER BY RRH.DATUM DESC";
 $stmt = $dbh->prepare($query);
 $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
 $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
@@ -132,7 +135,7 @@ try {
 
     <?php include_once('include/melding.php') ?>
 
-    <form method="post" id="uvisuelebeoordeling">
+    <form method="post">
         <?php include_once('include/risicoregel/form_risicoregel.php') ?>
         <?php include_once('include/risicoregel/form_visuele_beoordeling.php') ?>
 
@@ -202,7 +205,7 @@ try {
                             <td><?= $value['AFWIJKENDE_ACTIE_TER_UITVOERING'] ?></td>
                             <td><?= $value['RESTRISICO'] ?></td>
                             <td><?= $value['PROCES'] ?></td>
-                            <td><?= $value['MACHINE_ONDERDEEL'] ?></td>
+                            <td><?= $value['MACHINE_ONDERDEEL_'] ?></td>
                             <td><?= $value['AFDELING'] ?></td>
                         </tr>
                     <?php } ?>
