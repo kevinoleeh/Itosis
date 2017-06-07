@@ -21,6 +21,5 @@ foreach ($effectaspecten as $row) {
         $effectrow ++ 	;
     }
 }
-echo var_dump($aspecten);
 
 ?>
