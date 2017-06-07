@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2014                    */
-/* Created on:     7-6-2017 11:15:22                            */
+/* Created on:     7-6-2017 12:26:29                            */
 /*==============================================================*/
 
 use master
@@ -1308,6 +1308,7 @@ go
 alter table AFBEELDING
    add constraint FK_AFBEELDI_VISUELE_B_VISUELE_ foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
       references VISUELE_BEOORDELING (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+         on update cascade on delete cascade
 go
 
 alter table ASPECT_EFFECT
