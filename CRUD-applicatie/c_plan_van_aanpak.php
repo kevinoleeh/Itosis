@@ -2,7 +2,7 @@
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $query = "EXEC dbo.SP_INSERT_PLAN_VAN_AANPAK 
+    $query = "EXEC dbo.SP_INSERT_PLAN_VAN_AANPAK
                  :PROJECTNUMMER,
                  :RAPPORTNUMMER,
                  :REGELNUMMER,
@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $meldingStatus = true;
         $melding = "Plan van aanpak opgeslagen.";
+        header('location:rd_risicoregels.php?projectnummer=' . $_GET['projectnummer'] . '&rapportnummer=' . $_GET['rapportnummer'] );
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Plan van aanpak niet opgeslagen. Foutmelding: " . $e->getMessage();
@@ -79,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <hr>
     <div class="row">
-        <form action="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?> "
+        <form action="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?>"
               method="post">
             <h3>Plan van aanpak</h3>
             <div class="form-group">
@@ -136,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php if ($_SERVER['REQUEST_METHOD'] === 'POST') { ?>
 
             <?php } else { ?>
-                <button class="btn btn-block btn-primary" name="submit" type="submit">Aanmaken</button>
+                <button href class="btn btn-block btn-primary" name="submit" type="submit">Aanmaken</button>
             <?php } ?>
         </form>
 
