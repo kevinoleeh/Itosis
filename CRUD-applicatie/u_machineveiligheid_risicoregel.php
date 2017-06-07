@@ -176,6 +176,33 @@ try {
     $meldingStatus = false;
     $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
 }
+
+$query = "SELECT RRH.*, VBH.PROCES, VBH.MACHINE_ONDERDEEL_, VBH.AFDELING, MH.*
+          FROM RISICOREGEL_HISTORY RRH INNER JOIN VISUELE_BEOORDELING_HISTORY VBH
+          ON RRH.PROJECTNUMMER = VBH.PROJECTNUMMER
+          AND RRH.RAPPORTNUMMER = VBH.RAPPORTNUMMER
+          AND RRH.REGELNUMMER = VBH.REGELNUMMER
+          INNER JOIN MACHINEVEILIGHEID_HISTORY MH
+          ON RRH.PROJECTNUMMER = MH.PROJECTNUMMER
+          AND RRH.RAPPORTNUMMER = MH.RAPPORTNUMMER
+          AND RRH.REGELNUMMER = MH.REGELNUMMER
+          WHERE RRH.PROJECTNUMMER = :PROJECTNUMMER
+          AND RRH.RAPPORTNUMMER = :RAPPORTNUMMER
+          AND RRH.REGELNUMMER = :REGELNUMMER
+          ORDER BY RRH.DATUM DESC";
+$stmt = $dbh->prepare($query);
+$stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+$stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+$stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
+$history = null;
+
+try {
+    $stmt->execute();
+    $history = $stmt->fetchAll();
+} catch (PDOException $e) {
+    $meldingStatus = false;
+    $melding = "Foutmelding: " . $e->getMessage();
+}
 ?>
 
 <div class="container">
@@ -191,7 +218,131 @@ try {
             <button class="btn btn-block btn-primary" name="submit" type="submit">Regel updaten</button>
         </form>
     <br>
-</div>
+
+        <hr>
+
+        <button class="btn btn-block btn-default" onclick="ShowDiv()">Versiegeschiedenis weergeven</button>
+
+        <div style="display: none;" id="versiebeheer">
+            <br>
+            <h1>Versiegeschiedenis</h1>
+            <div style="overflow: auto;">
+                <?php if(count($history) > 0) { ?>
+                    <table class="table table-striped table-bordered" style="margin: 0; padding: 0;">
+                        <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>Gebruiker</th>
+                            <th>Actie</th>
+                            <th>Arbo onderwerp</th>
+                            <th>Aspect</th>
+                            <th>Effect</th>
+                            <th>Risico omschrijving of bevinding</th>
+                            <th>Huidige beheersmaatregel</th>
+                            <th>Voorgestelde actie ter uitvoering</th>
+                            <th>Voor ernst van ongeval</th>
+                            <th>Voor kans op blootstelling</th>
+                            <th>Voor kans op waarschijnlijkheid</th>
+                            <th>Voor risico</th>
+                            <th>Voor prioriteit</th>
+                            <th>Na ernst van ongeval</th>
+                            <th>Na kans op blootstelling</th>
+                            <th>Na kans op waarschijnlijkheid</th>
+                            <th>Na risico</th>
+                            <th>Na prioriteit</th>
+                            <th>Afwijkende actie ter uitvoering</th>
+                            <th>Rest risico</th>
+                            <th>Proces</th>
+                            <th>Machine(onderdeel)</th>
+                            <th>Afdeling</th>
+                            <th>PID</th>
+                            <th>Lijn</th>
+                            <th>Machine_code</th>
+                            <th>Machine</th>
+                            <th>Model_type</th>
+                            <th>Serienummer</th>
+                            <th>Leverancier</th>
+                            <th>CE Markering</th>
+                            <th>CE Docucheck</th>
+                            <th>Aanvullende omschrijving</th>
+                            <th>Taken</th>
+                            <th>In bedrijfsname</th>
+                            <th>Tijdens productie</th>
+                            <th>Tijdens onderhoud</th>
+                            <th>Tijdens storing</th>
+                            <th>Tijdens reinigen</th>
+                            <th>Tijdens afstellen</th>
+                            <th>Demontage</th>
+                            <th>Ontwerp</th>
+                            <th>Afscherming</th>
+                            <th>Instructie</th>
+                            <th>Frequentie</th>
+                            <th>Mogelijkheid optreden gevaarlijk gebeurtenis</th>
+                            <th>Mogelijkheid voorkomen of beperken schade</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($history as $value) { ?>
+                            <tr>
+                                <td><?= $value['DATUM'] ?></td>
+                                <td><?= $value['GEBRUIKER'] ?></td>
+                                <td><?= $value['ACTIE'] ?></td>
+                                <td><?= $value['ARBO_ONDERWERP'] ?></td>
+                                <td><?= $value['ASPECTNAAM'] ?></td>
+                                <td><?= $value['EFFECTNAAM'] ?></td>
+                                <td><?= $value['RISICO_OMSCHRIJVING_OF_BEVINDING'] ?></td>
+                                <td><?= $value['HUIDIGE_BEHEERSMAATREGEL'] ?></td>
+                                <td><?= $value['VOORGESTELDE_ACTIE_OF_VERBETERINGSMAATREGEL'] ?></td>
+                                <td><?= $value['VOOR_ERNST_VAN_ONGEVAL'] ?></td>
+                                <td><?= $value['VOOR_KANS_OP_BLOOTSTELLING'] ?></td>
+                                <td><?= $value['VOOR_KANS_OP_WAARSCHIJNLIJKHEID'] ?></td>
+                                <td><?= $value['VOOR_RISICO'] ?></td>
+                                <td><?= $value['VOOR_PRIORITEIT'] ?></td>
+                                <td><?= $value['NA_ERNST_VAN_ONGEVAL'] ?></td>
+                                <td><?= $value['NA_KANS_OP_BLOOTSTELLING'] ?></td>
+                                <td><?= $value['NA_KANS_OP_WAARSCHIJNLIJKHEID'] ?></td>
+                                <td><?= $value['NA_RISICO'] ?></td>
+                                <td><?= $value['NA_PRIORITEIT'] ?></td>
+                                <td><?= $value['AFWIJKENDE_ACTIE_TER_UITVOERING'] ?></td>
+                                <td><?= $value['RESTRISICO'] ?></td>
+                                <td><?= $value['PROCES'] ?></td>
+                                <td><?= $value['MACHINE_ONDERDEEL_'] ?></td>
+                                <td><?= $value['AFDELING'] ?></td>
+                                <td><?= $value['PID'] ?></td>
+                                <td><?= $value['LIJN'] ?></td>
+                                <td><?= $value['MACHINE_CODE'] ?></td>
+                                <td><?= $value['MACHINE'] ?></td>
+                                <td><?= $value['MODEL_TYPE'] ?></td>
+                                <td><?= $value['SERIENUMMER'] ?></td>
+                                <td><?= $value['LEVERANCIER'] ?></td>
+                                <td><?= $value['CE_MARKERING'] ?></td>>
+                                <td><?= $value['CE_DOCUCHECK'] ?></td>
+                                <td><?= $value['AANVULLENDE_OMSCHRIJVING'] ?></td>
+                                <td><?= $value['TAKEN'] ?></td>
+                                <td><?= ($value['IN_BEDRIJFSNAME'] == '1' ? 'Ja' : 'Nee')?></td>
+                                <td><?= ($value['TIJDENS_PRODUCTIE'] == '1' ? 'Ja' : 'Nee')?></td>
+                                <td><?= ($value['TIJDENS_ONDERHOUD'] == '1' ? 'Ja' : 'Nee')?></td>
+                                <td><?= ($value['TIJDENS_STORING'] == '1' ? 'Ja' : 'Nee')?></td>
+                                <td><?= ($value['TIJDENS_REINIGEN'] == '1' ? 'Ja' : 'Nee')?></td>
+                                <td><?= ($value['TIJDENS_AFSTELLEN'] == '1' ? 'Ja' : 'Nee')?></td>
+                                <td><?= ($value['DEMONTAGE'] == '1' ? 'Ja' : 'Nee')?></td>>
+                                <td><?= $value['ONTWERP'] ?></td>
+                                <td><?= $value['AFSCHERMING'] ?></td>
+                                <td><?= $value['INSTRUCTIE'] ?></td>
+                                <td><?= $value['FREQUENTIE'] ?></td>
+                                <td><?= $value['MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS'] ?></td>
+                                <td><?= $value['MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE'] ?></td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                <?php } else { ?>
+                    <p>Er zijn geen oudere versies.</p>
+                <?php } ?>
+            </div>
+        </div>
+        <br>
+    </div>
 <?php include_once('include/footer.php'); ?>
 <script>
 $(document).ready(function() {
@@ -205,4 +356,7 @@ chk.change(function(){
         $(this).next('input[type="hidden"]').val(v);
     });
 });
+function ShowDiv() {
+    document.getElementById("versiebeheer").style.display = "";
+}
 </script>
