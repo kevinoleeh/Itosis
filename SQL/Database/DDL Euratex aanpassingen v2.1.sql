@@ -176,46 +176,4 @@ drop column CI
 alter table MACHINEVEILIGHEID
 add CI AS dbo.FN_GET_CI(FREQUENTIE, MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS, MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE)
 
-/*==============================================================*/
-/* CASCADING REGELS 					                        */
-/*==============================================================*/
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('PROJECT') and o.name = 'FK_PROJECT_BEDRIJF_P_BEDRIJF')
-alter table PROJECT
-   drop constraint FK_PROJECT_BEDRIJF_P_BEDRIJF
-go
-
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('ASPECT_EFFECT') and o.name = 'FK_ASPECT_E_ASPECT_EF_ASPECT')
-alter table ASPECT_EFFECT
-   drop constraint FK_ASPECT_E_ASPECT_EF_ASPECT
-go
-
-if exists (select 1
-   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('ASPECT_EFFECT') and o.name = 'FK_ASPECT_E_ASPECT_EF_EFFECT')
-alter table ASPECT_EFFECT
-   drop constraint FK_ASPECT_E_ASPECT_EF_EFFECT
-go
-
-alter table ASPECT_EFFECT
-   add constraint FK_ASPECT_E_ASPECT_EF_ASPECT foreign key (ASPECTNAAM)
-      references ASPECT (ASPECTNAAM)
-         on update cascade on delete cascade
-go
-
-alter table ASPECT_EFFECT
-   add constraint FK_ASPECT_E_ASPECT_EF_EFFECT foreign key (EFFECTNAAM)
-      references EFFECT (EFFECTNAAM)
-         on update cascade on delete cascade
-go
-
-alter table PROJECT
-   add constraint FK_PROJECT_BEDRIJF_P_BEDRIJF foreign key (BEDRIJFSNAAM, LOCATIE)
-      references BEDRIJF (BEDRIJFSNAAM, LOCATIE)
-         on update cascade
-go
-
 use master
