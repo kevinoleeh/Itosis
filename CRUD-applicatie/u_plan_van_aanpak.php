@@ -2,7 +2,7 @@
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $query = "EXEC dbo.SP_UPDATE_PLAN_VAN_AANPAK 
+    $query = "EXEC dbo.SP_UPDATE_PLAN_VAN_AANPAK
              :PROJECTNUMMER,
              :RAPPORTNUMMER,
              :REGELNUMMER,
@@ -87,157 +87,141 @@ try {
 }
 ?>
 
-<div class="container" xmlns="http://www.w3.org/1999/html">
-    <div class="row">
+    <div class="container" xmlns="http://www.w3.org/1999/html">
         <div class="page-header">
             <h1>Plan van Aanpak wijzigen </h1>
+            <h4>Projectnummer
+                <?= $_GET['projectnummer'] ?>, rapportnummer
+                    <?= $_GET['rapportnummer'] ?>, regelnummer
+                        <?= $_GET['regelnummer'] ?>
+            </h4>
         </div>
-    </div>
-    <?php include_once('include/melding.php') ?>
+        <?php include_once('include/melding.php') ?>
 
-    <div class="row">
-        <div class="form-group">
-            <div class="col-md-3">
-                <label>Projectnummer:</label>
-                <input disabled type="text" class="form-control" name="projectnummer"
-                       value=" <?= $_GET['projectnummer'] ?>">
-            </div>
-            <div class="col-md-3">
-                <label>Rapportnummer</label>
-                <input disabled type="text" class="form-control" name="rapportnummer"
-                       value=" <?= $_GET['rapportnummer'] ?>">
-            </div>
-            <div class="col-md-3">
-                <label>Regelnummer:</label>
-                <input disabled type="text" class="form-control" name="regelnummer"
-                       value=" <?= $_GET['regelnummer'] ?>">
-            </div>
-        </div>
-        <hr>
-
-    </div>
-
-    <div class="row">
-        <form action="u_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?> "
-              method="post">
-            <h3>Plan van aanpak</h3>
-            <div class="form-group">
-                <label for="UITGEVOERD_DOOR">Uitgevoerd door:</label>
-                <input type="text" class="form-control" name="UITGEVOERD_DOOR"
-                       value="<?php if (isset($result['UITGEVOERD_DOOR'])) {
+        <div class="row">
+            <div class="col-md-12">
+                <form action="u_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?> " method="post">
+                    <h3>Plan van aanpak</h3>
+                    <div class="form-group">
+                        <label for="UITGEVOERD_DOOR">Uitgevoerd door:</label>
+                        <input type="text" class="form-control" name="UITGEVOERD_DOOR" value="<?php if (isset($result['UITGEVOERD_DOOR'])) {
                            echo $result['UITGEVOERD_DOOR'];
                        } ?>">
-            </div>
-            <div class="form-group">
-                <label for="EINDVERANTWOORDELIJKE">Eindverantwoordelijke</label>
-                <input type="text" class="form-control" name="EINDVERANTWOORDELIJKE"
-                       value="<?php if (isset($result['EINDVERANTWOORDELIJKE'])) {
+                    </div>
+                    <div class="form-group">
+                        <label for="EINDVERANTWOORDELIJKE">Eindverantwoordelijke</label>
+                        <input type="text" class="form-control" name="EINDVERANTWOORDELIJKE" value="<?php if (isset($result['EINDVERANTWOORDELIJKE'])) {
                            echo $result['EINDVERANTWOORDELIJKE'];
                        } ?>">
-            </div>
-            <div class="form-group">
-                <label for="DATUM_GEREED_GEPLAND">Datum gereed gepland</label>
-                <input type="date" class="form-control" name="DATUM_GEREED_GEPLAND"
-                       value="<?php if (isset($result['DATUM_GEREED_GEPLAND'])) {
+                    </div>
+                    <div class="form-group">
+                        <label for="DATUM_GEREED_GEPLAND">Datum gereed gepland</label>
+                        <input type="date" class="form-control" name="DATUM_GEREED_GEPLAND" value="<?php if (isset($result['DATUM_GEREED_GEPLAND'])) {
                            echo strftime('%Y-%m-%d', strtotime($result['DATUM_GEREED_GEPLAND']));
                        } ?>">
-            </div>
-            <div class="form-group">
-                <label for="PBM">PBM</label>
-                <textarea class="form-control" rows="2" name="PBM"><?php if (isset($result['PBM'])) {
+                    </div>
+                    <div class="form-group">
+                        <label for="PBM">PBM</label>
+                        <textarea class="form-control" rows="2" name="PBM"><?php if (isset($result['PBM'])) {
                         echo $result['PBM'];
                     } ?></textarea>
-            </div>
-            <div class="form-group">
-                <label for="VOORLICHTING">Voorlichting</label>
-                <textarea class="form-control" rows="2" name="VOORLICHTING"><?php if (isset($result['VOORLICHTING'])) {
+                    </div>
+                    <div class="form-group">
+                        <label for="VOORLICHTING">Voorlichting</label>
+                        <textarea class="form-control" rows="2" name="VOORLICHTING"><?php if (isset($result['VOORLICHTING'])) {
                         echo $result['VOORLICHTING'];
                     } ?></textarea>
-            </div>
-            <div class="form-group">
-                <label for="WERKINSTRUCTIE_PROCEDURE">Werkinstructie procedure</label>
-                <textarea class="form-control" rows="2"
-                          name="WERKINSTRUCTIE_PROCEDURE"><?php if (isset($result['WERKINSTRUCTIE_PROCEDURE'])) {
+                    </div>
+                    <div class="form-group">
+                        <label for="WERKINSTRUCTIE_PROCEDURE">Werkinstructie procedure</label>
+                        <textarea class="form-control" rows="2" name="WERKINSTRUCTIE_PROCEDURE"><?php if (isset($result['WERKINSTRUCTIE_PROCEDURE'])) {
                         echo $result['WERKINSTRUCTIE_PROCEDURE'];
                     } ?></textarea>
-            </div>
-            <div class="form-group">
-                <label for="TRA">TRA</label>
-                <textarea class="form-control" rows="2" name="TRA"><?php if (isset($result['TRA'])) {
+                    </div>
+                    <div class="form-group">
+                        <label for="TRA">TRA</label>
+                        <textarea class="form-control" rows="2" name="TRA"><?php if (isset($result['TRA'])) {
                         echo $result['TRA'];
                     } ?></textarea>
-            </div>
-            <div class="form-group">
-                <label for="CONTRACT_LIJST_">Controlelijst</label>
-                <textarea class="form-control" rows="2"
-                          name="CONTRACT_LIJST_"><?php if (isset($result['CONTRACT_LIJST_'])) {
+                    </div>
+                    <div class="form-group">
+                        <label for="CONTRACT_LIJST_">Controlelijst</label>
+                        <textarea class="form-control" rows="2" name="CONTRACT_LIJST_"><?php if (isset($result['CONTRACT_LIJST_'])) {
                         echo $result['CONTRACT_LIJST_'];
                     } ?></textarea>
+                    </div>
+
+                    <button class="btn btn-block btn-primary" name="submit" type="submit">Wijzigen</button>
+                </form>
+
             </div>
-
-            <button class="btn btn-block btn-primary" name="submit" type="submit">Wijzigen</button>
-        </form>
-
-    </div>
-    <hr>
-    <h3>Periodieke beoordelingen</h3>
-    <div class="row">
-        <div class="col-md-12">
-            <a class="btn btn-block btn-primary"
-               href="c_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?>">Periodieke
+            <hr>
+            <h3>Periodieke beoordelingen</h3>
+            <div class="row">
+                <div class="col-md-12">
+                    <a class="btn btn-block btn-primary" href="c_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?>">Periodieke
                 beoordeling toevoegen</a>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
 
-            <br>
+                    <br>
 
-            <table id="table" class="table table-striped table-bordered">
-                <thead>
-                <tr>
-                    <th>Datum Beoordeling</th>
-                    <th>Inspectie uitgevoerd</th>
-                    <th>Opmerkingen s.v.z.</th>
-                    <th>Stand van zaken</th>
-                    <th>Score</th>
-                    <th>Wijzigen</th>
+                    <table id="table" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Datum Beoordeling</th>
+                                <th>Inspectie uitgevoerd</th>
+                                <th>Opmerkingen s.v.z.</th>
+                                <th>Stand van zaken</th>
+                                <th>Score</th>
+                                <th>Wijzigen</th>
 
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($periodieke_beoordelingen as &$value) { ?>
-                    <tr>
-                        <td><?php echo strftime('%d-%m-%Y', strtotime($value['DATUM_BEOORDELING'])); ?></td>
-                        <td><?php if ($value['INSPECTIE_IS_DE_ACTIE_UITGEVOERD'] == 0) {
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($periodieke_beoordelingen as &$value) { ?>
+                            <tr>
+                                <td>
+                                    <?php echo strftime('%d-%m-%Y', strtotime($value['DATUM_BEOORDELING'])); ?>
+                                </td>
+                                <td>
+                                    <?php if ($value['INSPECTIE_IS_DE_ACTIE_UITGEVOERD'] == 0) {
                                 echo 'Nee';
                             } else {
                                 echo 'Ja';
-                            }; ?></td>
-                        <td><?= $value['OPMERKING_STAND_VAN_ZAKEN'] ?></td>
-                        <td><?= $value['STAND_VAN_ZAKEN'] ?></td>
-                        <td><?= $value['SCORE'] ?></td>
-                        <td>
-                            <div class="">
-                                <a id="periodiekebutton"
-                                   href="u_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>&datum=<?php echo strftime('%Y-%m-%d', strtotime($value['DATUM_BEOORDELING'])); ?>"
-                                   class="btn btn-block btn-primary">Wijzigen</a>
-                            </div>
+                            }; ?>
+                                </td>
+                                <td>
+                                    <?= $value['OPMERKING_STAND_VAN_ZAKEN'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['STAND_VAN_ZAKEN'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['SCORE'] ?>
+                                </td>
+                                <td>
+                                    <div class="">
+                                        <a id="periodiekebutton" href="u_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>&datum=<?php echo strftime('%Y-%m-%d', strtotime($value['DATUM_BEOORDELING'])); ?>"
+                                            class="btn btn-block btn-primary">Wijzigen</a>
+                                    </div>
 
-                        </td>
-                    </tr>
-                <?php } ?>
-                </tbody>
-            </table>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<br>
-<script type="text/javascript">
-    var projectnummer = "<?= $_GET['projectnummer'] ?>";
-    var rapportnummer = "<?= $_GET['rapportnummer'] ?>";
+    <br>
+    <script type="text/javascript">
+        var projectnummer = "<?= $_GET['projectnummer'] ?>";
+        var rapportnummer = "<?= $_GET['rapportnummer'] ?>";
+    </script>
 
-</script>
-
-<?php include_once('include/footer.php'); ?>
+    <?php include_once('include/footer.php'); ?>
