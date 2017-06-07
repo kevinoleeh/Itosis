@@ -3,6 +3,8 @@
 /* Created on:     7-6-2017 11:15:22                            */
 /*==============================================================*/
 
+use master
+
 if db_id('Euratex') is not null
 	drop database Euratex
 
