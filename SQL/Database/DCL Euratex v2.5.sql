@@ -1,6 +1,11 @@
 USE master
 GO
 
+
+
+/*==============================================================*/
+/* LOGIN							                            */
+/*==============================================================*/
 IF EXISTS (SELECT * FROM sys.syslogins WHERE name = N'BeheerderLogin')
 DROP LOGIN BeheerderLogin
 
@@ -10,49 +15,43 @@ DROP LOGIN GebruikerLogin
 IF EXISTS (SELECT * FROM sys.syslogins WHERE name = N'StagiairLogin')
 DROP LOGIN StagiairLogin
 
-
-IF EXISTS (SELECT * FROM sys.syslogins WHERE name = N'EenStagiair')
-DROP LOGIN EenStagiair
-
-IF EXISTS (SELECT * FROM sys.syslogins WHERE name = N'TweeStagiair')
-DROP LOGIN TweeStagiair
-
-IF EXISTS (SELECT * FROM sys.syslogins WHERE name = N'StagiairLogin')
-DROP LOGIN StagiairLogin
-
-
-
-
-
 GO
 
-
-
-
-/*==============================================================*/
-/* LOGIN							                            */
-/*==============================================================*/
-CREATE LOGIN BeheerderLogin WITH PASSWORD = 'wachtwoord'
-CREATE LOGIN GebruikerLogin WITH PASSWORD = 'wachtwoord'
-CREATE LOGIN StagiairLogin WITH PASSWORD = 'wachtwoord'
+CREATE LOGIN BeheerderLogin WITH PASSWORD = 'wachtwoord1!413F'
+CREATE LOGIN GebruikerLogin WITH PASSWORD = 'wachtwoord1!413F'
+CREATE LOGIN StagiairLogin WITH PASSWORD = 'wachtwoord1!413F'
 
 USE Euratex
 
+GO
 /*==============================================================*/
 /* USER								                            */
 /*==============================================================*/
+IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'BeheerderGebruiker')
+DROP USER BeheerderGebruiker
+
+IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'GebruikerGebruiker')
+DROP USER GebruikerGebruiker
+
+IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'StagiairGebruiker')
+DROP USER StagiairGebruiker
+
 CREATE USER BeheerderGebruiker FOR LOGIN BeheerderLogin WITH DEFAULT_SCHEMA = EURATEX
 CREATE USER GebruikerGebruiker FOR LOGIN GebruikerLogin WITH DEFAULT_SCHEMA = EURATEX
 CREATE USER StagiairGebruiker FOR LOGIN StagiairLogin WITH DEFAULT_SCHEMA = EURATEX
 
+
 /*==============================================================*/
 /* ROLLEN							                            */
 /*==============================================================*/
+IF DATABASE_PRINCIPAL_ID('BEHEERDER') IS NULL
 CREATE ROLE BEHEERDER
+IF DATABASE_PRINCIPAL_ID('GEBRUIKER') IS NULL
 CREATE ROLE GEBRUIKER
+IF DATABASE_PRINCIPAL_ID('STAGIAIR') IS NULL
 CREATE ROLE STAGIAIR
 
-
+go
 /*==============================================================*/
 /* TOEWIJZEN ROLLEN					                            */
 /*==============================================================*/
@@ -218,8 +217,8 @@ GRANT DELETE ON PERIODIEKE_BEOORDELING_HISTORY TO BEHEERDER
 /* RECHTEN TOT ALLE SP'S		  */
 /*================================*/
 GRANT EXECUTE TO GEBRUIKER
-REVOKE EXECUTE ON SP_DELETE_BEDRIJF TO GEBRUIKER
-REVOKE EXECUTE ON SP_DELETE_PROJECT TO GEBRUIKER
+DENY EXECUTE ON SP_DELETE_BEDRIJF TO GEBRUIKER
+DENY EXECUTE ON SP_DELETE_PROJECT TO GEBRUIKER
 
 /*================================*/
 /* Tabel BEDRIJF				  */
@@ -380,30 +379,30 @@ GRANT SELECT ON MACHINEVEILIGHEID_HISTORY TO GEBRUIKER
 GRANT EXECUTE TO STAGIAIR
 
 /*=============*/
-/* REVOKE      */
+/* DENY      */
 /*=============*/
-REVOKE EXECUTE ON SP_DELETE_BEDRIJF TO STAGIAIR
-REVOKE EXECUTE ON SP_UPDATE_BEDRIJF TO STAGIAIR
-REVOKE EXECUTE ON SP_INSERT_BEDRIJF TO STAGIAIR
+DENY EXECUTE ON SP_DELETE_BEDRIJF TO STAGIAIR
+DENY EXECUTE ON SP_UPDATE_BEDRIJF TO STAGIAIR
+DENY EXECUTE ON SP_INSERT_BEDRIJF TO STAGIAIR
 
 
-REVOKE EXECUTE ON SP_INSERT_PROJECT TO STAGIAIR
-REVOKE EXECUTE ON SP_UPDATE_PROJECT TO STAGIAIR
-REVOKE EXECUTE ON SP_DELETE_PROJECT TO STAGIAIR
+DENY EXECUTE ON SP_INSERT_PROJECT TO STAGIAIR
+DENY EXECUTE ON SP_UPDATE_PROJECT TO STAGIAIR
+DENY EXECUTE ON SP_DELETE_PROJECT TO STAGIAIR
 
 
-REVOKE EXECUTE ON SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT TO STAGIAIR
-REVOKE EXECUTE ON SP_INSERT_EFFECT TO STAGIAIR
-REVOKE EXECUTE ON SP_UPDATE_EFFECT TO STAGIAIR
+DENY EXECUTE ON SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT TO STAGIAIR
+DENY EXECUTE ON SP_INSERT_EFFECT TO STAGIAIR
+DENY EXECUTE ON SP_UPDATE_EFFECT TO STAGIAIR
 
 
 
-REVOKE EXECUTE ON SP_INSERT_RAPPORT TO STAGIAIR
+DENY EXECUTE ON SP_INSERT_RAPPORT TO STAGIAIR
 
 
-REVOKE EXECUTE ON SP_DELETE_ASPECT TO STAGIAIR
-REVOKE EXECUTE ON SP_INSERT_ASPECT TO STAGIAIR
-REVOKE EXECUTE ON SP_UPDATE_ASPECT TO STAGIAIR
+DENY EXECUTE ON SP_DELETE_ASPECT TO STAGIAIR
+DENY EXECUTE ON SP_INSERT_ASPECT TO STAGIAIR
+DENY EXECUTE ON SP_UPDATE_ASPECT TO STAGIAIR
 
 
 
