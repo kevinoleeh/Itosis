@@ -155,7 +155,8 @@ try {
                 </form>
 
             </div>
-            <hr>
+          </div>
+
             <h3>Periodieke beoordelingen</h3>
             <div class="row">
                 <div class="col-md-12">
@@ -202,21 +203,20 @@ try {
                                 <td>
                                     <?= $value['SCORE'] ?>
                                 </td>
+                                </div>
                                 <td>
-                                    <div class="">
                                         <a id="periodiekebutton" href="u_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>&datum=<?php echo strftime('%Y-%m-%d', strtotime($value['DATUM_BEOORDELING'])); ?>"
                                             class="btn btn-block btn-primary">Wijzigen</a>
-                                    </div>
+
 
                                 </td>
                             </tr>
                             <?php } ?>
                         </tbody>
                     </table>
-                </div>
-            </div>
+                  </div>
         </div>
-    </div>
+      </div>
 
     <br>
     <script type="text/javascript">

@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $meldingStatus = true;
         $melding = "Periodieke beoordeling opgeslagen.";
         header('Location: u_plan_van_aanpak.php?projectnummer=' . $_GET['projectnummer'] . '&rapportnummer=' . $_GET['rapportnummer'] . '&regelnummer=' . $_GET['regelnummer']);
-        
+
 
     } catch (PDOException $e) {
         $meldingStatus = false;
@@ -67,8 +67,7 @@ try {
 ?>
 
 <div class="container" xmlns="http://www.w3.org/1999/html">
-    <div class="row">
-        <div class="page-header">
+    <div class="page-header">
             <h1>Periodieke beoordeling aanpassen</h1>
         </div>
     </div>
@@ -145,7 +144,7 @@ try {
         </form>
 
     </div>
-
+</div>
 </div>
 
 <br>
