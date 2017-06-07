@@ -176,4 +176,12 @@ drop column CI
 alter table MACHINEVEILIGHEID
 add CI AS dbo.FN_GET_CI(FREQUENTIE, MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS, MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE)
 
+/*==============================================================*/
+/* VISUELE_BEOORDELING BR			                        */
+/*==============================================================*/
+
+ALTER TABLE VISUELE_BEOORDELING
+ADD CONSTRAINT (AFDELING IS NOT NULL OR (PROCES IS NOT NULL OR MACHINE_ONDERDEEL IS NOT NULL))
+go
+
 use master
