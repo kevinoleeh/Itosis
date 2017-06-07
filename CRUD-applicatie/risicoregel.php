@@ -13,11 +13,12 @@ $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
 $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
 
 try {
-
-} catch ()
-
-$stmt->execute();
-$type = $stmt->fetch();
+    $stmt->execute();
+    $type = $stmt->fetch();
+} catch (PDOException $e) {
+    $meldingStatus = false;
+    $melding = "Foutmelding: " . $e->getMessage();
+}
 
 switch ($type['RAPPORT_TYPE']) {
     case 'Organisatie':
