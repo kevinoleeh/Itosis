@@ -54,35 +54,30 @@ EXEC _end 0
 GO
 
 
--- SP_INSERT_PLAN_VAN_AANPAK test (success)
-EXEC _begin
-BEGIN TRY
-DECLARE @projectnummer INT = (SELECT projectnummer
-                              FROM PROJECT
-                              WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
-BEGIN TRANSACTION test
-EXEC SP_INSERT_PLAN_VAN_AANPAK
-	@PROJECTNUMMER = @projectnummer,
-	@RAPPORTNUMMER = 2,
-	@REGELNUMMER = 1,
-	@UITGEVOERD_DOOR = 'Testpersoon',
-	@EINDVERANTWOORDELIJKE = 'Testpersoon 2',
-	@DATUM_GEREED_GEPLAND = '2099-11-11',
-	@PBM = 'Dit is een PBM',
-	@VOORLICHTING = 'Voorlichting etc.',
-	@WERKINSTRUCTIE_PROCEDURE = 'Werkinstructies',
-	@TRA = 'Taak risico analyse',
-	@CONTRACT_LIJST_ = 'Controlelijst e.d.'
-ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_PLAN_VAN_AANPAK', 1, 'Pva is toegevoegd', ''
-END TRY
-BEGIN CATCH
-ROLLBACK TRANSACTION
-DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_INSERT_PLAN_VAN_AANPAK', 0, '', @msg
-END CATCH
-EXEC _end 0
-GO
+  -- SP_UPDATE_PERIODIEKE_BEOORDELING test (success)
+  EXEC _begin
+  BEGIN TRY
+    DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
+    BEGIN TRANSACTION test
+      EXEC SP_UPDATE_PERIODIEKE_BEOORDELING
+       @PROJECTNUMMER = @projectnummer,
+      @RAPPORTNUMMER = 1,
+      @REGELNUMMER = 1,
+      @DATUM_BEOORDELING_OUD = '2099-11-12',
+      @DATUM_BEOORDELING_NIEUW = '2099-12-13',
+      @INSPECTIE_IS_DE_ACTIE_UITGEVOERD = 1,
+      @OPMERKING_STAND_VAN_ZAKEN = 'Geen opmerking',
+      @STAND_VAN_ZAKEN = 'Het pva is nog niet toegepast',
+      @SCORE = 10
+    ROLLBACK TRANSACTION
+    EXEC _result 'SP_UPDATE_PERIODIEKE_BEOORDELING', 1, 'Periodieke beoordeling is geüpdatet', ''
+  END TRY
+  BEGIN CATCH    ROLLBACK TRANSACTION
+    DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+    EXEC _result 'SP_UPDATE_PERIODIEKE_BEOORDELING', 0, '',@msg
+  END CATCH
+  EXEC _end 0
+  GO
 
 -- SP_UPDATE_PLAN_VAN_AANPAK test
 EXEC _begin
@@ -1769,7 +1764,6 @@ BEGIN TRY
 BEGIN TRANSACTION test
 
 	 DELETE FROM VISUELE_BEOORDELING WHERE rapportnummer = 2 and regelnummer = 1
-
 	 IF NOT EXISTS(select * from VISUELE_BEOORDELING_HISTORY where rapportnummer = 2 and regelnummer = 1)
 	 RAISERROR ('', -- Message text.
                16, -- Severity.

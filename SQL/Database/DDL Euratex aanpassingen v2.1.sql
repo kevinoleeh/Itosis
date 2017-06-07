@@ -217,5 +217,7 @@ alter table PROJECT
       references BEDRIJF (BEDRIJFSNAAM, LOCATIE)
          on update cascade
 go
-
+ALTER TABLE VISUELE_BEOORDELING
+ add constraint CKC_VISUELE_BEOORDELING check (AFDELING is not null or (MACHINE_ONDERDEEL_ is not null or PROCES is not null))
+go
 use master
