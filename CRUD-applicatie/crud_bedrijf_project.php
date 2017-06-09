@@ -15,10 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
 
             $meldingStatus = true;
-            $melding = "Regel opgeslagen.";
+            $melding = "Bedrijf opgeslagen.";
         } catch (PDOException $e) {
             $meldingStatus = false;
-            $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
+            $melding = "Bedrijf niet opgeslagen. Foutmelding: " . $e->getMessage();
         }
     }
     if (isset($_GET["project"])) {
@@ -60,7 +60,7 @@ if (isset($_POST["editBEDRIJFSNAAM"]) && isset($_POST["editLOCATIE"])) {
         $stmt->execute();
 
         $meldingStatus = true;
-        $melding = "Het bedrijf is succesvol geüpdatet";
+        $melding = "Bedrijf en/of locatie geüpdatet.";
 
     } catch (PDOException $e) {
         $meldingStatus = false;
@@ -103,68 +103,70 @@ if (isset($_GET["removeProject"])) {
     }
 }
 
-if(isset($_POST["omschrijvingNew"])){
-  $query = 'EXEC dbo.SP_UPDATE_PROJECT
+if (isset($_POST["projectomschrijving"])) {
+    $query = 'EXEC dbo.SP_UPDATE_PROJECT
             :PROJECTNUMMER,
-            :OMSCHRIJVINGOUD,
-            :OMSCHRIJVINGNEW';
-  $stmt = $dbh->prepare($query);
-  $stmt->bindParam(':PROJECTNUMMER', $_POST['UPROJECTNUMMER']);
-  $stmt->bindParam(':OMSCHRIJVINGOUD', $_POST['omschrijvingOud']);
-  $stmt->bindParam(':OMSCHRIJVINGNEW', $_POST['omschrijvingNew']);
-  try {
+            :PROJECTOMSCHRIJVING';
+    $stmt = $dbh->prepare($query);
+    $stmt->bindParam(':PROJECTNUMMER', $_POST['UPROJECTNUMMER']);
+    $stmt->bindParam(':PROJECTOMSCHRIJVING', $_POST['projectomschrijving']);
 
-      $stmt->execute();
+    try {
+        $stmt->execute();
 
-      $meldingStatus = true;
-      $melding = "Project geüpdate.";
-  } catch (PDOException $e) {
-      $meldingStatus = false;
-      $melding = "Project niet geüpdate. Foutmelding: " . $e->getMessage();
-  }
+        $meldingStatus = true;
+        $melding = "Project geüpdatet.";
+    } catch (PDOException $e) {
+        $meldingStatus = false;
+        $melding = "Project niet geüpdatet. Foutmelding: " . $e->getMessage();
+    }
 }
-try{
-$rs = $dbh->query("SELECT * FROM BEDRIJF");
-$bedrijven = $rs->fetchAll();
-}
-catch (PDOException $e) {
+
+try {
+    $rs = $dbh->query("SELECT * 
+                                FROM BEDRIJF");
+    $bedrijven = $rs->fetchAll();
+} catch (PDOException $e) {
     $meldingStatus = false;
-    $melding = "Project niet geüpdate. Foutmelding: " . $e->getMessage();
+    $melding = "Project niet geüpdatet. Foutmelding: " . $e->getMessage();
 }
+
 if (isset($_GET['project'])) {
-try{
-$stmt = $dbh->prepare("SELECT * FROM PROJECT WHERE BEDRIJFSNAAM = :BEDRIJFSNAAM AND LOCATIE = :LOCATIE");
-$stmt->execute(array(':BEDRIJFSNAAM' => $_GET['project'], ':LOCATIE' => $_GET['locatie']));
-$projecten = $stmt->fetchAll();
-}
-catch (PDOException $e) {
-    $meldingStatus = false;
-    $melding = "Project niet geüpdate. Foutmelding: " . $e->getMessage();
-}
+    try {
+        $stmt = $dbh->prepare("SELECT * 
+                                        FROM PROJECT 
+                                        WHERE BEDRIJFSNAAM = :BEDRIJFSNAAM 
+                                        AND LOCATIE = :LOCATIE");
+        $stmt->execute(array(':BEDRIJFSNAAM' => $_GET['project'], ':LOCATIE' => $_GET['locatie']));
+        $projecten = $stmt->fetchAll();
+    } catch (PDOException $e) {
+        $meldingStatus = false;
+        $melding = "Project niet geüpdatet. Foutmelding: " . $e->getMessage();
+    }
 }
 
 ?>
-    <div class="container">
-        <div class="page-header">
-            <h1>Bedrijven en projecten beheren</h1>
-        </div>
-        <?php include_once('include/melding.php') ?>
+<div class="container">
+    <div class="page-header">
+        <h1>Bedrijven en projecten beheren</h1>
+    </div>
+    <?php include_once('include/melding.php') ?>
 
-        <div class="row">
-            <div class="col-md-5">
-                <a href="?new=1" class="btn btn-block btn-primary">Bedrijf toevoegen</a>
-                <div class="table-responsive marginTop">
-                    <table id="table" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Bedrijf</th>
-                                <th>Locatie</th>
-                            </tr>
-                        </thead>
-                        <?php
+    <div class="row">
+        <div class="col-md-5">
+            <a href="?new=1" class="btn btn-block btn-primary">Bedrijf toevoegen</a>
+            <div class="table-responsive marginTop">
+                <table id="table" class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Bedrijf</th>
+                        <th>Locatie</th>
+                    </tr>
+                    </thead>
+                    <?php
                     if (isset($_GET["new"])) {
 
-                        echo '<form action="crd_bedrijf_project.php?new=1" method="post">';
+                        echo '<form action="crud_bedrijf_project.php?new=1" method="post">';
                         echo '<tr>';
                         echo '<td><input class="form-control" type="text" name="BEDRIJFSNAAM"></td>';
                         echo '<td><input class="form-control" type="text" name="LOCATIE"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
@@ -172,7 +174,7 @@ catch (PDOException $e) {
                         echo '</form>';
                     }
                     if (isset($_GET["editbedrijf"])) {
-                        echo '<form action="crd_bedrijf_project.php?edit=1" method="post">';
+                        echo '<form action="crud_bedrijf_project.php?edit=1" method="post">';
                         echo '<input type="hidden" value="' . $_GET["editbedrijf"] . '" name="oudBEDRIJFSNAAM"></td>';
                         echo '<input type="hidden" value="' . $_GET["LOCATIE"] . '" name="oudLOCATIE"></td>';
 
@@ -182,40 +184,40 @@ catch (PDOException $e) {
                         echo '</tr>';
                         echo '</form>';
                     }
-                    if(isset($bedrijven)){
-                    foreach ($bedrijven as $bedrijf) {
-                        echo '<tr>';
-                        echo '<td><a class="no-link" href="?project=' . $bedrijf["BEDRIJFSNAAM"] . '&locatie=' . $bedrijf["LOCATIE"] . '">' . $bedrijf["BEDRIJFSNAAM"] . '</a></td>';
-                        echo '<td>' . $bedrijf["LOCATIE"] . '
+                    if (isset($bedrijven)) {
+                        foreach ($bedrijven as $bedrijf) {
+                            echo '<tr>';
+                            echo '<td><a class="no-link" href="?project=' . $bedrijf["BEDRIJFSNAAM"] . '&locatie=' . $bedrijf["LOCATIE"] . '">' . $bedrijf["BEDRIJFSNAAM"] . '</a></td>';
+                            echo '<td>' . $bedrijf["LOCATIE"] . '
                     <a href="?remove=' . $bedrijf["BEDRIJFSNAAM"] . '&LOCATIE=' . $bedrijf["LOCATIE"] . '"><span class="glyphicon glyphicon-remove widintable red"></span></a>
                     <a href="?editbedrijf=' . $bedrijf["BEDRIJFSNAAM"] . '&LOCATIE=' . $bedrijf["LOCATIE"] . '"><span class="glyphicon glyphicon-pencil widintable"></span></a>';
+                        }
                     }
-                  }
                     ?>
-                    </table>
-                </div>
+                </table>
             </div>
-            <div class="col-md-1">
-            </div>
-            <div class="col-md-5">
-                <?php if (isset($_GET['project'])) {
+        </div>
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-5">
+            <?php if (isset($_GET['project'])) {
                 echo '<a class="no-link" href="?newProject=1&project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '">
                   <button class="btn btn-block btn-primary">Project aan bedrijf toevoegen</button>
                   </a>';
             }
             ?>
-                <?php if (isset($_GET['project'])) { ?>
-                <div class="table-responsive marginTop">
-                    <table id="table" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Project</th>
-                                <th>Omschrijving</th>
-                            </tr>
-                        </thead>
-                        <?php
+            <?php if (isset($_GET['project'])) { ?>
+            <div class="table-responsive marginTop">
+                <table id="table" class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Omschrijving</th>
+                    </tr>
+                    </thead>
+                    <?php
                     if (isset($_GET["newProject"])) {
-                        echo '<form action="crd_bedrijf_project.php?project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '" method="post">';
+                        echo '<form action="crud_bedrijf_project.php?project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '" method="post">';
                         echo '<tr>';
                         echo '<td></td>';
                         echo '<td><input class="form-control" type="text" name="PROJECTOMSCHRIJVING"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
@@ -224,12 +226,12 @@ catch (PDOException $e) {
                     }
 
                     if (isset($_GET["editProject"])) {
-                        echo '<form action="crd_bedrijf_project.php?edit=1" method="post">';
-                        echo '<input type="hidden" value="' . $_GET["projectnummer1"] .'" name="UPROJECTNUMMER"></td>';
-                        echo '<input type="hidden" value="' . $_GET["editProject"] .'" name="omschrijvingOud"></td>';
+                        echo '<form action="crud_bedrijf_project.php?edit=1" method="post">';
+                        echo '<input type="hidden" value="' . $_GET["projectnummer1"] . '" name="UPROJECTNUMMER"></td>';
+                        echo '<input type="hidden" value="' . $_GET["editProject"] . '" name="omschrijvingOud"></td>';
                         echo '<tr>';
                         echo '<td>' . $_GET["projectnummer1"] . '</a></td>';
-                        echo '<td><input class="form-control" type="text" value="' . $_GET["editProject"] . '" name="omschrijvingNew"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
+                        echo '<td><input class="form-control" type="text" value="' . $_GET["editProject"] . '" name="projectomschrijving"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
                         echo '</tr>';
                         echo '</form>';
                     }
@@ -238,14 +240,14 @@ catch (PDOException $e) {
                         echo '<td><a href=rd_rapportages.php?projectnummer=' . $project["PROJECTNUMMER"] . '>' . $project["PROJECTNUMMER"] . '</a></td>';
                         echo '<td>' . $project["PROJECTOMSCHRIJVING"] . '
                       <a href="?removeProject=' . $project["PROJECTNUMMER"] . '&project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '"><span class="glyphicon glyphicon-remove widintable red"></span></a>
-                      <a href="?editProject=' . $project["PROJECTOMSCHRIJVING"] . '&project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '&projectnummer1=' . $project["PROJECTNUMMER"] .   '"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
+                      <a href="?editProject=' . $project["PROJECTOMSCHRIJVING"] . '&project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '&projectnummer1=' . $project["PROJECTNUMMER"] . '"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
                     }
                     }
                     ?>
-                    </table>
-                </div>
+                </table>
             </div>
         </div>
     </div>
+</div>
 
-    <?php include_once('include/footer.php'); ?>
+<?php include_once('include/footer.php'); ?>
