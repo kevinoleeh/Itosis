@@ -211,12 +211,13 @@ try {
     </div>
 
     <?php include_once('include/melding.php') ?>
+
     <form method="post">
-    <?php include_once('include/risicoregel/form_risicoregel.php') ?>
-    <?php include_once('include/risicoregel/form_visuele_beoordeling.php') ?>
-    <?php include_once('include/risicoregel/form_machineveiligheid.php') ?>
-            <button class="btn btn-block btn-primary" name="submit" type="submit">Regel updaten</button>
-        </form>
+        <?php include_once('include/risicoregel/form_risicoregel.php') ?>
+        <?php include_once('include/risicoregel/form_visuele_beoordeling.php') ?>
+        <?php include_once('include/risicoregel/form_machineveiligheid.php') ?>
+        <button class="btn btn-block btn-primary" name="submit" type="submit">Regel updaten</button>
+    </form>
     <br>
 
         <hr>
@@ -344,19 +345,23 @@ try {
         <br>
     </div>
 <?php include_once('include/footer.php'); ?>
+</div>
+
 <script>
-$(document).ready(function() {
-var chk = $('input[type="checkbox"]');
-    chk.each(function(){
-        var v = $(this).attr('checked') == 'checked'?1:0;
-        $(this).after('<input type="hidden" class="form-control" name="'+$(this).attr('rel')+'" value="'+v+'" />');
+    $(document).ready(function() {
+        var chk = $('input[type="checkbox"]');
+        chk.each(function(){
+            var v = $(this).attr('checked') == 'checked'?1:0;
+            $(this).after('<input type="hidden" class="form-control" name="'+$(this).attr('rel')+'" value="'+v+'" />');
+        });
+        chk.change(function(){
+            var v = $(this).is(':checked')?1:0;
+            $(this).next('input[type="hidden"]').val(v);
+        });
     });
-chk.change(function(){
-        var v = $(this).is(':checked')?1:0;
-        $(this).next('input[type="hidden"]').val(v);
-    });
-});
 function ShowDiv() {
     document.getElementById("versiebeheer").style.display = "";
 }
 </script>
+
+<?php include_once('include/footer.php'); ?>
