@@ -85,6 +85,25 @@ try {
     $meldingStatus = false;
     $melding = "Periodieke beoordelingen niet kunnen ophalen. Foutmelding: " . $e->getMessage();
 }
+$query = "SELECT PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, UITGEVOERD_DOOR, EINDVERANTWOORDELIJKE,
+          DATUM_GEREED_GEPLAND, PBM, VOORLICHTING, WERKINSTRUCTIE_PROCEDURE, TRA, CONTRACT_LIJST_, GEBRUIKER, DATUM, ACTIE
+          FROM PLAN_VAN_AANPAK_HISTORY
+          WHERE PROJECTNUMMER = :PROJECTNUMMER
+          AND RAPPORTNUMMER = :RAPPORTNUMMER
+          AND REGELNUMMER = :REGELNUMMER";
+          $stmt = $dbh->prepare($query);
+          $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+          $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+          $stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
+          $history = null;
+          try{
+          $stmt->execute();
+          $history = $stmt->fetchall();
+        }
+        catch (PDOException $e) {
+            $meldingStatus = false;
+            $melding = "Periodieke beoordeling niet kunnen ophalen. Foutmelding: " . $e->getMessage();
+        }
 ?>
 
     <div class="container" xmlns="http://www.w3.org/1999/html">
@@ -214,14 +233,95 @@ try {
                             <?php } ?>
                         </tbody>
                     </table>
-                  </div>
+                  <button class="btn btn-block btn-default" onclick="ShowDiv()">Versiegeschiedenis weergeven</button>
+
+                  <div style="display: none;" id="versiebeheer">
+                      <br>
+                      <h1>Versiegeschiedenis</h1>
+                      <div style="overflow: auto;">
+                          <?php if(count($history) > 0) { ?>
+                          <table class="table table-striped table-bordered" style="margin: 0; padding: 0;">
+                              <thead>
+                                  <tr>
+                                      <th>Datum</th>
+                                      <th>Gebruiker</th>
+                                      <th>Actie</th>
+                                      <th>Projectnummer</th>
+                                      <th>Rapportnummer</th>
+                                      <th>Regelnummer</th>
+                                      <th>Uitgevoerd door</th>
+                                      <th>Eindverantwoordelijke</th>
+                                      <th>Datum gereed gepland</th>
+                                      <th>PBM</th>
+                                      <th>Voorlichting</th>
+                                      <th>Werkinstructie procedure</th>
+                                      <th>TRA</th>
+                                      <th>Contract lijst</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <?php foreach ($history as $value) { ?>
+                                  <tr>
+                                      <td><?= $value['DATUM'] ?></td>
+                                      <td>
+                                          <?= $value['GEBRUIKER'] ?>
+                                      </td>
+                                      <td>
+                                          <?= $value['ACTIE'] ?>
+                                      </td>
+                                      <td>
+                                          <?= $value['PROJECTNUMMER'] ?>
+                                      </td>
+                                      <td>
+                                          <?= $value['RAPPORTNUMMER'] ?>
+                                      </td>
+                                      <td>
+                                          <?= $value['REGELNUMMER'] ?>
+                                      </td>
+                                      <td>
+                                          <?= $value['UITGEVOERD_DOOR'] ?>
+                                      </td>
+                                      <td>
+                                          <?= $value['EINDVERANTWOORDELIJKE'] ?>
+                                      </td>
+                                      <td>
+                                          <?= $value['DATUM_GEREED_GEPLAND'] ?>
+                                      </td>
+                                      <td>
+                                          <?= $value['PBM'] ?>
+                                      </td>
+                                      <td>
+                                          <?= $value['VOORLICHTING'] ?>
+                                      </td>
+                                      <td>
+                                          <?= $value['WERKINSTRUCTIE_PROCEDURE'] ?>
+                                      </td>
+                                      <td>
+                                          <?= $value['TRA'] ?>
+                                      </td>
+                                      <td>
+                                          <?= $value['CONTRACT_LIJST_'] ?>
+                                      </td>
+                                  </tr>
+                                  <?php } ?>
+                              </tbody>
+                          </table>
+                          <?php } else { ?>
+                          <p>Er zijn geen oudere versies.</p>
+                          <?php } ?>
+                        </div>
+</div>
         </div>
       </div>
+    </div>
 
     <br>
     <script type="text/javascript">
         var projectnummer = "<?= $_GET['projectnummer'] ?>";
         var rapportnummer = "<?= $_GET['rapportnummer'] ?>";
+        function ShowDiv() {
+            document.getElementById("versiebeheer").style.display = "";
+        }
     </script>
 
     <?php include_once('include/footer.php'); ?>

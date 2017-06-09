@@ -64,94 +64,163 @@ try {
     $melding = "Periodieke beoordeling niet kunnen ophalen. Foutmelding: " . $e->getMessage();
 }
 
+$query = "SELECT PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, DATUM_BEOORDELING, INSPECTIE_IS_DE_ACTIE_UITGEVOERD,
+          OPMERKING_STAND_VAN_ZAKEN, STAND_VAN_ZAKEN, SCORE, GEBRUIKER, DATUM, ACTIE
+          FROM PERIODIEKE_BEOORDELING_HISTORY
+          WHERE PROJECTNUMMER = :PROJECTNUMMER
+          AND RAPPORTNUMMER = :RAPPORTNUMMER
+          AND REGELNUMMER = :REGELNUMMER
+          AND DATUM_BEOORDELING = '" . $_GET['datum'] . "'";
+          $stmt = $dbh->prepare($query);
+          $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+          $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+          $stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
+          $history = null;
+          try{
+          $stmt->execute();
+          $history = $stmt->fetchall();
+        }
+        catch (PDOException $e) {
+            $meldingStatus = false;
+            $melding = "Periodieke beoordeling niet kunnen ophalen. Foutmelding: " . $e->getMessage();
+        }
 ?>
 
-<div class="container" xmlns="http://www.w3.org/1999/html">
-    <div class="page-header">
+    <div class="container" xmlns="http://www.w3.org/1999/html">
+        <div class="page-header">
             <h1>Periodieke beoordeling aanpassen</h1>
+            <h4>Projectnummer
+                <?= $_GET['projectnummer'] ?>, rapportnummer
+                    <?= $_GET['rapportnummer'] ?>, regelnummer
+                        <?= $_GET['regelnummer'] ?>
         </div>
-    </div>
-    <?php include_once('include/melding.php') ?>
+        <?php include_once('include/melding.php') ?>
 
-    <div class="row">
-        <div class="form-group">
-            <div class="col-md-3">
-                <label>Projectnummer:</label>
-                <input disabled type="text" class="form-control" name="projectnummer"
-                       value=" <?= $_GET['projectnummer'] ?>">
-            </div>
-            <div class="col-md-3">
-                <label>Rapportnummer</label>
-                <input disabled type="text" class="form-control" name="rapportnummer"
-                       value=" <?= $_GET['rapportnummer'] ?>">
-            </div>
-            <div class="col-md-3">
-                <label>Regelnummer:</label>
-                <input disabled type="text" class="form-control" name="regelnummer"
-                       value=" <?= $_GET['regelnummer'] ?>">
-            </div>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <form action="u_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?>&datum=<?= $_GET['datum'] ?>"
-              method="post">
 
-            <div class="form-group">
-                <label for="DATUM_BEOORDELING">Datum beoordeling</label>
-                <input type="date" class="form-control" name="DATUM_BEOORDELING"
-                       value="<?php if (isset($result['DATUM_BEOORDELING'])) {
+        <hr>
+        <div class="row">
+            <form action="u_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?>&datum=<?= $_GET['datum'] ?>" method="post">
+
+                <div class="form-group">
+                    <label for="DATUM_BEOORDELING">Datum beoordeling</label>
+                    <input type="date" class="form-control" name="DATUM_BEOORDELING" value="<?php if (isset($result['DATUM_BEOORDELING'])) {
                            echo strftime('%Y-%m-%d', strtotime($result['DATUM_BEOORDELING']));
                        } ?>">
-            </div>
+                </div>
 
 
-            <label for="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">Is de actie uitgevoerd?</label><br>
-            <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-success">
-                    <input type="radio" name="INSPECTIE_IS_DE_ACTIE_UITGEVOERD" value="1"> Ja
-                </label>
-                <label class="btn btn-danger">
-                    <input type="radio" name="INSPECTIE_IS_DE_ACTIE_UITGEVOERD" value="0" checked> Nee
-                </label>
-            </div>
+                <label for="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">Is de actie uitgevoerd?</label><br>
+                <div class="form-group">
+                    <input type="checkbox" style="outline: 2px solid" rel="INSPECTIE_IS_DE_ACTIE_UITGEVOERD" <?php if(strcmp($result[ 'INSPECTIE_IS_DE_ACTIE_UITGEVOERD'], '1')==0 ) { echo 'checked'; } ?>>
+                </div>
 
-            <div class="form-group">
-                <label for="OPMERKING_STAND_VAN_ZAKEN">Opmerking stand van zaken</label>
-                <input type="text" class="form-control" name="OPMERKING_STAND_VAN_ZAKEN"
-                       value="<?php if (isset($result['OPMERKING_STAND_VAN_ZAKEN'])) {
+                <div class="form-group">
+                    <label for="OPMERKING_STAND_VAN_ZAKEN">Opmerking stand van zaken</label>
+                    <input type="text" class="form-control" name="OPMERKING_STAND_VAN_ZAKEN" value="<?php if (isset($result['OPMERKING_STAND_VAN_ZAKEN'])) {
                            echo $result['OPMERKING_STAND_VAN_ZAKEN'];
                        } ?>">
-            </div>
-            <div class="form-group">
-                <label for="STAND_VAN_ZAKEN">Stand van zaken</label>
-                <input type="text" class="form-control" name="STAND_VAN_ZAKEN"
-                       value="<?php if (isset($result['STAND_VAN_ZAKEN'])) {
+                </div>
+                <div class="form-group">
+                    <label for="STAND_VAN_ZAKEN">Stand van zaken</label>
+                    <input type="text" class="form-control" name="STAND_VAN_ZAKEN" value="<?php if (isset($result['STAND_VAN_ZAKEN'])) {
                            echo $result['STAND_VAN_ZAKEN'];
                        } ?>">
-            </div>
-            <div class="form-group">
-                <label for="SCORE">Score</label>
-                <input type="text" class="form-control" name="SCORE"
-                       value="<?php if (isset($result['SCORE'])) {
+                </div>
+                <div class="form-group">
+                    <label for="SCORE">Score</label>
+                    <input type="text" class="form-control" name="SCORE" value="<?php if (isset($result['SCORE'])) {
                            echo $result['SCORE'];
                        } ?>">
+                </div>
+
+
+                <button class="btn btn-block btn-primary" name="submit" type="submit">Aanpassen</button>
+
+            </form>
+            <button class="btn btn-block btn-default" onclick="ShowDiv()">Versiegeschiedenis weergeven</button>
+
+            <div style="display: none;" id="versiebeheer">
+                <br>
+                <h1>Versiegeschiedenis</h1>
+                <div style="overflow: auto;">
+                    <?php if(count($history) > 0) { ?>
+                    <table class="table table-striped table-bordered" style="margin: 0; padding: 0;">
+                        <thead>
+                            <tr>
+                                <th>Datum</th>
+                                <th>Gebruiker</th>
+                                <th>Actie</th>
+                                <th>Projectnummer</th>
+                                <th>Rapportnummer</th>
+                                <th>Regelnummer</th>
+                                <th>Datum beoordeling</th>
+                                <th>Inspectie is de actie uitgevoerd</th>
+                                <th>Opmerking stand van zaken</th>
+                                <th>Stand van zaken</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($history as $value) { ?>
+                            <tr>
+                                <td><?= $value['DATUM'] ?></td>
+                                <td>
+                                    <?= $value['GEBRUIKER'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['ACTIE'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['PROJECTNUMMER'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['RAPPORTNUMMER'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['REGELNUMMER'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['DATUM_BEOORDELING'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['INSPECTIE_IS_DE_ACTIE_UITGEVOERD'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['OPMERKING_STAND_VAN_ZAKEN'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['SCORE'] ?>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                    <?php } else { ?>
+                    <p>Er zijn geen oudere versies.</p>
+                    <?php } ?>
+                </div>
             </div>
-
-
-            <button class="btn btn-block btn-primary" name="submit" type="submit">Aanpassen</button>
-
-        </form>
-
+        </div>
     </div>
-</div>
-</div>
 
-<br>
-<script type="text/javascript">
-    var projectnummer = "<?= $_GET['projectnummer'] ?>";
-    var rapportnummer = "<?= $_GET['rapportnummer'] ?>";
+    <br>
+    <?php include_once('include/footer.php'); ?>
+    <script type="text/javascript">
+        var projectnummer = "<?= $_GET['projectnummer'] ?>";
+        var rapportnummer = "<?= $_GET['rapportnummer'] ?>";
+        $(document).ready(function() {
+            var chk = $('input[type="checkbox"]');
+            chk.each(function() {
+                var v = $(this).attr('checked') == 'checked' ? 1 : 0;
+                $(this).after('<input type="hidden" class="form-control" name="' + $(this).attr('rel') + '" value="' + v + '" />');
+            });
+            chk.change(function() {
+                var v = $(this).is(':checked') ? 1 : 0;
+                $(this).next('input[type="hidden"]').val(v);
+            });
+        });
 
-</script>
-
-<?php include_once('include/footer.php'); ?>
+        function ShowDiv() {
+            document.getElementById("versiebeheer").style.display = "";
+        }
+    </script>
