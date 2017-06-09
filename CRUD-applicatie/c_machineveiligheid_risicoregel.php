@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
     <br>
 </div>
-
+<?php include_once('include/footer.php'); ?>
 <script>
     $(document).ready(function() {
         var chk = $('input[type="checkbox"]');
@@ -182,5 +182,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     });
 </script>
-
-<?php include_once('include/footer.php'); ?>
