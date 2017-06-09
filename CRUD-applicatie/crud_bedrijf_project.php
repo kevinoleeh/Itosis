@@ -166,7 +166,7 @@ if (isset($_GET['project'])) {
                     <?php
                     if (isset($_GET["new"])) {
 
-                        echo '<form action="crd_bedrijf_project.php?new=1" method="post">';
+                        echo '<form action="crud_bedrijf_project.php?new=1" method="post">';
                         echo '<tr>';
                         echo '<td><input class="form-control" type="text" name="BEDRIJFSNAAM"></td>';
                         echo '<td><input class="form-control" type="text" name="LOCATIE"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
@@ -174,7 +174,7 @@ if (isset($_GET['project'])) {
                         echo '</form>';
                     }
                     if (isset($_GET["editbedrijf"])) {
-                        echo '<form action="crd_bedrijf_project.php?edit=1" method="post">';
+                        echo '<form action="crud_bedrijf_project.php?edit=1" method="post">';
                         echo '<input type="hidden" value="' . $_GET["editbedrijf"] . '" name="oudBEDRIJFSNAAM"></td>';
                         echo '<input type="hidden" value="' . $_GET["LOCATIE"] . '" name="oudLOCATIE"></td>';
 
@@ -217,7 +217,7 @@ if (isset($_GET['project'])) {
                     </thead>
                     <?php
                     if (isset($_GET["newProject"])) {
-                        echo '<form action="crd_bedrijf_project.php?project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '" method="post">';
+                        echo '<form action="crud_bedrijf_project.php?project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '" method="post">';
                         echo '<tr>';
                         echo '<td></td>';
                         echo '<td><input class="form-control" type="text" name="PROJECTOMSCHRIJVING"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
@@ -226,7 +226,7 @@ if (isset($_GET['project'])) {
                     }
 
                     if (isset($_GET["editProject"])) {
-                        echo '<form action="crd_bedrijf_project.php?edit=1" method="post">';
+                        echo '<form action="crud_bedrijf_project.php?edit=1" method="post">';
                         echo '<input type="hidden" value="' . $_GET["projectnummer1"] . '" name="UPROJECTNUMMER"></td>';
                         echo '<input type="hidden" value="' . $_GET["editProject"] . '" name="omschrijvingOud"></td>';
                         echo '<tr>';

@@ -26,7 +26,7 @@ try {
 
     <div class="row">
         <div class="col-md-12">
-            <a href="crd_bedrijf_project.php" class="btn btn-block btn-primary">Project toevoegen</a>
+            <a href="crud_bedrijf_project.php" class="btn btn-block btn-primary">Project toevoegen</a>
             <br>
 
             <table class="table table-striped table-bordered">
@@ -41,7 +41,7 @@ try {
                 <tbody>
                 <?php if(count($result) > 0) { ?>
                     <?php foreach ($result as $value) { ?>
-                        <tr onClick="document.location.href='rd_rapportages.php?projectnummer=<?= $value['PROJECTNUMMER'] ?>';">
+                        <tr onClick="document.location.href='r_rapportages.php?projectnummer=<?= $value['PROJECTNUMMER'] ?>';">
                             <td><?= $value['PROJECTNUMMER'] ?></a></td>
                             <td><?= $value['PROJECTOMSCHRIJVING'] ?></td>
                             <td><?= $value['BEDRIJFSNAAM'] ?></td>

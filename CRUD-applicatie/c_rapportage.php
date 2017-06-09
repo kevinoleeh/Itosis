@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':RAPPORT_TYPE', $_POST['RAPPORT_TYPE']);
     try {
         $stmt->execute();
-        header('Location: rd_rapportages.php?projectnummer='.$_GET['projectnummer']);
+        header('Location: r_rapportages.php?projectnummer='.$_GET['projectnummer']);
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Rapport niet opgeslagen. Foutmelding: " . $e->getMessage();
@@ -40,7 +40,7 @@ try {
 
     <?php include_once('include/melding.php') ?>
 
-    <form action="c_rapportage.php?projectnummer=<?= $_GET['projectnummer'] ?>" method="post">
+    <form method="post">
         <div class="form-group">
             <label for="ASPECT">Rapport type</label>
             <select class="form-control" name="RAPPORT_TYPE">
