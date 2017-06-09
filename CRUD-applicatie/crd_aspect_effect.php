@@ -10,10 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
 
             $meldingStatus = true;
-            $melding = "Regel opgeslagen.";
+            $melding = "Aspect opgeslagen.";
         } catch (PDOException $e) {
             $meldingStatus = false;
-            $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
+            $melding = "Aspect niet opgeslagen. Foutmelding: " . $e->getMessage();
         }
     }
 
@@ -48,10 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute();
 
                 $meldingStatus = true;
-                $melding = "Regel opgeslagen.";
+                $melding = "Effect toegevoegd aan aspect.";
             } catch (PDOException $e) {
                 $meldingStatus = false;
-                $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
+                $melding = "Effect niet toegevoegd aan aspect. Foutmelding: " . $e->getMessage();
             }
         }
     }
@@ -73,6 +73,7 @@ if (isset($_GET["removeAspect"])) {
         }
     }
 }
+
 if (isset($_GET["removeEffect"])) {
     $query = 'EXEC dbo.SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT
               :ASPECTNAAM,
@@ -84,7 +85,7 @@ if (isset($_GET["removeEffect"])) {
         $stmt->execute();
 
         $meldingStatus = true;
-        $melding = "Effect verwijderd.";
+        $melding = "Effect bij aspect verwijderd.";
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Effect niet verwijderd. Foutmelding: " . $e->getMessage();
@@ -104,11 +105,11 @@ if (isset($_POST["ASPECTNAAMNEW"])) {
         $stmt->execute();
 
         $meldingStatus = true;
-        $melding = "Het aspect is succesvol geüpdatet";
+        $melding = "Aspect geüpdatet.";
 
     } catch (PDOException $e) {
         $meldingStatus = false;
-        $melding = "Aspect niet geupdatet. Foutmelding: " . $e->getMessage();
+        $melding = "Aspect niet geüpdatet. Foutmelding: " . $e->getMessage();
     }
 }
 
@@ -125,11 +126,11 @@ if (isset($_GET["edit"])) {
         $stmt->execute();
 
         $meldingStatus = true;
-        $melding = "Het effect is succesvol geüpdatet";
+        $melding = "Effect geüpdatet.";
 
     } catch (PDOException $e) {
         $meldingStatus = false;
-        $melding = "Effect niet geupdatet. Foutmelding: " . $e->getMessage();
+        $melding = "Effect niet geüpdatet. Foutmelding: " . $e->getMessage();
     }
 }
 try {
@@ -196,11 +197,11 @@ catch (PDOException $e) {
                         echo '</form>';
                     }
                     if (isset($_GET["editAspect"])) {
-                        echo '<form action="crd_aspect_effect.php?edit=1" method="post">';
+                        echo '<form action="crd_aspect_effect.php" method="post">';
                         echo '<input type="hidden" value="' . $_GET["editAspect"] . '" name="ASPECTNAAMOUD"></td>';
                         echo '<tr>';
 
-                        echo '<td><input type="text" value="' . $_GET["editAspect"] . '" name="ASPECTNAAMNEW">';
+                        echo '<td><input type="text" class="form-control" value="' . $_GET["editAspect"] . '" name="ASPECTNAAMNEW">';
                         echo '<button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
                         echo '</tr>';
                         echo '</form>';
