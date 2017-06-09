@@ -237,7 +237,7 @@ if (isset($_GET['project'])) {
                     }
                     foreach ($projecten as $project) {
                         echo '<tr>';
-                        echo '<td><a href=rd_rapportages.php?projectnummer=' . $project["PROJECTNUMMER"] . '>' . $project["PROJECTNUMMER"] . '</a></td>';
+                        echo '<td><a href=r_rapportages.php?projectnummer=' . $project["PROJECTNUMMER"] . '>' . $project["PROJECTNUMMER"] . '</a></td>';
                         echo '<td>' . $project["PROJECTOMSCHRIJVING"] . '
                       <a href="?removeProject=' . $project["PROJECTNUMMER"] . '&project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '"><span class="glyphicon glyphicon-remove widintable red"></span></a>
                       <a href="?editProject=' . $project["PROJECTOMSCHRIJVING"] . '&project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '&projectnummer1=' . $project["PROJECTNUMMER"] . '"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
