@@ -108,7 +108,7 @@ $query = "SELECT PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, UITGEVOERD_DOOR, EIN
 
     <div class="container" xmlns="http://www.w3.org/1999/html">
         <div class="page-header">
-            <h1>Plan van Aanpak wijzigen </h1>
+            <h1>Plan van aanpak wijzigen </h1>
             <h4>Projectnummer
                 <?= $_GET['projectnummer'] ?>, rapportnummer
                     <?= $_GET['rapportnummer'] ?>, regelnummer
@@ -170,7 +170,7 @@ $query = "SELECT PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, UITGEVOERD_DOOR, EIN
                     } ?></textarea>
                     </div>
 
-                    <button class="btn btn-block btn-primary" name="submit" type="submit">Wijzigen</button>
+                    <button class="btn btn-block btn-primary" name="submit" type="submit">Plan van aanpak wijzigen</button>
                 </form>
 
             </div>

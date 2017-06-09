@@ -152,26 +152,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result['ERNST_VAN_DE_GEVOLGEN'] = $_POST['ERNST_VAN_DE_GEVOLGEN'];
     }
 }
-try {
-    $query = "SELECT *
-              FROM RISICOREGEL RR INNER JOIN VISUELE_BEOORDELING VB
-              ON RR.PROJECTNUMMER = VB.PROJECTNUMMER
-              AND RR.RAPPORTNUMMER = VB.RAPPORTNUMMER
-              AND RR.REGELNUMMER = VB.REGELNUMMER
-              INNER JOIN MACHINEVEILIGHEID MV
-              ON RR.PROJECTNUMMER = MV.PROJECTNUMMER
-              AND RR.RAPPORTNUMMER = MV.RAPPORTNUMMER
-              AND RR.REGELNUMMER = MV.REGELNUMMER
-              WHERE RR.PROJECTNUMMER = :PROJECTNUMMER
-              AND RR.RAPPORTNUMMER = :RAPPORTNUMMER
-              AND RR.REGELNUMMER = :REGELNUMMER";
-    $stmt = $dbh->prepare($query);
-    $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
-    $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
-    $stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
 
+$query = "SELECT *
+          FROM RISICOREGEL RR INNER JOIN VISUELE_BEOORDELING VB
+          ON RR.PROJECTNUMMER = VB.PROJECTNUMMER
+          AND RR.RAPPORTNUMMER = VB.RAPPORTNUMMER
+          AND RR.REGELNUMMER = VB.REGELNUMMER
+          INNER JOIN MACHINEVEILIGHEID MV
+          ON RR.PROJECTNUMMER = MV.PROJECTNUMMER
+          AND RR.RAPPORTNUMMER = MV.RAPPORTNUMMER
+          AND RR.REGELNUMMER = MV.REGELNUMMER
+          WHERE RR.PROJECTNUMMER = :PROJECTNUMMER
+          AND RR.RAPPORTNUMMER = :RAPPORTNUMMER
+          AND RR.REGELNUMMER = :REGELNUMMER";
+$stmt = $dbh->prepare($query);
+$stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+$stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+$stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
+
+try {
     $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmt->fetch();
 } catch (PDOException $e) {
     $meldingStatus = false;
     $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
@@ -207,7 +208,7 @@ try {
 
 <div class="container">
     <div class="page-header">
-        <h1>Organisatieregel toevoegen</h1>
+        <h1>Machineveiligheidregel wijzigen</h1>
     </div>
 
     <?php include_once('include/melding.php') ?>

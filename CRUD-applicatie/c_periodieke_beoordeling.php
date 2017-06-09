@@ -46,19 +46,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               WHERE PROJECTNUMMER = :PROJECTNUMMER
               AND RAPPORTNUMMER = :RAPPORTNUMMER
               AND REGELNUMMER = :REGELNUMMER";
-              $stmt = $dbh->prepare($query);
-              $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
-              $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
-              $stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
-              $history = null;
-              try{
-              $stmt->execute();
-              $history = $stmt->fetchall();
-            }
-            catch (PDOException $e) {
-                $meldingStatus = false;
-                $melding = "Periodieke beoordeling niet kunnen ophalen. Foutmelding: " . $e->getMessage();
-            }
+    $stmt = $dbh->prepare($query);
+    $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+    $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
+    $stmt->bindParam(':REGELNUMMER', $_GET['regelnummer']);
+    $history = null;
+    try {
+        $stmt->execute();
+        $history = $stmt->fetchall();
+    } catch (PDOException $e) {
+        $meldingStatus = false;
+        $melding = "Periodieke beoordeling niet kunnen ophalen. Foutmelding: " . $e->getMessage();
+    }
 }
 
 ?>
@@ -69,28 +68,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1>Periodieke beoordeling toevoegen</h1>
             <h4>Projectnummer
                 <?= $_GET['projectnummer'] ?>, rapportnummer
-                    <?= $_GET['rapportnummer'] ?>, regelnummer
-                        <?= $_GET['regelnummer'] ?>
+                <?= $_GET['rapportnummer'] ?>, regelnummer
+                <?= $_GET['regelnummer'] ?>
         </div>
     </div>
-    <?php include_once('include/melding.php') ?>
 
-    <hr>
     <div class="row">
+        <?php include_once('include/melding.php') ?>
+
         <form action="c_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?> "
               method="post">
-            <h3>Periodieke beoordeling toevoegen</h3>
             <div class="form-group">
-                <div class="form-group">
-                    <label for="DATUM_BEOORDELING">Datum beoordeling</label>
-                    <input type="date" class="form-control" name="DATUM_BEOORDELING"
-                           value="<?php echo date("Y-m-d"); ?>">
-                </div>
+                <label for="DATUM_BEOORDELING">Datum beoordeling</label>
+                <input type="date" class="form-control" name="DATUM_BEOORDELING"
+                       value="<?php echo date("Y-m-d"); ?>">
             </div>
 
             <label for="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">Is de actie uitgevoerd?</label>
             <div class="form-group">
-                <input type="checkbox" style="outline: 2px solid" rel="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">
+                <input type="checkbox" style="width: 34px; height: 34px;" rel="INSPECTIE_IS_DE_ACTIE_UITGEVOERD" <?php if(isset($result['INSPECTIE_IS_DE_ACTIE_UITGEVOERD'])) { if(strcmp($result['INSPECTIE_IS_DE_ACTIE_UITGEVOERD'], '1') == 0) { echo 'checked'; } } ?>>
             </div>
 
             <div class="form-group">
@@ -114,17 +110,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                            echo $result['SCORE'];
                        } ?>">
             </div>
-                <button class="btn btn-block btn-primary" name="submit" type="submit">Aanmaken</button>
+            <button class="btn btn-block btn-primary" name="submit" type="submit">Periodieke beoordeling opslaan</button>
+            <br>
         </form>
+
         <button class="btn btn-block btn-default" onclick="ShowDiv()">Versiegeschiedenis weergeven</button>
 
         <div style="display: none;" id="versiebeheer">
             <br>
             <h1>Versiegeschiedenis</h1>
             <div style="overflow: auto;">
-                <?php if(count($history) > 0) { ?>
-                <table class="table table-striped table-bordered" style="margin: 0; padding: 0;">
-                    <thead>
+                <?php if (count($history) > 0) { ?>
+                    <table class="table table-striped table-bordered" style="margin: 0; padding: 0;">
+                        <thead>
                         <tr>
                             <th>Datum</th>
                             <th>Gebruiker</th>
@@ -141,78 +139,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <th>TRA</th>
                             <th>Contract lijst</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         <?php foreach ($history as $value) { ?>
-                        <tr>
-                            <td><?= $value['DATUM'] ?></td>
-                            <td>
-                                <?= $value['GEBRUIKER'] ?>
-                            </td>
-                            <td>
-                                <?= $value['ACTIE'] ?>
-                            </td>
-                            <td>
-                                <?= $value['PROJECTNUMMER'] ?>
-                            </td>
-                            <td>
-                                <?= $value['RAPPORTNUMMER'] ?>
-                            </td>
-                            <td>
-                                <?= $value['REGELNUMMER'] ?>
-                            </td>
-                            <td>
-                                <?= $value['UITGEVOERD_DOOR'] ?>
-                            </td>
-                            <td>
-                                <?= $value['EINDVERANTWOORDELIJKE'] ?>
-                            </td>
-                            <td>
-                                <?= $value['DATUM_GEREED_GEPLAND'] ?>
-                            </td>
-                            <td>
-                                <?= $value['PBM'] ?>
-                            </td>
-                            <td>
-                                <?= $value['VOORLICHTING'] ?>
-                            </td>
-                            <td>
-                                <?= $value['WERKINSTRUCTIE_PROCEDURE'] ?>
-                            </td>
-                            <td>
-                                <?= $value['TRA'] ?>
-                            </td>
-                            <td>
-                                <?= $value['CONTRACT_LIJST_'] ?>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td><?= $value['DATUM'] ?></td>
+                                <td>
+                                    <?= $value['GEBRUIKER'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['ACTIE'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['PROJECTNUMMER'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['RAPPORTNUMMER'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['REGELNUMMER'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['UITGEVOERD_DOOR'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['EINDVERANTWOORDELIJKE'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['DATUM_GEREED_GEPLAND'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['PBM'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['VOORLICHTING'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['WERKINSTRUCTIE_PROCEDURE'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['TRA'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['CONTRACT_LIJST_'] ?>
+                                </td>
+                            </tr>
                         <?php } ?>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
                 <?php } else { ?>
-                <p>Er zijn geen oudere versies.</p>
+                    <p>Er zijn geen oudere versies.</p>
                 <?php } ?>
+            </div>
+        </div>
 
     </div>
-
-</div>
 </div>
 
 <br>
 
 <?php include_once('include/footer.php'); ?>
 <script type="text/javascript">
-$(document).ready(function() {
-    var chk = $('input[type="checkbox"]');
-    chk.each(function(){
-        var v = $(this).attr('checked') == 'checked'?1:0;
-        $(this).after('<input type="hidden" class="form-control" name="'+$(this).attr('rel')+'" value="'+v+'" />');
+    $(document).ready(function () {
+        var chk = $('input[type="checkbox"]');
+        chk.each(function () {
+            var v = $(this).attr('checked') == 'checked' ? 1 : 0;
+            $(this).after('<input type="hidden" class="form-control" name="' + $(this).attr('rel') + '" value="' + v + '" />');
+        });
+        chk.change(function () {
+            var v = $(this).is(':checked') ? 1 : 0;
+            $(this).next('input[type="hidden"]').val(v);
+        });
     });
-    chk.change(function(){
-        var v = $(this).is(':checked')?1:0;
-        $(this).next('input[type="hidden"]').val(v);
-    });
-});
     var projectnummer = "<?= $_GET['projectnummer'] ?>";
     var rapportnummer = "<?= $_GET['rapportnummer'] ?>";
     function ShowDiv() {

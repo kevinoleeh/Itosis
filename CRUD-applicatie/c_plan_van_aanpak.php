@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="container" xmlns="http://www.w3.org/1999/html">
         <div class="page-header">
-            <h1>Plan van Aanpak wijzigen </h1>
+            <h1>Plan van aanpak toevoegen</h1>
             <h4>Projectnummer
                 <?= $_GET['projectnummer'] ?>, rapportnummer
                     <?= $_GET['rapportnummer'] ?>, regelnummer
@@ -61,8 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </h4>
         </div>
         <?php include_once('include/melding.php') ?>
-
-
 
             <div class="row">
               <div class="col-md-12">
