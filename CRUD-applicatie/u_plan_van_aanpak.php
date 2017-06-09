@@ -191,7 +191,7 @@ $query = "SELECT PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, UITGEVOERD_DOOR, EIN
                     <table id="table" class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th>Datum Beoordeling</th>
+                                <th>Datum beoordeling</th>
                                 <th>Inspectie uitgevoerd</th>
                                 <th>Opmerkingen s.v.z.</th>
                                 <th>Stand van zaken</th>
@@ -208,10 +208,10 @@ $query = "SELECT PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, UITGEVOERD_DOOR, EIN
                                 </td>
                                 <td>
                                     <?php if ($value['INSPECTIE_IS_DE_ACTIE_UITGEVOERD'] == 0) {
-                                echo 'Nee';
-                            } else {
-                                echo 'Ja';
-                            }; ?>
+                                        echo 'Nee';
+                                    } else {
+                                        echo 'Ja';
+                                    }; ?>
                                 </td>
                                 <td>
                                     <?= $value['OPMERKING_STAND_VAN_ZAKEN'] ?>
@@ -224,10 +224,7 @@ $query = "SELECT PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, UITGEVOERD_DOOR, EIN
                                 </td>
                                 </div>
                                 <td>
-                                        <a id="periodiekebutton" href="u_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>&datum=<?php echo strftime('%Y-%m-%d', strtotime($value['DATUM_BEOORDELING'])); ?>"
-                                            class="btn btn-block btn-primary">Wijzigen</a>
-
-
+                                    <a id="periodiekebutton" style="padding: 0 12px;" href="u_periodieke_beoordeling.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>&datum=<?= $value['DATUM_BEOORDELING']; ?>" class="btn btn-block btn-primary">Wijzigen</a>
                                 </td>
                             </tr>
                             <?php } ?>
