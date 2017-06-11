@@ -79,6 +79,36 @@ GO
   EXEC _end 0
   GO
 
+  -- SP_INSERT_PLAN_VAN_AANPAK test
+EXEC _begin
+BEGIN TRY
+	DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
+	BEGIN TRANSACTION test
+		EXEC SP_INSERT_PLAN_VAN_AANPAK
+		@PROJECTNUMMER = @projectnummer,
+    @RAPPORTNUMMER = 1,
+    @REGELNUMMER = 1,
+    @UITGEVOERD_DOOR = 'Testpersoon',
+    @EINDVERANTWOORDELIJKE = 'Testpersoon 2',
+    @DATUM_GEREED_GEPLAND = '12-12-2017',
+    @PBM ='Dit is een PBM',
+    @VOORLICHTING = 'Voorlichting etc.',
+    @WERKINSTRUCTIE_PROCEDURE = 'Werkinstructies',
+    @TRA = 'Taak risico analyse',
+    @CONTRACT_LIJST_  = 'Controlelijst e.d.'
+	ROLLBACK TRANSACTION
+	EXEC _result 'SP_INSERT_PLAN_VAN_AANPAK', 1, 'Pva is toegevoegd', ''
+END TRY
+BEGIN CATCH
+	ROLLBACK TRANSACTION
+	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+	EXEC _result 'SP_INSERT_PLAN_VAN_AANPAK', 0, '',@msg
+END CATCH
+EXEC _end 0
+GO
+
+
+
 -- SP_UPDATE_PLAN_VAN_AANPAK test
 EXEC _begin
 BEGIN TRY
