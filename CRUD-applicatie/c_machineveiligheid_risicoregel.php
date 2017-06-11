@@ -1,6 +1,4 @@
-<?php
-
-include_once('include/header.php');
+<?php include_once('include/header.php');
 include_once('include/risicoregel/effect_aspect.php'); ?>
 
 <?php
@@ -19,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              :AFWIJKENDE_ACTIE_TER_UITVOERING,
              :RESTRISICO,
              :PROCES,
-             :MACHINE_ONDERDEEL,
+             :MACHINE_ONDERDEEL_,
              :AFDELING,
              :MACHINE_CODE,
              :MACHINE,
@@ -66,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':AFWIJKENDE_ACTIE_TER_UITVOERING', $_POST['AFWIJKENDE_ACTIE_TER_UITVOERING']);
     $stmt->bindParam(':RESTRISICO', $_POST['RESTRISICO']);
     $stmt->bindParam(':PROCES', $_POST['PROCES']);
-    $stmt->bindParam(':MACHINE_ONDERDEEL', $_POST['MACHINE_ONDERDEEL']);
+    $stmt->bindParam(':MACHINE_ONDERDEEL_', $_POST['MACHINE_ONDERDEEL_']);
     $stmt->bindParam(':AFDELING', $_POST['AFDELING']);
     $stmt->bindParam(':MACHINE_CODE', $_POST['MACHINE_CODE']);
     $stmt->bindParam(':MACHINE', $_POST['MACHINE']);
@@ -99,6 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':NA_ERNST_VAN_ONGEVAL', $_POST['NA_ERNST_VAN_ONGEVAL']);
     $stmt->bindParam(':NA_KANS_OP_BLOOTSTELLING', $_POST['NA_KANS_OP_BLOOTSTELLING']);
     $stmt->bindParam(':NA_KANS_OP_WAARSCHIJNLIJKHEID', $_POST['NA_KANS_OP_WAARSCHIJNLIJKHEID']);
+
     try {
         $stmt->execute();
         header('Location: rd_risicoregels.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
@@ -114,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result['RISICO_OMSCHRIJVING_OF_BEVINDING'] = $_POST['RISICO_OMSCHRIJVING_OF_BEVINDING'];
         $result['HUIDIGE_BEHEERSMAATREGEL'] = $_POST['HUIDIGE_BEHEERSMAATREGEL'];
         $result['PROCES'] = $_POST['PROCES'];
-        $result['MACHINE_ONDERDEEL'] = $_POST['MACHINE_ONDERDEEL'];
+        $result['MACHINE_ONDERDEEL_'] = $_POST['MACHINE_ONDERDEEL_'];
         $result['AFDELING'] = $_POST['AFDELING'];
         $result['MACHINE'] = $_POST['MACHINE'];
         $result['MACHINE_CODE'] = $_POST['MACHINE_CODE'];
@@ -156,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="container">
     <div class="page-header">
-        <h1>Organisatieregel toevoegen</h1>
+        <h1>Machineveiligheidregel toevoegen</h1>
     </div>
 
     <?php include_once('include/melding.php') ?>
@@ -169,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
     <br>
 </div>
-
+<?php include_once('include/footer.php'); ?>
 <script>
     $(document).ready(function() {
         var chk = $('input[type="checkbox"]');
@@ -183,5 +182,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     });
 </script>
-
-<?php include_once('include/footer.php'); ?>

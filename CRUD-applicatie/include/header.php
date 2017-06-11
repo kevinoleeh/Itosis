@@ -44,9 +44,9 @@ if(strstr($_SERVER["PHP_SELF"], 'login.php') != 'login.php') {
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <?php if(isset($_SESSION['gebruikersnaam']) and isset($_SESSION['wachtwoord'])) { ?>
-                <li><a href="rd_projecten.php">Alle projecten</a></li>
-                <li><a href="crd_bedrijf_project.php">Bedrijf en project</a></li>
-                <li><a href="crd_aspect_effect.php">Aspect en effect</a></li>
+                <li><a href="r_projecten.php">Alle projecten</a></li>
+                <li><a href="crud_bedrijf_project.php">Bedrijf en project</a></li>
+                <li><a href="crud_aspect_effect.php">Aspect en effect</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a><?= $_SESSION['gebruikersnaam'] ?></a></li>

@@ -10,10 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
 
             $meldingStatus = true;
-            $melding = "Regel opgeslagen.";
+            $melding = "Aspect opgeslagen.";
         } catch (PDOException $e) {
             $meldingStatus = false;
-            $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
+            $melding = "Aspect niet opgeslagen. Foutmelding: " . $e->getMessage();
         }
     }
 
@@ -48,10 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute();
 
                 $meldingStatus = true;
-                $melding = "Regel opgeslagen.";
+                $melding = "Effect toegevoegd aan aspect.";
             } catch (PDOException $e) {
                 $meldingStatus = false;
-                $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
+                $melding = "Effect niet toegevoegd aan aspect. Foutmelding: " . $e->getMessage();
             }
         }
     }
@@ -73,6 +73,7 @@ if (isset($_GET["removeAspect"])) {
         }
     }
 }
+
 if (isset($_GET["removeEffect"])) {
     $query = 'EXEC dbo.SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT
               :ASPECTNAAM,
@@ -84,7 +85,7 @@ if (isset($_GET["removeEffect"])) {
         $stmt->execute();
 
         $meldingStatus = true;
-        $melding = "Effect verwijderd.";
+        $melding = "Effect bij aspect verwijderd.";
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Effect niet verwijderd. Foutmelding: " . $e->getMessage();
@@ -104,11 +105,11 @@ if (isset($_POST["ASPECTNAAMNEW"])) {
         $stmt->execute();
 
         $meldingStatus = true;
-        $melding = "Het aspect is succesvol geüpdatet";
+        $melding = "Aspect geüpdatet.";
 
     } catch (PDOException $e) {
         $meldingStatus = false;
-        $melding = "Aspect niet geupdatet. Foutmelding: " . $e->getMessage();
+        $melding = "Aspect niet geüpdatet. Foutmelding: " . $e->getMessage();
     }
 }
 
@@ -125,11 +126,11 @@ if (isset($_GET["edit"])) {
         $stmt->execute();
 
         $meldingStatus = true;
-        $melding = "Het effect is succesvol geüpdatet";
+        $melding = "Effect geüpdatet.";
 
     } catch (PDOException $e) {
         $meldingStatus = false;
-        $melding = "Effect niet geupdatet. Foutmelding: " . $e->getMessage();
+        $melding = "Effect niet geüpdatet. Foutmelding: " . $e->getMessage();
     }
 }
 try {
@@ -189,18 +190,18 @@ catch (PDOException $e) {
                     <?php
 
                     if (isset($_GET["insertAspect"])) {
-                        echo '<form action="crd_aspect_effect.php?insertAspect=1" method="post">';
+                        echo '<form action="crud_aspect_effect.php?insertAspect=1" method="post">';
                         echo '<tr>';
                         echo '<td><input class="form-control" type="text" name="ASPECTNAAM"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
                         echo '</tr>';
                         echo '</form>';
                     }
                     if (isset($_GET["editAspect"])) {
-                        echo '<form action="crd_aspect_effect.php?edit=1" method="post">';
+                        echo '<form action="crud_aspect_effect.php" method="post">';
                         echo '<input type="hidden" value="' . $_GET["editAspect"] . '" name="ASPECTNAAMOUD"></td>';
                         echo '<tr>';
 
-                        echo '<td><input type="text" value="' . $_GET["editAspect"] . '" name="ASPECTNAAMNEW">';
+                        echo '<td><input type="text" class="form-control" value="' . $_GET["editAspect"] . '" name="ASPECTNAAMNEW">';
                         echo '<button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
                         echo '</tr>';
                         echo '</form>';
@@ -208,7 +209,7 @@ catch (PDOException $e) {
                     if(isset($aspecten)){
                     foreach ($aspecten as $aspecten) {
                         echo '<tr>
-                              <td><a href="crd_aspect_effect.php?aspectnaam='.$aspecten["ASPECTNAAM"].'"> '.$aspecten["ASPECTNAAM"].'</a>
+                              <td><a href="crud_aspect_effect.php?aspectnaam='.$aspecten["ASPECTNAAM"].'"> '.$aspecten["ASPECTNAAM"].'</a>
                               <a href="?removeAspect='.$aspecten["ASPECTNAAM"].'&checkAspect=1"><span class="glyphicon glyphicon-remove widintable red"></span></a>
                                 <a href="?editAspect='.$aspecten["ASPECTNAAM"].'&"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>
                               </tr>';
@@ -235,7 +236,7 @@ catch (PDOException $e) {
 
                     $i = 1;
                     if (isset($_GET["inserteffect"])) {
-                        echo '<form action="crd_aspect_effect.php?control=1&aspectnaam=' . $_GET['aspectnaam'] . '" method="post">';
+                        echo '<form action="crud_aspect_effect.php?control=1&aspectnaam=' . $_GET['aspectnaam'] . '" method="post">';
                         echo '<tr>';
                         echo '  <td><p><b>Effect toevoegen (kies):</b></p><select name="EFFECTNAAM" class="form-control">';
                         foreach ($alleEffecten as $effect) {
@@ -249,7 +250,7 @@ catch (PDOException $e) {
 
 
                     if (isset($_GET["inserteffect"])) {
-                        echo '<form action="crd_aspect_effect.php?aspectnaam=' . $_GET['aspectnaam'] . '" method="post">';
+                        echo '<form action="crud_aspect_effect.php?aspectnaam=' . $_GET['aspectnaam'] . '" method="post">';
                         echo '<tr>';
                         echo '<td><p><b>Effect toevoegen (nieuw):</b></p><input class="form-control" type="text" name="EFFECTNAAM"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
                         echo '</tr>';
@@ -258,7 +259,7 @@ catch (PDOException $e) {
                     }
 
                     if (isset($_GET["editEffect"])) {
-                        echo '<form action="crd_aspect_effect.php?edit=1" method="post">';
+                        echo '<form action="crud_aspect_effect.php?edit=1" method="post">';
                         echo '<input type="hidden" value="' . $_GET["editEffect"] . '" name="EFFECTNAAMOUD"></td>';
                         echo '<tr>';
                         echo '<td><input class="form-control" type="text" value="' . $_GET["editEffect"] . '" name="EFFECTNAAMNEW">';

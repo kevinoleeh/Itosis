@@ -25,10 +25,6 @@ td.numberwidth {
     width: 50px;
 }
 
-h1 {
-    color: black;
-}
-
 .navbar-default .navbar-nav>.active>a,
 .navbar-default .navbar-nav>.active>a:hover,
 .navbar-default .navbar-nav>.active>a:focus {
@@ -144,6 +140,7 @@ tr:hover td {
 }
 
 h1 {
+    color: black;
     margin-top: 0;
     padding-top: 0;
 }

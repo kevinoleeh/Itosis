@@ -1,4 +1,4 @@
-<h2>Machine veiligheid</h2>
+<h2>Machineveiligheid</h2>
 <div class="form-group">
     <label for="PID">PID</label>
     <input type="text" class="form-control" name="PID" value="<?php if(isset($result['PID'])) { echo $result['PID']; } ?>">
@@ -43,41 +43,41 @@
     <label for="TAKEN">Taken</label>
     <input type="text" class="form-control" name="TAKEN" value="<?php if(isset($result['TAKEN'])) { echo $result['TAKEN']; } ?>">
 </div>
+<label for="TRANSPORT">Transport</label>
 <div class="form-group">
-    <label for="TRANSPORT">Transport</label>
-    <input type="checkbox" class="form-control" rel="TRANSPORT" <?php if(strcmp($result['TRANSPORT'], '1') == 0) { echo 'checked'; } ?>>
+    <input type="checkbox" style="width: 34px; height: 34px;" rel="TRANSPORT" <?php if(isset($result['TRANSPORT'])) { if(strcmp($result['TRANSPORT'], '1') == 0) { echo 'checked'; } } ?>>
 </div>
+<label for="MONTAGE">Montage</label>
 <div class="form-group">
-    <label for="MONTAGE">Montage</label>
-    <input type="checkbox" class="form-control" rel="MONTAGE" <?php if(strcmp($result['MONTAGE'], '1') == 0) { echo 'checked'; } ?>>
+    <input type="checkbox" style="width: 34px; height: 34px;" rel="MONTAGE" <?php if(isset($result['MONTAGE'])) { if(strcmp($result['MONTAGE'], '1') == 0) { echo 'checked'; } } ?>>
 </div>
+<label for="IN_BEDRIJFSNAME">In bedrijfsname</label>
 <div class="form-group">
-    <label for="IN_BEDRIJFSNAME">In bedrijfsname</label>
-    <input type="checkbox" class="form-control" rel="IN_BEDRIJFSNAME" <?php if(strcmp($result['IN_BEDRIJFSNAME'], '1') == 0) { echo 'checked'; } ?>>
+    <input type="checkbox" style="width: 34px; height: 34px;" rel="IN_BEDRIJFSNAME" <?php if(isset($result['IN_BEDRIJFSNAME'])) { if(strcmp($result['IN_BEDRIJFSNAME'], '1') == 0) { echo 'checked'; } } ?>>
 </div>
+<label for="TIJDENS_PRODUCTIE">Tijdens productie</label>
 <div class="form-group">
-    <label for="TIJDENS_PRODUCTIE">Tijdens productie</label>
-    <input type="checkbox" class="form-control" rel="TIJDENS_PRODUCTIE" <?php if(strcmp($result['TIJDENS_PRODUCTIE'], '1') == 0) { echo 'checked'; } ?>>
+    <input type="checkbox" style="width: 34px; height: 34px;" rel="TIJDENS_PRODUCTIE" <?php if(isset($result['TIJDENS_PRODUCTIE'])) { if(strcmp($result['TIJDENS_PRODUCTIE'], '1') == 0) { echo 'checked'; } } ?>>
 </div>
+<label for="TIJDENS_ONDERHOUD">Tijdens onderhoud</label>
 <div class="form-group">
-    <label for="TIJDENS_ONDERHOUD">Tijdens onderhoud</label>
-    <input type="checkbox" class="form-control" rel="TIJDENS_ONDERHOUD" <?php if(strcmp($result['TIJDENS_ONDERHOUD'], '1') == 0) { echo 'checked'; } ?>>
+    <input type="checkbox" style="width: 34px; height: 34px;" rel="TIJDENS_ONDERHOUD" <?php if(isset($result['TIJDENS_ONDERHOUD'])) { if(strcmp($result['TIJDENS_ONDERHOUD'], '1') == 0) { echo 'checked'; } } ?>>
 </div>
+<label for="TIJDENS_STORING">Tijdens storing</label>
 <div class="form-group">
-    <label for="TIJDENS_STORING">Tijdens storing</label>
-    <input type="checkbox" class="form-control" rel="TIJDENS_STORING" <?php if(strcmp($result['TIJDENS_STORING'], '1') == 0) { echo 'checked'; } ?>>
+    <input type="checkbox" style="width: 34px; height: 34px;" rel="TIJDENS_STORING" <?php if(isset($result['TIJDENS_STORING'])) { if(strcmp($result['TIJDENS_STORING'], '1') == 0) { echo 'checked'; } } ?>>
 </div>
+<label for="TIJDENS_REINIGEN">Tijdens reinigen</label>
 <div class="form-group">
-    <label for="TIJDENS_REINIGEN">Tijdens reinigen</label>
-    <input type="checkbox" class="form-control" rel="TIJDENS_REINIGEN" <?php if(strcmp($result['TIJDENS_REINIGEN'], '1') == 0) { echo 'checked'; } ?>>
+    <input type="checkbox" style="width: 34px; height: 34px;" rel="TIJDENS_REINIGEN" <?php if(isset($result['TIJDENS_REINIGEN'])) { if(strcmp($result['TIJDENS_REINIGEN'], '1') == 0) { echo 'checked'; } } ?>>
 </div>
+<label for="TIJDENS_AFSTELLEN">Tijdens afstellen</label>
 <div class="form-group">
-    <label for="TIJDENS_AFSTELLEN">Tijdens afstellen</label>
-    <input type="checkbox" class="form-control" rel="TIJDENS_AFSTELLEN" <?php if(strcmp($result['TIJDENS_AFSTELLEN'], '1') == 0) { echo 'checked'; } ?>>
+    <input type="checkbox" style="width: 34px; height: 34px;" rel="TIJDENS_AFSTELLEN" <?php if(isset($result['TIJDENS_AFSTELLEN'])) { if(strcmp($result['TIJDENS_AFSTELLEN'], '1') == 0) { echo 'checked'; } } ?>>
 </div>
+<label for="DEMONTAGE">Demontage</label>
 <div class="form-group">
-    <label for="DEMONTAGE">Demontage</label>
-    <input type="checkbox" class="form-control" rel="DEMONTAGE" <?php if(strcmp($result['DEMONTAGE'], '1') == 0) { echo 'checked'; } ?>>
+    <input type="checkbox" style="width: 34px; height: 34px;" rel="DEMONTAGE" <?php if(isset($result['DEMONTAGE'])) { if(strcmp($result['DEMONTAGE'], '1') == 0) { echo 'checked'; } } ?>>
 </div>
 <div class="form-group">
   <label for="ONTWERP">Ontwerp</label>
@@ -94,24 +94,25 @@
 <div class="form-group">
     <label for="FREQUENTIE">Frequentie</label>
     <input type="text" class="form-control" name="FREQUENTIE" value="<?php if(isset($result['FREQUENTIE'])) { echo $result['FREQUENTIE']; } ?>">
-    <small id="VOOR_ERNST_VAN_ONGEVAL" class="form-text text-muted">Keuze uit 1, 2, 3, 4, 5</small>
+    <small id="" class="form-text text-muted">Keuze uit 1, 2, 3, 4, 5</small>
 </div>
 <div class="form-group">
     <label for="MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS">Mogelijkheid optreden gevaarlijke gebeurtenis</label>
     <input type="text" class="form-control" name="MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS" value="<?php if(isset($result['MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS'])) { echo $result['MOGELIJKHEID_OPTREDEN_GEVAARLIJKE_GEBEURTENIS']; } ?>">
-    <small id="VOOR_ERNST_VAN_ONGEVAL" class="form-text text-muted">Keuze uit 1, 2, 3, 4, 5</small>
+    <small id="" class="form-text text-muted">Keuze uit 1, 2, 3, 4, 5</small>
 </div>
 <div class="form-group">
     <label for="MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE">Mogelijkheid voorkomen of beperken schade</label>
     <input type="text" class="form-control" name="MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE" value="<?php if(isset($result['MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE'])) { echo $result['MOGELIJKHEID_VOORKOMEN_OF_BEPERKEN_SCHADE']; } ?>">
-    <small id="VOOR_ERNST_VAN_ONGEVAL" class="form-text text-muted">Keuze uit 1, 3, 5</small>
+    <small id="" class="form-text text-muted">Keuze uit 1, 3, 5</small>
 </div>
 <div class="form-group">
     <label for="ERNST_VAN_DE_GEVOLGEN">Ernst van de gevolgen</label>
     <input type="text" class="form-control" name="ERNST_VAN_DE_GEVOLGEN" value="<?php if(isset($result['ERNST_VAN_DE_GEVOLGEN'])) { echo $result['ERNST_VAN_DE_GEVOLGEN']; } ?>">
-    <small id="VOOR_ERNST_VAN_ONGEVAL" class="form-text text-muted">Keuze uit 1, 2, 3, 4</small>
+    <small id="" class="form-text text-muted">Keuze uit 1, 2, 3, 4</small>
 </div>
 <div class="form-group">
     <label for="CI">CI</label>
     <input type="text" class="form-control" name="CI" value="<?php if(isset($result['CI'])) { echo $result['CI']; } ?>" disabled>
+    <small id="" class="form-text text-muted">Automatisch berekend</small>
 </div>
