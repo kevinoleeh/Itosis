@@ -1457,7 +1457,7 @@ EXEC _begin
 BEGIN TRY
 BEGIN TRANSACTION test
 EXEC SP_INSERT_ASPECT_EFFECT
-	'Test aspect',
+	'Test aspect',--D
 	'Test effect 2'
 ROLLBACK TRANSACTION
 EXEC _result 'SP_INSERT_ASPECT_EFFECT', 1, 'Juiste insert', ''
