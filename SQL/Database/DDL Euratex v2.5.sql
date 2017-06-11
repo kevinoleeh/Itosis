@@ -1,13 +1,12 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2014                    */
-/* Created on:     30-5-2017 14:15:19                           */
+/* Created on:     7-6-2017 12:26:29                            */
 /*==============================================================*/
 
 use master
 
-if db_id('Euratex') is not null begin
+if db_id('Euratex') is not null
 	drop database Euratex
-end
 
 create database Euratex
 use Euratex
@@ -1013,9 +1012,9 @@ go
 /* Table: ASPECT                                                */
 /*==============================================================*/
 create table ASPECT (
-   ASPECTNAAM           ASPECTNAAM           not null,
-   constraint PK_ASPECT primary key (ASPECTNAAM),
-    constraint CK_ASPECTNAAM check (ASPECTNAAM > '')
+   ASPECTNAAM           ASPECTNAAM           not null 
+      constraint CKC_ASPECTNAAM_ASPECT check (ASPECTNAAM >= '1'),
+   constraint PK_ASPECT primary key (ASPECTNAAM)
 )
 go
 
@@ -1023,10 +1022,11 @@ go
 /* Table: ASPECT_EFFECT                                         */
 /*==============================================================*/
 create table ASPECT_EFFECT (
-   ASPECTNAAM           ASPECTNAAM           not null,
-   EFFECTNAAM           EFFECTNAAM           not null,
-   constraint PK_ASPECT_EFFECT primary key (ASPECTNAAM, EFFECTNAAM),
-    constraint CK_EFFECTNAAM check (EFFECTNAAM > '')
+   ASPECTNAAM           ASPECTNAAM           not null 
+      constraint CKC_ASPECTNAAM_ASPECT_E check (ASPECTNAAM >= '1'),
+   EFFECTNAAM           EFFECTNAAM           not null 
+      constraint CKC_EFFECTNAAM_ASPECT_E check (EFFECTNAAM >= '1'),
+   constraint PK_ASPECT_EFFECT primary key (ASPECTNAAM, EFFECTNAAM)
 )
 go
 
@@ -1054,10 +1054,11 @@ go
 /* Table: BEDRIJF                                               */
 /*==============================================================*/
 create table BEDRIJF (
-   BEDRIJFSNAAM         BEDRIJFSNAAM         not null,
-   LOCATIE              LOCATIE              not null,
-   constraint PK_BEDRIJF primary key (BEDRIJFSNAAM, LOCATIE),
-    constraint CK_BEDRIJFNAAM check (BEDRIJFSNAAM > '')
+   BEDRIJFSNAAM         BEDRIJFSNAAM         not null 
+      constraint CKC_BEDRIJFSNAAM_BEDRIJF check (BEDRIJFSNAAM >= '1'),
+   LOCATIE              LOCATIE              not null 
+      constraint CKC_LOCATIE_BEDRIJF check (LOCATIE >= '1'),
+   constraint PK_BEDRIJF primary key (BEDRIJFSNAAM, LOCATIE)
 )
 go
 
@@ -1065,7 +1066,8 @@ go
 /* Table: EFFECT                                                */
 /*==============================================================*/
 create table EFFECT (
-   EFFECTNAAM           EFFECTNAAM           not null,
+   EFFECTNAAM           EFFECTNAAM           not null 
+      constraint CKC_EFFECTNAAM_EFFECT check (EFFECTNAAM >= '1'),
    constraint PK_EFFECT primary key (EFFECTNAAM)
 )
 go
@@ -1164,12 +1166,13 @@ go
 /* Table: PROJECT                                               */
 /*==============================================================*/
 create table PROJECT (
-   PROJECTNUMMER        PROJECTNUMMER      IDENTITY(1,1) not null,
-   BEDRIJFSNAAM         BEDRIJFSNAAM         not null,
-   LOCATIE              LOCATIE              not null,
+   PROJECTNUMMER        PROJECTNUMMER        identity,
+   BEDRIJFSNAAM         BEDRIJFSNAAM         not null 
+      constraint CKC_BEDRIJFSNAAM_PROJECT check (BEDRIJFSNAAM >= '1'),
+   LOCATIE              LOCATIE              not null 
+      constraint CKC_LOCATIE_PROJECT check (LOCATIE >= '1'),
    PROJECTOMSCHRIJVING  PROJECTOMSCHRIJVING  not null,
-   constraint PK_PROJECT primary key (PROJECTNUMMER),
-    constraint CK_PROJECTOMSCHRIJVING check (PROJECTOMSCHRIJVING > '')
+   constraint PK_PROJECT primary key (PROJECTNUMMER)
 )
 go
 
@@ -1190,7 +1193,8 @@ go
 create table RAPPORT (
    PROJECTNUMMER        PROJECTNUMMER        not null,
    RAPPORTNUMMER        RAPPORTNUMMER        not null,
-   RAPPORT_TYPE         RAPPORT_TYPE         not null,
+   RAPPORT_TYPE         RAPPORT_TYPE         not null 
+      constraint CKC_RAPPORT_TYPE_RAPPORT check (RAPPORT_TYPE >= '1'),
    constraint PK_RAPPORT primary key (PROJECTNUMMER, RAPPORTNUMMER)
 )
 go
@@ -1219,7 +1223,8 @@ go
 /* Table: RAPPORT_TYPE                                          */
 /*==============================================================*/
 create table RAPPORT_TYPE (
-   RAPPORT_TYPE         RAPPORT_TYPE         not null,
+   RAPPORT_TYPE         RAPPORT_TYPE         not null 
+      constraint CKC_RAPPORT_TYPE_RAPPORT_ check (RAPPORT_TYPE >= '1'),
    constraint PK_RAPPORT_TYPE primary key (RAPPORT_TYPE)
 )
 go
@@ -1231,8 +1236,10 @@ create table RISICOREGEL (
    PROJECTNUMMER        PROJECTNUMMER        not null,
    RAPPORTNUMMER        RAPPORTNUMMER        not null,
    REGELNUMMER          REGELNUMMER          not null,
-   ASPECTNAAM           ASPECTNAAM           not null,
-   EFFECTNAAM           EFFECTNAAM           not null,
+   ASPECTNAAM           ASPECTNAAM           not null 
+      constraint CKC_ASPECTNAAM_RISICORE check (ASPECTNAAM >= '1'),
+   EFFECTNAAM           EFFECTNAAM           not null 
+      constraint CKC_EFFECTNAAM_RISICORE check (EFFECTNAAM >= '1'),
    ARBO_ONDERWERP       ARBO_ONDERWERP       not null,
    RISICO_OMSCHRIJVING_OF_BEVINDING RISICO_OMSCHRIJVING_OF_BEVINDING not null,
    HUIDIGE_BEHEERSMAATREGEL HUIDIGE_BEHEERSMAATREGEL null,
@@ -1301,18 +1308,20 @@ go
 alter table AFBEELDING
    add constraint FK_AFBEELDI_VISUELE_B_VISUELE_ foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
       references VISUELE_BEOORDELING (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
+         on update cascade on delete cascade
 go
 
 alter table ASPECT_EFFECT
    add constraint FK_ASPECT_E_ASPECT_AS_ASPECT foreign key (ASPECTNAAM)
       references ASPECT (ASPECTNAAM)
+         on update cascade on delete cascade
 go
 
 alter table ASPECT_EFFECT
    add constraint FK_ASPECT_E_EFFECT_AS_EFFECT foreign key (EFFECTNAAM)
       references EFFECT (EFFECTNAAM)
+         on update cascade on delete cascade
 go
-
 
 alter table MACHINEVEILIGHEID
    add constraint FK_MACHINEV_IS_EEN_VI_VISUELE_ foreign key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
@@ -1333,6 +1342,7 @@ go
 alter table PROJECT
    add constraint FK_PROJECT_BEDRIJF_P_BEDRIJF foreign key (BEDRIJFSNAAM, LOCATIE)
       references BEDRIJF (BEDRIJFSNAAM, LOCATIE)
+         on update cascade
 go
 
 alter table RAPPORT
@@ -1360,3 +1370,4 @@ alter table VISUELE_BEOORDELING
       references RISICOREGEL (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
          on update cascade on delete cascade
 go
+

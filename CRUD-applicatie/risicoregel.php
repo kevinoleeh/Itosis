@@ -11,10 +11,24 @@ $query = "SELECT RAPPORT_TYPE
 $stmt = $dbh->prepare($query);
 $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
 $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
-$stmt->execute();
-$type = $stmt->fetch();
+
+try {
+    $stmt->execute();
+    $type = $stmt->fetch();
+} catch (PDOException $e) {
+    $meldingStatus = false;
+    $melding = "Foutmelding: " . $e->getMessage();
+}
 
 switch ($type['RAPPORT_TYPE']) {
+    case 'Organisatie':
+        if(isset($_GET['regelnummer'])) {
+            header('Location: u_organisatie_risicoregel.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer'].'&regelnummer='.$_GET['regelnummer']);
+        } else {
+            header('Location: c_organisatie_risicoregel.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
+        }
+
+        break;
     case 'Visuele beoordeling':
         if(isset($_GET['regelnummer'])) {
             header('Location: u_visuele_beoordeling_risicoregel.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer'].'&regelnummer='.$_GET['regelnummer']);
@@ -32,15 +46,11 @@ switch ($type['RAPPORT_TYPE']) {
 
         break;
     default:
-        if(isset($_GET['regelnummer'])) {
-            header('Location: u_organisatie_risicoregel.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer'].'&regelnummer='.$_GET['regelnummer']);
-        } else {
-            header('Location: c_organisatie_risicoregel.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
-        }
+        header('Location: rd_risicoregels.php');
 
         break;
 }
 
-include_once('include/pdo-disconnect.php');
+include_once('include/footer.php');
 
 ?>
