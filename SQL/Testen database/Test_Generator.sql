@@ -88,10 +88,7 @@ CREATE PROCEDURE _begin AS BEGIN
 	INSERT INTO PLAN_VAN_AANPAK
 	VALUES (@projectnummer, 1, 1, 'Testpersoon', 'Testpersoon', '2099-12-12', 'PBMTEST', 'Voorlichting test',
 	                        'Werkinstructie voorbeeld test', 'Tra testje',
-	                        'de test die het testen heeft willen testen test de test die getest is om te testen of de test getest kan worden'),
-		(@projectnummer, 2, 1, 'Testpersoon', 'Testpersoon', '2099-12-12', 'PBMTEST', 'Voorlichting test',
-		                 'Werkinstructie voorbeeld test', 'Tra testje',
-		                 'de test die het testen heeft willen testen test de test die getest is om te testen of de test getest kan worden')
+	                        'de test die het testen heeft willen testen test de test die getest is om te testen of de test getest kan worden')
 	--periodieke beoordeling
 	SET @tabel = 'PERIODIEKE_BEOORDELING'
 	INSERT INTO PERIODIEKE_BEOORDELING
