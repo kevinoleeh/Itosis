@@ -190,26 +190,25 @@ catch (PDOException $e) {
                     <?php
 
                     if (isset($_GET["insertAspect"])) {
-                        echo '<form action="crud_aspect_effect.php?insertAspect=1" method="post">';
-                        echo '<tr>';
-                        echo '<td><input class="form-control" type="text" name="ASPECTNAAM"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
-                        echo '</tr>';
-                        echo '</form>';
+                        echo '<form action="crud_aspect_effect.php?insertAspect=1" method="post">
+                        <tr>
+                        <td><input class="form-control" type="text" name="ASPECTNAAM"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>
+                        </tr>
+                        </form>';
                     }
                     if (isset($_GET["editAspect"])) {
-                        echo '<form action="crud_aspect_effect.php" method="post">';
-                        echo '<input type="hidden" value="' . $_GET["editAspect"] . '" name="ASPECTNAAMOUD"></td>';
-                        echo '<tr>';
-
-                        echo '<td><input type="text" class="form-control" value="' . $_GET["editAspect"] . '" name="ASPECTNAAMNEW">';
-                        echo '<button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
-                        echo '</tr>';
-                        echo '</form>';
+                        echo '<form action="crud_aspect_effect.php" method="post">
+                        <input type="hidden" value="' . $_GET["editAspect"] . '" name="ASPECTNAAMOUD"></td>
+                        <tr>
+                        <td><input type="text" class="form-control" value="' . $_GET["editAspect"] . '" name="ASPECTNAAMNEW">
+                        <button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>
+                        </tr>
+                        </form>';
                     }
                     if(isset($aspecten)){
                     foreach ($aspecten as $aspecten) {
                         echo '<tr>
-                              <td><a href="crud_aspect_effect.php?aspectnaam='.$aspecten["ASPECTNAAM"].'"> '.$aspecten["ASPECTNAAM"].'</a>
+                              <td><a class="no-link" href="crud_aspect_effect.php?aspectnaam='.$aspecten["ASPECTNAAM"].'"> '.$aspecten["ASPECTNAAM"].'</a>
                               <a href="?removeAspect='.$aspecten["ASPECTNAAM"].'&checkAspect=1"><span class="glyphicon glyphicon-remove widintable red"></span></a>
                                 <a href="?editAspect='.$aspecten["ASPECTNAAM"].'&"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>
                               </tr>';
@@ -236,36 +235,36 @@ catch (PDOException $e) {
 
                     $i = 1;
                     if (isset($_GET["inserteffect"])) {
-                        echo '<form action="crud_aspect_effect.php?control=1&aspectnaam=' . $_GET['aspectnaam'] . '" method="post">';
-                        echo '<tr>';
-                        echo '  <td><p><b>Effect toevoegen (kies):</b></p><select name="EFFECTNAAM" class="form-control">';
+                        echo '<form action="crud_aspect_effect.php?control=1&aspectnaam=' . $_GET['aspectnaam'] . '" method="post">
+                        <tr>
+                        <td><p><b>Effect toevoegen (kies):</b></p><select name="EFFECTNAAM" class="form-control">';
                         foreach ($alleEffecten as $effect) {
                             echo '  <option > ' . $effect['EFFECTNAAM'] . '</option>';
                         }
-                        echo '  </select><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button> </td>';
-                        echo '</tr>';
-                        echo '</form>';
+                        echo '</select><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button> </td>
+                        </tr>
+                        </form>';
                     }
 
 
 
                     if (isset($_GET["inserteffect"])) {
-                        echo '<form action="crud_aspect_effect.php?aspectnaam=' . $_GET['aspectnaam'] . '" method="post">';
-                        echo '<tr>';
-                        echo '<td><p><b>Effect toevoegen (nieuw):</b></p><input class="form-control" type="text" name="EFFECTNAAM"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
-                        echo '</tr>';
-                        echo '</form>';
+                        echo '<form action="crud_aspect_effect.php?aspectnaam=' . $_GET['aspectnaam'] . '" method="post">
+                        <tr>
+                        <td><p><b>Effect toevoegen (nieuw):</b></p><input class="form-control" type="text" name="EFFECTNAAM"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>
+                        </tr>
+                        </form>';
 
                     }
 
                     if (isset($_GET["editEffect"])) {
-                        echo '<form action="crud_aspect_effect.php?edit=1" method="post">';
-                        echo '<input type="hidden" value="' . $_GET["editEffect"] . '" name="EFFECTNAAMOUD"></td>';
-                        echo '<tr>';
-                        echo '<td><input class="form-control" type="text" value="' . $_GET["editEffect"] . '" name="EFFECTNAAMNEW">';
-                        echo '<button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
-                        echo '</tr>';
-                        echo '</form>';
+                        echo '<form action="crud_aspect_effect.php?edit=1" method="post">
+                        <input type="hidden" value="' . $_GET["editEffect"] . '" name="EFFECTNAAMOUD"></td>
+                        <tr>
+                        <td><input class="form-control" type="text" value="' . $_GET["editEffect"] . '" name="EFFECTNAAMNEW">
+                        <button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>
+                        </tr>
+                        </form>';
                     }
 
                     foreach ($effecten as $effectnaam) {
@@ -274,7 +273,7 @@ catch (PDOException $e) {
                         <tr>
                             <td>
                                 <?php echo $effectnaam["EFFECTNAAM"];
-                              echo'  <a href="?removeEffect='.$effectnaam["EFFECTNAAM"].'&removeAspect='.$_GET["aspectnaam"].'&aspectnaam='.$_GET["aspectnaam"].'"><span class="glyphicon glyphicon-remove widintable red"></span></a>
+                              echo '<a href="?removeEffect='.$effectnaam["EFFECTNAAM"].'&removeAspect='.$_GET["aspectnaam"].'&aspectnaam='.$_GET["aspectnaam"].'"><span class="glyphicon glyphicon-remove widintable red"></span></a>
                                      <a href="?editEffect='.$effectnaam["EFFECTNAAM"].'&aspectnaam='.$_GET['aspectnaam'].'"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
                               ?>
                             </td>
