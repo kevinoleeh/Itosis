@@ -185,8 +185,9 @@ if (isset($_GET['project'])) {
                     }
                     if (isset($bedrijven)) {
                         foreach ($bedrijven as $bedrijf) {
-                            echo '<tr>
-                            <td><a class="no-link" href="?project=' . $bedrijf["BEDRIJFSNAAM"] . '&locatie=' . $bedrijf["LOCATIE"] . '">' . $bedrijf["BEDRIJFSNAAM"] . '</a></td>
+                          ?>  <tr onClick="document.location.href='crud_bedrijf_project.php?project=<?= $bedrijf["BEDRIJFSNAAM"] ?>&locatie=<?= $bedrijf["LOCATIE"]?>'">
+                          <?php
+                            echo '<td>' . $bedrijf["BEDRIJFSNAAM"] . '</td>
                             <td>' . $bedrijf["LOCATIE"] . '
                     <a href="?remove=' . $bedrijf["BEDRIJFSNAAM"] . '&LOCATIE=' . $bedrijf["LOCATIE"] . '"><span class="glyphicon glyphicon-remove widintable red"></span></a>
                     <a href="?editbedrijf=' . $bedrijf["BEDRIJFSNAAM"] . '&LOCATIE=' . $bedrijf["LOCATIE"] . '"><span class="glyphicon glyphicon-pencil widintable"></span></a>';

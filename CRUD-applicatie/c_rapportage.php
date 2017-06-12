@@ -4,8 +4,8 @@
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $query = "EXEC dbo.SP_INSERT_RAPPORT
-             :PROJECTNUMMER,
-             :RAPPORT_TYPE";
+             :RAPPORT_TYPE,
+             :PROJECTNUMMER";
     $stmt = $dbh->prepare($query);
     $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
     $stmt->bindParam(':RAPPORT_TYPE', $_POST['RAPPORT_TYPE']);

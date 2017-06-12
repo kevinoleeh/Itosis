@@ -207,10 +207,12 @@ catch (PDOException $e) {
                     }
                     if(isset($aspecten)){
                     foreach ($aspecten as $aspecten) {
-                        echo '<tr>
-                              <td><a class="no-link" href="crud_aspect_effect.php?aspectnaam='.$aspecten["ASPECTNAAM"].'"> '.$aspecten["ASPECTNAAM"].'</a>
+                        ?> <tr onClick="document.location.href='crud_aspect_effect.php?aspectnaam=<?= $aspecten["ASPECTNAAM"]?>'">
+                          <?php echo  '<td>
+                              '.$aspecten["ASPECTNAAM"].'
                               <a href="?removeAspect='.$aspecten["ASPECTNAAM"].'&checkAspect=1"><span class="glyphicon glyphicon-remove widintable red"></span></a>
-                                <a href="?editAspect='.$aspecten["ASPECTNAAM"].'&"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>
+                                <a href="?editAspect='.$aspecten["ASPECTNAAM"].'&"><span class="glyphicon glyphicon-pencil widintable"></span></a>
+                              </td>
                               </tr>';
                     }
                   }
@@ -260,7 +262,6 @@ catch (PDOException $e) {
                     if (isset($_GET["editEffect"])) {
                         echo '<form action="crud_aspect_effect.php?edit=1" method="post">
                         <input type="hidden" value="' . $_GET["editEffect"] . '" name="EFFECTNAAMOUD"></td>
-                        <tr>
                         <td><input class="form-control" type="text" value="' . $_GET["editEffect"] . '" name="EFFECTNAAMNEW">
                         <button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>
                         </tr>
