@@ -163,13 +163,11 @@ catch (PDOException $e) {
     <?php include_once('include/melding.php') ?>
 
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-6">
             <a href="?insertAspect=1" class="btn btn-block btn-primary">Aspect toevoegen</a>
         </div>
 
-        <div class="col-md-1">
-        </div>
-        <div class="col-md-5">
+        <div class="col-md-6">
             <?php if (isset($_GET['aspectnaam'])) {
                 echo '  <a class="no-link" href="?inserteffect=1&aspectnaam=' . $_GET['aspectnaam'] . '">
                 <button class="btn btn-block btn-primary">Effect aan aspect toevoegen</button>
@@ -179,7 +177,7 @@ catch (PDOException $e) {
     </div>
 
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-6">
             <div class="table-responsive marginTop">
                 <table id="table" class="table table-striped table-bordered">
                     <thead>
@@ -221,9 +219,8 @@ catch (PDOException $e) {
                 </table>
             </div>
         </div>
-        <div class="col-md-1">
-        </div>
-        <div class="col-md-5">
+
+        <div class="col-md-6">
             <?php if (isset($_GET['aspectnaam'])){ ?>
             <div class="table-responsive marginTop">
                 <table id="table" class="table table-striped table-bordered">
