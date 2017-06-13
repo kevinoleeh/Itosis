@@ -28,14 +28,14 @@ GO
 /*==============================================================*/
 /* USER								                            */
 /*==============================================================*/
-IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'BeheerderGebruiker')
-DROP USER BeheerderGebruiker
+IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'BeheerderLogin')
+DROP USER BeheerderLogin
 
-IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'GebruikerGebruiker')
-DROP USER GebruikerGebruiker
+IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'GebruikerLogin')
+DROP USER GebruikerLogin
 
-IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'StagiairGebruiker')
-DROP USER StagiairGebruiker
+IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'StagiairLogin')
+DROP USER StagiairLogin
 
 
 
