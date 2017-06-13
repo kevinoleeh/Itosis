@@ -1,7 +1,20 @@
 <?php include_once('include/header.php') ?>
 
 <?php
+if(isset($_GET['delete'])){
+  $query = "EXEC SP_DELETE_RAPPORT :RAPPORTNUMMER, :PROJECTNUMMER";
+  $stmt = $dbh->prepare($query);
+  $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
+  $stmt->bindParam(':RAPPORTNUMMER', $_GET['delete']);
 
+
+try {
+    $stmt->execute();
+} catch (PDOException $e) {
+    $meldingStatus = false;
+    $melding = "Foutmelding: " . $e->getMessage();
+}
+}
 $query = "SELECT *
          FROM RAPPORT
          WHERE PROJECTNUMMER = :PROJECTNUMMER";
@@ -44,7 +57,9 @@ try {
                     <?php foreach ($result as &$value) { ?>
                         <tr onClick="document.location.href='rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $value['RAPPORTNUMMER'] ?>';">
                             <td><?= $value['RAPPORTNUMMER'] ?></td>
-                            <td><?= $value['RAPPORT_TYPE'] ?></td>
+                            <td><?= $value['RAPPORT_TYPE'] ?>
+                            <a href="?delete=<?= $value['RAPPORTNUMMER']?>&projectnummer=<?= $_GET['projectnummer']?>"><span class="glyphicon glyphicon-remove widintable red"></span></a>
+                          </td>
                         </tr>
                     <?php } ?>
                 <?php } ?>

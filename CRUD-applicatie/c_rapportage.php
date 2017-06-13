@@ -5,13 +5,14 @@
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $query = "EXEC dbo.SP_INSERT_RAPPORT
              :PROJECTNUMMER,
-             :RAPPORT_TYPE";
+             :RAPPORT_TYPE
+";
     $stmt = $dbh->prepare($query);
     $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
     $stmt->bindParam(':RAPPORT_TYPE', $_POST['RAPPORT_TYPE']);
     try {
         $stmt->execute();
-        header('Location: r_rapportages.php?projectnummer='.$_GET['projectnummer']);
+        header('Location: rd_rapportages.php?projectnummer='.$_GET['projectnummer']);
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Rapport niet opgeslagen. Foutmelding: " . $e->getMessage();

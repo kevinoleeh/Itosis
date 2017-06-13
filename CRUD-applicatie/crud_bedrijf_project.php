@@ -123,7 +123,7 @@ if (isset($_POST["projectomschrijving"])) {
 }
 
 try {
-    $rs = $dbh->query("SELECT * 
+    $rs = $dbh->query("SELECT *
                                 FROM BEDRIJF");
     $bedrijven = $rs->fetchAll();
 } catch (PDOException $e) {
@@ -133,9 +133,9 @@ try {
 
 if (isset($_GET['project'])) {
     try {
-        $stmt = $dbh->prepare("SELECT * 
-                                        FROM PROJECT 
-                                        WHERE BEDRIJFSNAAM = :BEDRIJFSNAAM 
+        $stmt = $dbh->prepare("SELECT *
+                                        FROM PROJECT
+                                        WHERE BEDRIJFSNAAM = :BEDRIJFSNAAM
                                         AND LOCATIE = :LOCATIE");
         $stmt->execute(array(':BEDRIJFSNAAM' => $_GET['project'], ':LOCATIE' => $_GET['locatie']));
         $projecten = $stmt->fetchAll();
@@ -166,29 +166,29 @@ if (isset($_GET['project'])) {
                     <?php
                     if (isset($_GET["new"])) {
 
-                        echo '<form action="crud_bedrijf_project.php?new=1" method="post">';
-                        echo '<tr>';
-                        echo '<td><input class="form-control" type="text" name="BEDRIJFSNAAM"></td>';
-                        echo '<td><input class="form-control" type="text" name="LOCATIE"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
-                        echo '</tr>';
-                        echo '</form>';
+                        echo '<form action="crud_bedrijf_project.php?new=1" method="post">
+                        <tr>
+                        <td><input class="form-control" type="text" name="BEDRIJFSNAAM"></td>
+                        <td><input class="form-control" type="text" name="LOCATIE"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>
+                        </tr>
+                        </form>';
                     }
                     if (isset($_GET["editbedrijf"])) {
-                        echo '<form action="crud_bedrijf_project.php?edit=1" method="post">';
-                        echo '<input type="hidden" value="' . $_GET["editbedrijf"] . '" name="oudBEDRIJFSNAAM"></td>';
-                        echo '<input type="hidden" value="' . $_GET["LOCATIE"] . '" name="oudLOCATIE"></td>';
-
-                        echo '<tr>';
-                        echo '<td><input class="form-control" type="text" value="' . $_GET["editbedrijf"] . '" name="editBEDRIJFSNAAM"></td>';
-                        echo '<td><input class="form-control" type="text" value="' . $_GET["LOCATIE"] . '" name="editLOCATIE"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
-                        echo '</tr>';
-                        echo '</form>';
+                        echo '<form action="crud_bedrijf_project.php?edit=1" method="post">
+                        <input type="hidden" value="' . $_GET["editbedrijf"] . '" name="oudBEDRIJFSNAAM"></td>
+                        <input type="hidden" value="' . $_GET["LOCATIE"] . '" name="oudLOCATIE"></td>
+                        <tr>
+                        <td><input class="form-control" type="text" value="' . $_GET["editbedrijf"] . '" name="editBEDRIJFSNAAM"></td>
+                        <td><input class="form-control" type="text" value="' . $_GET["LOCATIE"] . '" name="editLOCATIE"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>
+                        </tr>
+                        </form>';
                     }
                     if (isset($bedrijven)) {
                         foreach ($bedrijven as $bedrijf) {
-                            echo '<tr>';
-                            echo '<td><a class="no-link" href="?project=' . $bedrijf["BEDRIJFSNAAM"] . '&locatie=' . $bedrijf["LOCATIE"] . '">' . $bedrijf["BEDRIJFSNAAM"] . '</a></td>';
-                            echo '<td>' . $bedrijf["LOCATIE"] . '
+                          ?>  <tr onClick="document.location.href='crud_bedrijf_project.php?project=<?= $bedrijf["BEDRIJFSNAAM"] ?>&locatie=<?= $bedrijf["LOCATIE"]?>'">
+                          <?php
+                            echo '<td>' . $bedrijf["BEDRIJFSNAAM"] . '</td>
+                            <td>' . $bedrijf["LOCATIE"] . '
                     <a href="?remove=' . $bedrijf["BEDRIJFSNAAM"] . '&LOCATIE=' . $bedrijf["LOCATIE"] . '"><span class="glyphicon glyphicon-remove widintable red"></span></a>
                     <a href="?editbedrijf=' . $bedrijf["BEDRIJFSNAAM"] . '&LOCATIE=' . $bedrijf["LOCATIE"] . '"><span class="glyphicon glyphicon-pencil widintable"></span></a>';
                         }
@@ -217,28 +217,28 @@ if (isset($_GET['project'])) {
                     </thead>
                     <?php
                     if (isset($_GET["newProject"])) {
-                        echo '<form action="crud_bedrijf_project.php?project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '" method="post">';
-                        echo '<tr>';
-                        echo '<td></td>';
-                        echo '<td><input class="form-control" type="text" name="PROJECTOMSCHRIJVING"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
-                        echo '</tr>';
-                        echo '</form>';
+                        echo '<form action="crud_bedrijf_project.php?project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '" method="post">
+                        <tr>
+                        <td></td>
+                        <td><input class="form-control" type="text" name="PROJECTOMSCHRIJVING"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>
+                        </tr>
+                        </form>';
                     }
 
                     if (isset($_GET["editProject"])) {
-                        echo '<form action="crud_bedrijf_project.php?edit=1" method="post">';
-                        echo '<input type="hidden" value="' . $_GET["projectnummer1"] . '" name="UPROJECTNUMMER"></td>';
-                        echo '<input type="hidden" value="' . $_GET["editProject"] . '" name="omschrijvingOud"></td>';
-                        echo '<tr>';
-                        echo '<td>' . $_GET["projectnummer1"] . '</a></td>';
-                        echo '<td><input class="form-control" type="text" value="' . $_GET["editProject"] . '" name="projectomschrijving"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>';
-                        echo '</tr>';
-                        echo '</form>';
+                        echo '<form action="crud_bedrijf_project.php?edit=1" method="post">
+                        <input type="hidden" value="' . $_GET["projectnummer1"] . '" name="UPROJECTNUMMER"></td>
+                        <input type="hidden" value="' . $_GET["editProject"] . '" name="omschrijvingOud"></td>
+                        <tr>
+                        <td>' . $_GET["projectnummer1"] . '</a></td>
+                        <td><input class="form-control" type="text" value="' . $_GET["editProject"] . '" name="projectomschrijving"><button class="buttonlink widintable" type="submit"><span class="glyphicon glyphicon-ok green"></button></td>
+                        </tr>
+                        </form>';
                     }
                     foreach ($projecten as $project) {
-                        echo '<tr>';
-                        echo '<td><a href=r_rapportages.php?projectnummer=' . $project["PROJECTNUMMER"] . '>' . $project["PROJECTNUMMER"] . '</a></td>';
-                        echo '<td>' . $project["PROJECTOMSCHRIJVING"] . '
+                        echo '<tr>
+                        <td><a href=r_rapportages.php?projectnummer=' . $project["PROJECTNUMMER"] . '>' . $project["PROJECTNUMMER"] . '</a></td>
+                        <td>' . $project["PROJECTOMSCHRIJVING"] . '
                       <a href="?removeProject=' . $project["PROJECTNUMMER"] . '&project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '"><span class="glyphicon glyphicon-remove widintable red"></span></a>
                       <a href="?editProject=' . $project["PROJECTOMSCHRIJVING"] . '&project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '&projectnummer1=' . $project["PROJECTNUMMER"] . '"><span class="glyphicon glyphicon-pencil widintable"></span></a></td>';
                     }

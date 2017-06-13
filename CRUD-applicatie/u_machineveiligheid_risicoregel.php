@@ -345,9 +345,9 @@ try {
         </div>
         <br>
     </div>
-<?php include_once('include/footer.php'); ?>
-</div>
 
+</div>
+<?php include_once('include/footer.php'); ?>
 <script>
     $(document).ready(function() {
         var chk = $('input[type="checkbox"]');
@@ -364,5 +364,3 @@ function ShowDiv() {
     document.getElementById("versiebeheer").style.display = "";
 }
 </script>
-
-<?php include_once('include/footer.php'); ?>

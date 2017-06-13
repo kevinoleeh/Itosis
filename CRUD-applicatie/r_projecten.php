@@ -41,7 +41,7 @@ try {
                 <tbody>
                 <?php if(count($result) > 0) { ?>
                     <?php foreach ($result as $value) { ?>
-                        <tr onClick="document.location.href='r_rapportages.php?projectnummer=<?= $value['PROJECTNUMMER'] ?>';">
+                        <tr onClick="document.location.href='rd_rapportages.php?projectnummer=<?= $value['PROJECTNUMMER'] ?>';">
                             <td><?= $value['PROJECTNUMMER'] ?></a></td>
                             <td><?= $value['PROJECTOMSCHRIJVING'] ?></td>
                             <td><?= $value['BEDRIJFSNAAM'] ?></td>

@@ -1,8 +1,8 @@
 <?php
 
-$query = "SELECT ASPECTNAAM, EFFECTNAAM 
+$query = "SELECT ASPECTNAAM, EFFECTNAAM
           FROM ASPECT_EFFECT
-          GROUP BY ASPECTNAAM, EFFECTNAAM 
+          GROUP BY ASPECTNAAM, EFFECTNAAM
           ORDER BY ASPECTNAAM";
 $stmt = $dbh->prepare($query);
 $result = null;
@@ -25,13 +25,16 @@ if(count($result) > 0) {
             $aspecten[$number] = $row[0];
             $aspectlast = $row[0];
         }
-        $effecten[$number][$effectrow] = $row[1];
+
         if ($aspectlast != $row[0]) {
             $effectrow = 0;
             $number++;
             $aspecten[$number] = $row[0];
             $aspectlast = $row[0];
-        } else {
+            $effecten[$number][$effectrow] = $row[1];
+        }
+         else {
+           $effecten[$number][$effectrow] = $row[1];
             $effectrow++;
         }
     }
