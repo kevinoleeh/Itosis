@@ -63,7 +63,8 @@ CREATE PROCEDURE _begin AS BEGIN
 	--effect
 	SET @tabel = 'EFFECT'
 	INSERT INTO EFFECT VALUES ('Test effect')
-	INSERT INTO EFFECT VALUES ('Test effect 2')
+	INSERT INTO EFFECT VALUES ('Test effect 2'),
+		('Test effect 3')
 
 	--aspect_effect
 	SET @tabel = 'ASPECT_EFFECT'
@@ -79,6 +80,8 @@ CREATE PROCEDURE _begin AS BEGIN
 		(@projectnummer, 2, 1, 'Test aspect', 'Test effect', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00,
 		 'pars transit.', 'novum', 15.00, 1.00, 10.00),
 		(@projectnummer, 1, 5, 'Test aspect', 'Test effect', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00,
+		 'pars transit.', 'novum', 15.00, 1.00, 10.00),
+		(@projectnummer, 1, 6, 'Test aspect', 'Test effect', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00,
 		 'pars transit.', 'novum', 15.00, 1.00, 10.00)
 	INSERT INTO VISUELE_BEOORDELING (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, PROCES, MACHINE_ONDERDEEL_, AFDELING)
 	VALUES (@projectnummer, 2, 1, NULL, 'test', NULL)
@@ -89,6 +92,8 @@ CREATE PROCEDURE _begin AS BEGIN
 	VALUES (@projectnummer, 1, 1, 'Testpersoon', 'Testpersoon', '2099-12-12', 'PBMTEST', 'Voorlichting test',
 	                        'Werkinstructie voorbeeld test', 'Tra testje',
 	                        'de test die het testen heeft willen testen test de test die getest is om te testen of de test getest kan worden')
+	INSERT INTO PLAN_VAN_AANPAK
+	VALUES (@projectnummer, 1, 6, 'Testpersoon', 's', '2022-12-12', 's', 's', 's', 'd', 's')
 	--periodieke beoordeling
 	SET @tabel = 'PERIODIEKE_BEOORDELING'
 	INSERT INTO PERIODIEKE_BEOORDELING
@@ -190,6 +195,8 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 	WHERE EFFECTNAAM = 'Test effect';
 	DELETE FROM EFFECT
 	WHERE EFFECTNAAM = 'Test effect 2';
+	DELETE FROM EFFECT
+	WHERE EFFECTNAAM = 'Test effect 3';
 
 	SET @tabel = 'ASPECT'
 	DELETE FROM ASPECT
