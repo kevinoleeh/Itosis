@@ -1,29 +1,29 @@
--- SP_INSERT_PERIODIEKE_BEOORDELING test (success)
-EXEC _begin
-BEGIN TRY
-DECLARE @projectnummer INT = (SELECT projectnummer
-                              FROM PROJECT
-                              WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
-BEGIN TRANSACTION test
-EXEC SP_INSERT_PERIODIEKE_BEOORDELING
-	@PROJECTNUMMER = @projectnummer,
-	@RAPPORTNUMMER = 1,
-	@REGELNUMMER = 1,
-	@DATUM_BEOORDELING = '2098-11-11',
-	@INSPECTIE_IS_DE_ACTIE_UITGEVOERD = 1,
-	@OPMERKING_STAND_VAN_ZAKEN = 'Geen opmerking',
-	@STAND_VAN_ZAKEN = 'Het pva is nog niet toegepast',
-	@SCORE = 10
-ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_PERIODIEKE_BEOORDELING', 1, 'Periodieke beoordeling is toegevoegd', ''
-END TRY
-BEGIN CATCH
-ROLLBACK TRANSACTION
-DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_INSERT_PERIODIEKE_BEOORDELING', 0, '', @msg
-END CATCH
-EXEC _end 0
-GO
+  -- SP_INSERT_PERIODIEKE_BEOORDELING test (success)
+  EXEC _begin
+  BEGIN TRY
+  DECLARE @projectnummer INT = (SELECT projectnummer
+                                FROM PROJECT
+                                WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
+  BEGIN TRANSACTION test
+  EXEC SP_INSERT_PERIODIEKE_BEOORDELING
+    @PROJECTNUMMER = @projectnummer,
+    @RAPPORTNUMMER = 1,
+    @REGELNUMMER = 1,
+    @DATUM_BEOORDELING = '2098-11-11',
+    @INSPECTIE_IS_DE_ACTIE_UITGEVOERD = 1,
+    @OPMERKING_STAND_VAN_ZAKEN = 'Geen opmerking',
+    @STAND_VAN_ZAKEN = 'Het pva is nog niet toegepast',
+    @SCORE = 10
+  ROLLBACK TRANSACTION
+  EXEC _result 'SP_INSERT_PERIODIEKE_BEOORDELING', 1, 'Periodieke beoordeling is toegevoegd', ''
+  END TRY
+  BEGIN CATCH
+  ROLLBACK TRANSACTION
+  DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+  EXEC _result 'SP_INSERT_PERIODIEKE_BEOORDELING', 0, '', @msg
+  END CATCH
+  EXEC _end 0
+  GO
 
 -- SP_UPDATE_PERIODIEKE_BEOORDELING test (success)
 EXEC _begin
