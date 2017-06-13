@@ -21,6 +21,7 @@ CREATE LOGIN BeheerderLogin WITH PASSWORD = 'wachtwoord1!413F'
 CREATE LOGIN GebruikerLogin WITH PASSWORD = 'wachtwoord1!413F'
 CREATE LOGIN StagiairLogin WITH PASSWORD = 'wachtwoord1!413F'
 
+
 USE Euratex
 
 GO
@@ -36,9 +37,12 @@ DROP USER GebruikerGebruiker
 IF  EXISTS (SELECT * FROM sys.database_principals WHERE name = N'StagiairGebruiker')
 DROP USER StagiairGebruiker
 
-CREATE USER BeheerderGebruiker FOR LOGIN BeheerderLogin WITH DEFAULT_SCHEMA = EURATEX
-CREATE USER GebruikerGebruiker FOR LOGIN GebruikerLogin WITH DEFAULT_SCHEMA = EURATEX
-CREATE USER StagiairGebruiker FOR LOGIN StagiairLogin WITH DEFAULT_SCHEMA = EURATEX
+
+
+CREATE USER BeheerderLogin FOR LOGIN BeheerderLogin WITH DEFAULT_SCHEMA = EURATEX
+CREATE USER GebruikerLogin FOR LOGIN GebruikerLogin WITH DEFAULT_SCHEMA = EURATEX
+CREATE USER StagiairLogin FOR LOGIN StagiairLogin WITH DEFAULT_SCHEMA = EURATEX
+
 
 
 /*==============================================================*/
@@ -57,9 +61,9 @@ go
 /*==============================================================*/
 
 
-EXEC sp_addrolemember 'BEHEERDER', 'BeheerderGebruiker'
-EXEC sp_addrolemember 'GEBRUIKER', 'GebruikerGebruiker'
-EXEC sp_addrolemember 'STAGIAIR', 'StagiairGebruiker'
+EXEC sp_addrolemember 'BEHEERDER', 'BeheerderLogin'
+EXEC sp_addrolemember 'GEBRUIKER', 'GebruikerLogin'
+EXEC sp_addrolemember 'STAGIAIR', 'StagiairLogin'
 
 
 /*==============================================================*/
@@ -472,7 +476,7 @@ GRANT SELECT ON EFFECT TO STAGIAIR
 /*================================*/
 /* Tabel ASPECT_EFFECT	 		  */
 /*================================*/
-GRANT SELECT ON ASPECT_EFFECT TO BEHEERDER
+GRANT SELECT ON ASPECT_EFFECT TO STAGIAIR
 
 
 /*================================*/
