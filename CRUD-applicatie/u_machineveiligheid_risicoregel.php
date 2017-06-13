@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':NA_KANS_OP_WAARSCHIJNLIJKHEID', $_POST['NA_KANS_OP_WAARSCHIJNLIJKHEID']);
     try {
         $stmt->execute();
-        header('Location: rd_risicoregels.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
+        header('Location: rd_regels.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Regel niet opgeslagen. Foutmelding: " . $e->getMessage();
@@ -183,10 +183,12 @@ $query = "SELECT RRH.*, VBH.PROCES, VBH.MACHINE_ONDERDEEL_, VBH.AFDELING, MH.*
           ON RRH.PROJECTNUMMER = VBH.PROJECTNUMMER
           AND RRH.RAPPORTNUMMER = VBH.RAPPORTNUMMER
           AND RRH.REGELNUMMER = VBH.REGELNUMMER
+          AND RRH.VERSIENUMMER = VBH.VERSIENUMMER
           INNER JOIN MACHINEVEILIGHEID_HISTORY MH
           ON RRH.PROJECTNUMMER = MH.PROJECTNUMMER
           AND RRH.RAPPORTNUMMER = MH.RAPPORTNUMMER
           AND RRH.REGELNUMMER = MH.REGELNUMMER
+          AND RRH.VERSIENUMMER = MH.VERSIENUMMER
           WHERE RRH.PROJECTNUMMER = :PROJECTNUMMER
           AND RRH.RAPPORTNUMMER = :RAPPORTNUMMER
           AND RRH.REGELNUMMER = :REGELNUMMER
