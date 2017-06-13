@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $stmt->execute();
         // Redirect om de niet relevante parameters uit de URL te halen
-        header('Location: rd_risicoregels.php?projectnummer=' . $_GET['projectnummer'] . '&rapportnummer=' . $_GET['rapportnummer']);
+        header('Location: rd_regels.php?projectnummer=' . $_GET['projectnummer'] . '&rapportnummer=' . $_GET['rapportnummer']);
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Regel niet geüpdatet. Foutmelding: " . $e->getMessage();
@@ -102,6 +102,7 @@ $query = "SELECT RRH.*, VBH.PROCES, VBH.MACHINE_ONDERDEEL_, VBH.AFDELING
           ON RRH.PROJECTNUMMER = VBH.PROJECTNUMMER
           AND RRH.RAPPORTNUMMER = VBH.RAPPORTNUMMER
           AND RRH.REGELNUMMER = VBH.REGELNUMMER
+          AND RRH.VERSIENUMMER = VBH.VERSIENUMMER
           WHERE RRH.PROJECTNUMMER = :PROJECTNUMMER
           AND RRH.RAPPORTNUMMER = :RAPPORTNUMMER
           AND RRH.REGELNUMMER = :REGELNUMMER

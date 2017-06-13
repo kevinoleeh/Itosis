@@ -17,6 +17,6 @@ $("#table tbody tr").click(function(){
     var regelnummer=$(this).find('td:first').html();
 
 
-    document.getElementById("regelopenenbutton").href = "risicoregel.php?projectnummer="+projectnummer+"&rapportnummer="+rapportnummer+"&regelnummer="+regelnummer;
+    document.getElementById("regelopenenbutton").href = "regels_redirect.php?projectnummer="+projectnummer+"&rapportnummer="+rapportnummer+"&regelnummer="+regelnummer;
 
 });

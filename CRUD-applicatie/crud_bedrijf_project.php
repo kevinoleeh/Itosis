@@ -153,7 +153,7 @@ if (isset($_GET['project'])) {
     <?php include_once('include/melding.php') ?>
 
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-6">
             <a href="?new=1" class="btn btn-block btn-primary">Bedrijf toevoegen</a>
             <div class="table-responsive marginTop">
                 <table id="table" class="table table-striped table-bordered">
@@ -197,9 +197,7 @@ if (isset($_GET['project'])) {
                 </table>
             </div>
         </div>
-        <div class="col-md-1">
-        </div>
-        <div class="col-md-5">
+        <div class="col-md-6">
             <?php if (isset($_GET['project'])) {
                 echo '<a class="no-link" href="?newProject=1&project=' . $_GET['project'] . '&locatie=' . $_GET['locatie'] . '">
                   <button class="btn btn-block btn-primary">Project aan bedrijf toevoegen</button>
