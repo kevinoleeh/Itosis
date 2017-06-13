@@ -55,7 +55,7 @@ try {
                 <tbody>
                 <?php if(count($result) > 0) { ?>
                     <?php foreach ($result as &$value) { ?>
-                        <tr onClick="document.location.href='rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $value['RAPPORTNUMMER'] ?>';">
+                        <tr onClick="document.location.href='rd_regels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $value['RAPPORTNUMMER'] ?>';">
                             <td><?= $value['RAPPORTNUMMER'] ?></td>
                             <td><?= $value['RAPPORT_TYPE'] ?>
                             <a href="?delete=<?= $value['RAPPORTNUMMER']?>&projectnummer=<?= $_GET['projectnummer']?>"><span class="glyphicon glyphicon-remove widintable red"></span></a>
