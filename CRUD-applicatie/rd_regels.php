@@ -13,7 +13,7 @@
         try {
             $stmt->execute();
 
-            header('Location: rd_risicoregels.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
+            header('Location: rd_regels.php?projectnummer='.$_GET['projectnummer'].'&rapportnummer='.$_GET['rapportnummer']);
         } catch (PDOException $e) {
             $meldingStatus = false;
             $melding = "Foutmelding: " . $e->getMessage();
@@ -73,10 +73,10 @@ try {
             <a id="regelopenenbutton" class="btn btn-block btn-primary">Regel openen</a>
         </div>
         <div class="col-md-4">
-            <a href="risicoregel.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" class="btn btn-block btn-primary">Regel toevoegen</a>
+            <a href="regels_redirect.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" class="btn btn-block btn-primary">Regel toevoegen</a>
         </div>
         <div class="col-md-4">
-            <form action="rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" method="post">
+            <form action="rd_regels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>" method="post">
                 <input type="submit" class="btn btn-block btn-default" value="Regels exporteren naar Excel">
         </div>
 
@@ -142,7 +142,7 @@ try {
                             </div>
                         <?php } ?>
                         </td>
-                        <td><a href="rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>&delete=1"><span class="glyphicon glyphicon-remove widintable red"></span></a></td>
+                        <td width="1px"><a href="rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>&delete=1"><span class="glyphicon glyphicon-remove widintable red"></span></a></td>
                     </tr>
                     <?php } ?>
                 </tbody>
