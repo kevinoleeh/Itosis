@@ -63,7 +63,8 @@ CREATE PROCEDURE _begin AS BEGIN
 	--effect
 	SET @tabel = 'EFFECT'
 	INSERT INTO EFFECT VALUES ('Test effect')
-	INSERT INTO EFFECT VALUES ('Test effect 2')
+	INSERT INTO EFFECT VALUES ('Test effect 2'),
+		('Test effect 3')
 
 	--aspect_effect
 	SET @tabel = 'ASPECT_EFFECT'
@@ -79,6 +80,8 @@ CREATE PROCEDURE _begin AS BEGIN
 		(@projectnummer, 2, 1, 'Test aspect', 'Test effect', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00,
 		 'pars transit.', 'novum', 15.00, 1.00, 10.00),
 		(@projectnummer, 1, 5, 'Test aspect', 'Test effect', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00,
+		 'pars transit.', 'novum', 15.00, 1.00, 10.00),
+		(@projectnummer, 1, 6, 'Test aspect', 'Test effect', 'Produce', 'plurissimum', '43189', 'e', 3.00, 10.00, 1.00,
 		 'pars transit.', 'novum', 15.00, 1.00, 10.00)
 	INSERT INTO VISUELE_BEOORDELING (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, PROCES, MACHINE_ONDERDEEL_, AFDELING)
 	VALUES (@projectnummer, 2, 1, NULL, 'test', NULL)
@@ -89,6 +92,8 @@ CREATE PROCEDURE _begin AS BEGIN
 	VALUES (@projectnummer, 1, 1, 'Testpersoon', 'Testpersoon', '2099-12-12', 'PBMTEST', 'Voorlichting test',
 	                        'Werkinstructie voorbeeld test', 'Tra testje',
 	                        'de test die het testen heeft willen testen test de test die getest is om te testen of de test getest kan worden')
+	INSERT INTO PLAN_VAN_AANPAK
+	VALUES (@projectnummer, 1, 6, 'Testpersoon', 's', '2022-12-12', 's', 's', 's', 'd', 's')
 	--periodieke beoordeling
 	SET @tabel = 'PERIODIEKE_BEOORDELING'
 	INSERT INTO PERIODIEKE_BEOORDELING
@@ -130,13 +135,19 @@ CREATE PROCEDURE _result @name VARCHAR(50), @success BIT, @reden VARCHAR(200), @
 	        IIF(@msg = '', IIF(@success = 0, 'ERROR - Transactie geslaagd terwijl hij zou moeten falen!', @msg), @msg),
 	        @reden);
 	IF (@success = 1)
-		INSERT testCount (TOTAAL, GOED) VALUES ((SELECT COUNT(Totaal) + 1
-		                                         FROM testCount), (SELECT COUNT(Goed) + 1
-		                                                           FROM testCount))
+		BEGIN
+			INSERT testCount (TOTAAL, GOED, FOUT) VALUES ((SELECT TOP 1 Totaal + 1
+			                                               FROM testCount ORDER BY Totaal DESC), (SELECT TOP 1 Goed + 1
+			                                                                 FROM testCount ORDER BY Totaal DESC), (SELECT TOP 1 Fout
+			                                                                                   FROM testCount ORDER BY Totaal DESC))
+		END
 	IF (@success = 0)
-		INSERT testCount (TOTAAL, FOUT) VALUES ((SELECT COUNT(Totaal) + 1
-		                                         FROM testCount), (SELECT COUNT(Fout) + 1
-		                                                           FROM testCount))
+		BEGIN
+			INSERT testCount (TOTAAL, GOED, FOUT) VALUES ((SELECT TOP 1 Totaal + 1
+			                                               FROM testCount ORDER BY Totaal DESC), (SELECT TOP 1 Goed
+			                                                                 FROM testCount ORDER BY Totaal DESC), (SELECT TOP 1 FOUT + 1
+			                                                                                   FROM testCount ORDER BY Totaal DESC))
+		END
 	SET NOCOUNT OFF
 END
 GO
@@ -190,6 +201,8 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 	WHERE EFFECTNAAM = 'Test effect';
 	DELETE FROM EFFECT
 	WHERE EFFECTNAAM = 'Test effect 2';
+	DELETE FROM EFFECT
+	WHERE EFFECTNAAM = 'Test effect 3';
 
 	SET @tabel = 'ASPECT'
 	DELETE FROM ASPECT
@@ -217,7 +230,7 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 	BEGIN CATCH
 	RAISERROR ('Fout bij verwijderen van testdata in tabel %s!', 16, 1, @tabel)
 	END CATCH
-			IF @stop = 0
+	IF @stop = 0
 		RETURN
 	--IF EXISTS(SELECT 'Error occurred' FROM testData WHERE Success = 0)
 	SELECT
@@ -231,7 +244,7 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 		Totaal                AS Totaal_aantal_tests,
 		Goed                  AS Geslaagde_tests,
 		Fout                  AS Gefaalde_tests,
-		(Goed / Totaal) * 100 AS Percentage_geslaagde_tests,
+		(CONVERT(FLOAT,Goed) / CONVERT(FLOAT,Totaal)) * 100 AS Percentage_geslaagde_tests,
 		GETDATE()             AS Datum_getest
 	FROM testCount
 	WHERE Totaal = (SELECT max(totaal)

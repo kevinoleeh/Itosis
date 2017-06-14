@@ -25,6 +25,8 @@
   EXEC _end 0
   GO
 
+
+
 -- SP_UPDATE_PERIODIEKE_BEOORDELING test (success)
 EXEC _begin
 BEGIN TRY
@@ -305,6 +307,24 @@ DECLARE @nmr INT = (SELECT projectnummer
 EXEC SP_DELETE_PROJECT @nmr
 ROLLBACK TRANSACTION
 EXEC _result 'SP_DELETE_PROJECT', 1, 'Project verwijderd zonder rapporten', ''
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+EXEC _result 'SP_DELETE_PROJECT', 0, '', @msg
+END CATCH
+EXEC _end 0
+GO
+-- Testen insert raport bij project
+EXEC _begin
+BEGIN TRY
+BEGIN TRANSACTION test
+DECLARE @nmr INT = (SELECT projectnummer
+                    FROM PROJECT
+                    WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'TEST2')
+EXEC SP_INSERT_RAPPORT @nmr, 'Organisatie'
+ROLLBACK TRANSACTION
+EXEC _result 'SP_INSERT_RAPPORT', 1, 'Succesvol toegevoegd rapport', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1130,6 +1150,43 @@ GO
 
 EXEC _begin
 BEGIN TRY
+DECLARE @projectnummer INT = (SELECT projectnummer
+                              FROM PROJECT
+                              WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
+BEGIN TRANSACTION test
+EXEC SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL
+	@projectnummer,
+	2,
+	'Test aspect',
+	'Test effect',
+	'Test',
+	'Test',
+	'Test',
+	'Test',
+	'Test',
+	'Test',
+	'',
+	'',
+	'Test',
+	1,
+	1,
+	1,
+	1,
+	1,
+	1
+ROLLBACK TRANSACTION
+EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Een van de drie moest ingevuld zijn', ''
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 0, '', @msg
+END CATCH
+EXEC _end 0
+GO
+
+EXEC _begin
+BEGIN TRY
 BEGIN TRANSACTION test
 EXEC SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL
 	99999,
@@ -1568,6 +1625,41 @@ END CATCH
 EXEC _end 0
 GO
 
+  EXEC _begin
+BEGIN TRY
+BEGIN TRANSACTION test
+EXEC SP_UPDATE_ASPECT
+	'Test aspect123',
+	'Test test test'
+ROLLBACK TRANSACTION
+EXEC _result 'SP_UPDATE_ASPECT', 1, 'Juiste insert Aspect', ''
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+EXEC _result 'SP_UPDATE_ASPECT', 0, 'Juiste insert Aspect', @msg
+END CATCH
+EXEC _end 0
+GO
+
+
+  EXEC _begin
+BEGIN TRY
+BEGIN TRANSACTION test
+EXEC SP_UPDATE_EFFECT
+	'Test effect 3',
+		'Test effect test'
+ROLLBACK TRANSACTION
+EXEC _result 'SP_INSPERT_ASPECT', 1, 'Juiste insert Aspect', ''
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+EXEC _result 'SP_INSPERT_ASPECT', 0, 'Juiste insert Aspect', @msg
+END CATCH
+EXEC _end 0
+GO
+
 EXEC _begin
 BEGIN TRY
 DECLARE @projectnummer INT = (SELECT projectnummer
@@ -1837,9 +1929,8 @@ GO
 EXEC _begin
 BEGIN TRY
 BEGIN TRANSACTION test
-
-	 DELETE FROM PLAN_VAN_AANPAK WHERE rapportnummer = 2 and regelnummer = 1 AND UITGEVOERD_DOOR = 'Testpersoon'
-	 IF NOT EXISTS(select * from PLAN_VAN_AANPAK_HISTORY where rapportnummer = 2 and regelnummer = 1)
+	 DELETE FROM PLAN_VAN_AANPAK WHERE rapportnummer = 1 and regelnummer = 6 AND UITGEVOERD_DOOR = 'Testpersoon'
+	 IF NOT EXISTS(select * from PLAN_VAN_AANPAK_HISTORY where rapportnummer = 1 and regelnummer = 6)
 	 RAISERROR ('', -- Message text.
                16, -- Severity.
                1 -- State.
@@ -1858,9 +1949,9 @@ EXEC _begin
 BEGIN TRY
 BEGIN TRANSACTION test
 
-	 UPDATE PLAN_VAN_AANPAK SET UITGEVOERD_DOOR = 'test123' WHERE rapportnummer = 2 and regelnummer = 1
+	 UPDATE PLAN_VAN_AANPAK SET UITGEVOERD_DOOR = 'test123' WHERE rapportnummer = 1 and regelnummer = 6
 
-	 IF NOT EXISTS(select * from PLAN_VAN_AANPAK_HISTORY where rapportnummer = 2 and regelnummer = 1 )
+	 IF NOT EXISTS(select * from PLAN_VAN_AANPAK_HISTORY where rapportnummer = 1 and regelnummer = 6 )
 	 RAISERROR ('', -- Message text.
                16, -- Severity.
                1 -- State.
