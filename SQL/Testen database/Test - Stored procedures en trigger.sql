@@ -1150,6 +1150,43 @@ GO
 
 EXEC _begin
 BEGIN TRY
+DECLARE @projectnummer INT = (SELECT projectnummer
+                              FROM PROJECT
+                              WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
+BEGIN TRANSACTION test
+EXEC SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL
+	@projectnummer,
+	2,
+	'Test aspect',
+	'Test effect',
+	'Test',
+	'Test',
+	'Test',
+	'Test',
+	'Test',
+	'Test',
+	'',
+	'',
+	'Test',
+	1,
+	1,
+	1,
+	1,
+	1,
+	1
+ROLLBACK TRANSACTION
+EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Een van de drie moest ingevuld zijn', ''
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
+EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 0, '', @msg
+END CATCH
+EXEC _end 0
+GO
+
+EXEC _begin
+BEGIN TRY
 BEGIN TRANSACTION test
 EXEC SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL
 	99999,
@@ -1893,7 +1930,7 @@ EXEC _begin
 BEGIN TRY
 BEGIN TRANSACTION test
 	 DELETE FROM PLAN_VAN_AANPAK WHERE rapportnummer = 1 and regelnummer = 6 AND UITGEVOERD_DOOR = 'Testpersoon'
-	 IF NOT EXISTS(select * from PLAN_VAN_AANPAK_HISTORY where rapportnummer = 111 and regelnummer = 6)
+	 IF NOT EXISTS(select * from PLAN_VAN_AANPAK_HISTORY where rapportnummer = 1 and regelnummer = 6)
 	 RAISERROR ('', -- Message text.
                16, -- Severity.
                1 -- State.
