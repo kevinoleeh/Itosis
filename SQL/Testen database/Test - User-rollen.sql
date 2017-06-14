@@ -14,12 +14,12 @@ BEGIN TRANSACTION test
 EXECUTE AS LOGIN = N'StagiairLogin';
 EXEC SP_INSERT_BEDRIJF @Bedrijfsnaam = 'HAN', @Locatie = 'Gelre'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_BEDRIJF', 0, 'Nieuw bedrijf van de HAN op andere locatie', ''
+EXEC _result 'SP_INSERT_BEDRIJF', 0, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_INSERT_BEDRIJF', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_INSERT_BEDRIJF', 1, 'Geen rechten om deze EXEC uit te voeren als stagiair', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -37,7 +37,7 @@ END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_DELETE_BEDRIJF', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_DELETE_BEDRIJF', 1, 'Geen rechten om deze EXEC uit te voeren als stagiair', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -50,12 +50,12 @@ BEGIN TRANSACTION test
 	EXECUTE AS LOGIN = N'StagiairLogin';
 EXEC SP_UPDATE_BEDRIJF @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem', @uBedrijfsnaam = 'HAN', @uLocatie = 'Nijmegen'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_BEDRIJF', 1, 'HAN Arnhem locatie verandert naar HAN Nijmegen', ''
+EXEC _result 'SP_UPDATE_BEDRIJF', 0, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_UPDATE_BEDRIJF', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_UPDATE_BEDRIJF', 1, 'Geen rechten om deze EXEC uit te voeren als stagiair', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -73,12 +73,12 @@ BEGIN TRANSACTION test
 	EXECUTE AS LOGIN = N'StagiairLogin';
 EXEC SP_INSERT_PROJECT @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem', @ProjectOmschrijving = 'Project voor de han';
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_PROJECT', 1, 'Project bij HAN Arnhem toegevoegd', ''
+EXEC _result 'SP_INSERT_PROJECT', 0, 'Project bij HAN Arnhem toegevoegd', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_INSERT_PROJECT', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_INSERT_PROJECT', 1, 'Geen rechten om deze EXEC uit te voeren als stagiair', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -99,7 +99,7 @@ END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_DELETE_PROJECT', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_DELETE_PROJECT', 1, 'Geen rechten om deze EXEC uit te voeren als stagiair', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -116,12 +116,12 @@ DECLARE @nmr INT = (SELECT projectnummer
                     WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
 EXEC SP_UPDATE_PROJECT @nmr, 'nieuwe omschrijving'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_PROJECT', 1, 'Nieuwe omschrijving voor project met rapporten', ''
+EXEC _result 'SP_UPDATE_PROJECT', 0, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_UPDATE_PROJECT', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_UPDATE_PROJECT', 1, 'Geen rechten om deze EXEC uit te voeren als stagiair', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -144,7 +144,7 @@ END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_INSPERT_ASPECT', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_INSPERT_ASPECT', 1, 'Geen rechten om deze EXEC uit te voeren als stagiair', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -164,7 +164,7 @@ END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_DELETE_ASPECT', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_DELETE_ASPECT', 1, 'Geen rechten om deze EXEC uit te voeren als stagiair', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -182,7 +182,7 @@ EXEC SP_INSERT_ASPECT_EFFECT_EFFECT
 	'Test aspect',
 	'Test effect 1231232'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 1, 'Juiste insert', ''
+EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 1, 'Rechten om deze EXEC uit te voeren als stagiair', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -207,7 +207,7 @@ END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 1, 'Juiste delete van effect', @msg
+EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 1, 'Geen rechten om deze EXEC uit te voeren als stagiair', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -248,12 +248,12 @@ EXEC SP_INSERT_ORGANISATIE_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_ORGANISATIE_RISICOREGEL', 1, 'Geen rechten om deze EXEC uit te voeren', ''
+EXEC _result 'SP_INSERT_ORGANISATIE_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als stagiair', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_INSERT_ORGANISATIE_RISICOREGEL', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_INSERT_ORGANISATIE_RISICOREGEL', 0, 'Geen rechten om deze EXEC uit te voeren', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -287,12 +287,12 @@ EXEC SP_UPDATE_ORGANISATIE_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_ORGANISATIE_RISICOREGEL', 1, 'Standaard succes update van organisatie risicoregel', ''
+EXEC _result 'SP_UPDATE_ORGANISATIE_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_UPDATE_ORGANISATIE_RISICOREGEL', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_UPDATE_ORGANISATIE_RISICOREGEL', 0, 'Geen rechten om deze EXEC uit te voeren', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -327,12 +327,12 @@ EXEC SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Geen rechten om deze EXEC uit te voeren', ''
+EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als stagiair', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 0, 'Geen rechten om deze EXEC uit te voeren', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -368,12 +368,12 @@ EXEC SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Standaard succes update van organisatie risicoregel', ''
+EXEC _result 'SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als stagiair', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL', 0, 'Geen rechten om deze EXEC uit te voeren', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -436,52 +436,17 @@ EXEC SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL', 1, 'Goede insert', ''
+EXEC _result 'SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als stagiair', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL', 0, 'Geen rechten om deze EXEC uit te voeren', @msg
 END CATCH
 REVERT
 EXEC _end 0
 GO
 
---UPDATE MACHINEVEILIGHEID NOG NIET AANWEZIG
-/*==============================================================*/
-/* 4.6.8 Use Case: Beheren plan van aanpak					            */
-/*==============================================================*/
-
-  -- INSERT PLAN VAN AANPAK test
-EXEC _begin
-BEGIN TRY
-	DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
-	BEGIN TRANSACTION test
-
-	EXECUTE AS LOGIN = N'StagiairLogin';
-		EXEC SP_INSERT_PLAN_VAN_AANPAK
-		@PROJECTNUMMER = @projectnummer,
-    @RAPPORTNUMMER = 1,
-    @REGELNUMMER = 1,
-    @UITGEVOERD_DOOR = 'Testpersoon',
-    @EINDVERANTWOORDELIJKE = 'Testpersoon 2',
-    @DATUM_GEREED_GEPLAND = '12-12-2017',
-    @PBM ='Dit is een PBM',
-    @VOORLICHTING = 'Voorlichting etc.',
-    @WERKINSTRUCTIE_PROCEDURE = 'Werkinstructies',
-    @TRA = 'Taak risico analyse',
-    @CONTRACT_LIJST_  = 'Controlelijst e.d.'
-	ROLLBACK TRANSACTION
-	EXEC _result 'SP_INSERT_PLAN_VAN_AANPAK', 1, 'Pva is toegevoegd', ''
-END TRY
-BEGIN CATCH
-	ROLLBACK TRANSACTION
-	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-	EXEC _result 'SP_INSERT_PLAN_VAN_AANPAK', 1, 'Geen rechten om deze EXEC uit te voeren',@msg
-END CATCH
-REVERT
-EXEC _end 0
-GO
 
   -- UPDATE PLAN VAN AANPAK test
 EXEC _begin
@@ -505,12 +470,12 @@ EXEC SP_UPDATE_PLAN_VAN_AANPAK
 	@TRA = 'Task risk analysing',
 	@CONTRACT_LIJST_ = 'Checklist'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_PLAN_VAN_AANPAK', 1, 'Pva is geüpdatet', ''
+EXEC _result 'SP_UPDATE_PLAN_VAN_AANPAK', 1, 'Rechten om deze EXEC uit te voeren als stagiair', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_UPDATE_PLAN_VAN_AANPAK', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_UPDATE_PLAN_VAN_AANPAK', 0, 'Geen rechten om deze EXEC uit te voeren', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -540,12 +505,12 @@ EXEC SP_INSERT_PERIODIEKE_BEOORDELING
 	@STAND_VAN_ZAKEN = 'Het pva is nog niet toegepast',
 	@SCORE = 10
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_PERIODIEKE_BEOORDELING', 1, 'Periodieke beoordeling is toegevoegd', ''
+EXEC _result 'SP_INSERT_PERIODIEKE_BEOORDELING', 1, 'Rechten om deze EXEC uit te voeren als stagiair', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_INSERT_PERIODIEKE_BEOORDELING', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_INSERT_PERIODIEKE_BEOORDELING', 0, 'Geen rechten om deze EXEC uit te voeren als stagiair', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -571,12 +536,12 @@ EXEC SP_UPDATE_PERIODIEKE_BEOORDELING
 	@STAND_VAN_ZAKEN = 'Het pva is nog niet toegepast',
 	@SCORE = 10
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_PERIODIEKE_BEOORDELING', 1, 'Periodieke beoordeling is geüpdatet', ''
+EXEC _result 'SP_UPDATE_PERIODIEKE_BEOORDELING', 1, 'Rechten om deze EXEC uit te voeren als stagiair', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_UPDATE_PERIODIEKE_BEOORDELING', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_UPDATE_PERIODIEKE_BEOORDELING', 0, 'Geen rechten om deze EXEC uit te voeren', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -598,7 +563,7 @@ BEGIN TRANSACTION test
 EXECUTE AS LOGIN = N'GebruikerLogin';
 EXEC SP_INSERT_BEDRIJF @Bedrijfsnaam = 'HAN', @Locatie = 'Gelre'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_BEDRIJF', 1, 'Nieuw bedrijf van de HAN op andere locatie', ''
+EXEC _result 'SP_INSERT_BEDRIJF', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -616,7 +581,7 @@ BEGIN TRANSACTION test
 	EXECUTE AS LOGIN = N'GebruikerLogin';
 EXEC SP_DELETE_BEDRIJF @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_DELETE_BEDRIJF', 1, 'HAN Arnhem verwijdert', ''
+EXEC _result 'SP_DELETE_BEDRIJF', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -634,7 +599,7 @@ BEGIN TRANSACTION test
 	EXECUTE AS LOGIN = N'GebruikerLogin';
 EXEC SP_UPDATE_BEDRIJF @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem', @uBedrijfsnaam = 'HAN', @uLocatie = 'Nijmegen'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_BEDRIJF', 1, 'HAN Arnhem locatie verandert naar HAN Nijmegen', ''
+EXEC _result 'SP_UPDATE_BEDRIJF', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -657,7 +622,7 @@ BEGIN TRANSACTION test
 	EXECUTE AS LOGIN = N'GebruikerLogin';
 EXEC SP_INSERT_PROJECT @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem', @ProjectOmschrijving = 'Project voor de han';
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_PROJECT', 1, 'Project bij HAN Arnhem toegevoegd', ''
+EXEC _result 'SP_INSERT_PROJECT', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -678,12 +643,12 @@ DECLARE @nmr INT = (SELECT projectnummer
                     WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'TEST2')
 EXEC SP_DELETE_PROJECT @nmr
 ROLLBACK TRANSACTION
-EXEC _result 'SP_DELETE_PROJECT', 1, 'Project verwijderd zonder rapporten', ''
+EXEC _result 'SP_DELETE_PROJECT', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_DELETE_PROJECT', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_DELETE_PROJECT', 1, 'Geen rechten om deze EXEC uit te voeren als gebruiker', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -700,7 +665,7 @@ DECLARE @nmr INT = (SELECT projectnummer
                     WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
 EXEC SP_UPDATE_PROJECT @nmr, 'nieuwe omschrijving'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_PROJECT', 1, 'Nieuwe omschrijving voor project met rapporten', ''
+EXEC _result 'SP_UPDATE_PROJECT', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -723,12 +688,12 @@ EXEC SP_INSERT_ASPECT
 	'Test aspect123'
 ROLLBACK TRANSACTION
 
-EXEC _result 'SP_INSPERT_ASPECT', 1, 'Juiste insert Aspect', ''
+EXEC _result 'SP_INSPERT_ASPECT', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_INSPERT_ASPECT', 0, 'Juiste insert Aspect', @msg
+EXEC _result 'SP_INSPERT_ASPECT', 0, 'Rechten om deze EXEC uit te voeren als gebruiker', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -743,7 +708,7 @@ BEGIN TRANSACTION test
 EXEC SP_DELETE_ASPECT
 	'Test aspect2'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_DELETE_ASPECT', 1, 'Juiste delete zonder effect', ''
+EXEC _result 'SP_DELETE_ASPECT', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -766,12 +731,12 @@ EXEC SP_INSERT_ASPECT_EFFECT_EFFECT
 	'Test aspect',
 	'Test effect 1231232'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 1, 'Juiste insert', ''
+EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 0, 'Juiste insert', @msg
+EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 0, 'Rechten om deze EXEC uit te voeren als gebruiker', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -786,12 +751,12 @@ EXEC SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT
 	'Test aspect2',
 	'Test effect2'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 1, 'Juiste delete van effect', ''
+EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 0, 'Juiste delete van effect', @msg
+EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 0, 'Rechten om deze EXEC uit te voeren als gebruiker', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -832,7 +797,7 @@ EXEC SP_INSERT_ORGANISATIE_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_ORGANISATIE_RISICOREGEL', 1, 'Geen rechten om deze EXEC uit te voeren', ''
+EXEC _result 'SP_INSERT_ORGANISATIE_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -871,7 +836,7 @@ EXEC SP_UPDATE_ORGANISATIE_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_ORGANISATIE_RISICOREGEL', 1, 'Standaard succes update van organisatie risicoregel', ''
+EXEC _result 'SP_UPDATE_ORGANISATIE_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -911,7 +876,7 @@ EXEC SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Geen rechten om deze EXEC uit te voeren', ''
+EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -952,7 +917,7 @@ EXEC SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Standaard succes update van organisatie risicoregel', ''
+EXEC _result 'SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1020,7 +985,7 @@ EXEC SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL', 1, 'Goede insert', ''
+EXEC _result 'SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1035,37 +1000,6 @@ GO
 /*==============================================================*/
 /* 4.6.8 Use Case: Beheren plan van aanpak					            */
 /*==============================================================*/
-
-  -- INSERT PLAN VAN AANPAK test
-EXEC _begin
-BEGIN TRY
-	DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
-	BEGIN TRANSACTION test
-
-	EXECUTE AS LOGIN = N'GebruikerLogin';
-		EXEC SP_INSERT_PLAN_VAN_AANPAK
-		@PROJECTNUMMER = @projectnummer,
-    @RAPPORTNUMMER = 1,
-    @REGELNUMMER = 1,
-    @UITGEVOERD_DOOR = 'Testpersoon',
-    @EINDVERANTWOORDELIJKE = 'Testpersoon 2',
-    @DATUM_GEREED_GEPLAND = '12-12-2017',
-    @PBM ='Dit is een PBM',
-    @VOORLICHTING = 'Voorlichting etc.',
-    @WERKINSTRUCTIE_PROCEDURE = 'Werkinstructies',
-    @TRA = 'Taak risico analyse',
-    @CONTRACT_LIJST_  = 'Controlelijst e.d.'
-	ROLLBACK TRANSACTION
-	EXEC _result 'SP_INSERT_PLAN_VAN_AANPAK', 0, 'Pva is toegevoegd', ''
-END TRY
-BEGIN CATCH
-	ROLLBACK TRANSACTION
-	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-	EXEC _result 'SP_INSERT_PLAN_VAN_AANPAK', 1, 'Geen rechten om deze EXEC uit te voeren',@msg
-END CATCH
-REVERT
-EXEC _end 0
-GO
 
   -- UPDATE PLAN VAN AANPAK test
 EXEC _begin
@@ -1089,7 +1023,7 @@ EXEC SP_UPDATE_PLAN_VAN_AANPAK
 	@TRA = 'Task risk analysing',
 	@CONTRACT_LIJST_ = 'Checklist'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_PLAN_VAN_AANPAK', 1, 'Pva is geüpdatet', ''
+EXEC _result 'SP_UPDATE_PLAN_VAN_AANPAK', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1124,7 +1058,7 @@ EXEC SP_INSERT_PERIODIEKE_BEOORDELING
 	@STAND_VAN_ZAKEN = 'Het pva is nog niet toegepast',
 	@SCORE = 10
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_PERIODIEKE_BEOORDELING', 1, 'Periodieke beoordeling is toegevoegd', ''
+EXEC _result 'SP_INSERT_PERIODIEKE_BEOORDELING', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1155,7 +1089,7 @@ EXEC SP_UPDATE_PERIODIEKE_BEOORDELING
 	@STAND_VAN_ZAKEN = 'Het pva is nog niet toegepast',
 	@SCORE = 10
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_PERIODIEKE_BEOORDELING', 1, 'Periodieke beoordeling is geüpdatet', ''
+EXEC _result 'SP_UPDATE_PERIODIEKE_BEOORDELING', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1181,7 +1115,7 @@ BEGIN TRANSACTION test
 EXECUTE AS LOGIN = N'BeheerderLogin';
 EXEC SP_INSERT_BEDRIJF @Bedrijfsnaam = 'HAN', @Locatie = 'Gelre'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_BEDRIJF', 1, 'Nieuw bedrijf van de HAN op andere locatie', ''
+EXEC _result 'SP_INSERT_BEDRIJF', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1199,7 +1133,7 @@ BEGIN TRANSACTION test
 	EXECUTE AS LOGIN = N'BeheerderLogin';
 EXEC SP_DELETE_BEDRIJF @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_DELETE_BEDRIJF', 1, 'HAN Arnhem verwijdert', ''
+EXEC _result 'SP_DELETE_BEDRIJF', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1217,7 +1151,7 @@ BEGIN TRANSACTION test
 	EXECUTE AS LOGIN = N'BeheerderLogin';
 EXEC SP_UPDATE_BEDRIJF @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem', @uBedrijfsnaam = 'HAN', @uLocatie = 'Nijmegen'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_BEDRIJF', 1, 'HAN Arnhem locatie verandert naar HAN Nijmegen', ''
+EXEC _result 'SP_UPDATE_BEDRIJF', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1240,7 +1174,7 @@ BEGIN TRANSACTION test
 	EXECUTE AS LOGIN = N'BeheerderLogin';
 EXEC SP_INSERT_PROJECT @Bedrijfsnaam = 'HAN', @Locatie = 'Arnhem', @ProjectOmschrijving = 'Project voor de han';
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_PROJECT', 1, 'Project bij HAN Arnhem toegevoegd', ''
+EXEC _result 'SP_INSERT_PROJECT', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1261,7 +1195,7 @@ DECLARE @nmr INT = (SELECT projectnummer
                     WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'TEST2')
 EXEC SP_DELETE_PROJECT @nmr
 ROLLBACK TRANSACTION
-EXEC _result 'SP_DELETE_PROJECT', 1, 'Project verwijderd zonder rapporten', ''
+EXEC _result 'SP_DELETE_PROJECT', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1283,7 +1217,7 @@ DECLARE @nmr INT = (SELECT projectnummer
                     WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
 EXEC SP_UPDATE_PROJECT @nmr, 'nieuwe omschrijving'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_PROJECT', 1, 'Nieuwe omschrijving voor project met rapporten', ''
+EXEC _result 'SP_UPDATE_PROJECT', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1306,12 +1240,12 @@ EXEC SP_INSERT_ASPECT
 	'Test aspect123'
 ROLLBACK TRANSACTION
 
-EXEC _result 'SP_INSPERT_ASPECT', 1, 'Juiste insert Aspect', ''
+EXEC _result 'SP_INSPERT_ASPECT', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_INSPERT_ASPECT', 0, 'Juiste insert Aspect', @msg
+EXEC _result 'SP_INSPERT_ASPECT', 0, 'Rechten om deze EXEC uit te voeren als beheerder', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -1326,12 +1260,12 @@ BEGIN TRANSACTION test
 EXEC SP_DELETE_ASPECT
 	'Test aspect2'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_DELETE_ASPECT', 1, 'Juiste delete zonder effect', ''
+EXEC _result 'SP_DELETE_ASPECT', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_DELETE_ASPECT', 0, 'Juiste delete zonder effect', @msg
+EXEC _result 'SP_DELETE_ASPECT', 0, 'Rechten om deze EXEC uit te voeren als beheerder', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -1349,12 +1283,12 @@ EXEC SP_INSERT_ASPECT_EFFECT_EFFECT
 	'Test aspect',
 	'Test effect 1231232'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 1, 'Juiste insert', ''
+EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 0, 'Juiste insert', @msg
+EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 0, 'Rechten om deze EXEC uit te voeren als beheerder', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -1369,12 +1303,12 @@ EXEC SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT
 	'Test aspect2',
 	'Test effect2'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 1, 'Juiste delete van effect', ''
+EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 0, 'Juiste delete van effect', @msg
+EXEC _result 'SP_DELETE_EFFECT_BIJ_ASPECT_EFFECT', 0, 'Rechten om deze EXEC uit te voeren als beheerder', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -1415,7 +1349,7 @@ EXEC SP_INSERT_ORGANISATIE_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_ORGANISATIE_RISICOREGEL', 1, 'Geen rechten om deze EXEC uit te voeren', ''
+EXEC _result 'SP_INSERT_ORGANISATIE_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1454,7 +1388,7 @@ EXEC SP_UPDATE_ORGANISATIE_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_ORGANISATIE_RISICOREGEL', 1, 'Standaard succes update van organisatie risicoregel', ''
+EXEC _result 'SP_UPDATE_ORGANISATIE_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1494,7 +1428,7 @@ EXEC SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Geen rechten om deze EXEC uit te voeren', ''
+EXEC _result 'SP_INSERT_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1535,7 +1469,7 @@ EXEC SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Standaard succes update van organisatie risicoregel', ''
+EXEC _result 'SP_UPDATE_VISUELE_BEOORDELING_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als gebruiker', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1603,7 +1537,7 @@ EXEC SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL
 	1,
 	1
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL', 1, 'Goede insert', ''
+EXEC _result 'SP_INSERT_MACHINEVEILIGHEID_RISICOREGEL', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1619,36 +1553,6 @@ GO
 /* 4.6.8 Use Case: Beheren plan van aanpak					            */
 /*==============================================================*/
 
-  -- INSERT PLAN VAN AANPAK test
-EXEC _begin
-BEGIN TRY
-	DECLARE @projectnummer INT = (SELECT projectnummer FROM PROJECT WHERE BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
-	BEGIN TRANSACTION test
-
-	EXECUTE AS LOGIN = N'BeheerderLogin';
-		EXEC SP_INSERT_PLAN_VAN_AANPAK
-		@PROJECTNUMMER = @projectnummer,
-    @RAPPORTNUMMER = 1,
-    @REGELNUMMER = 1,
-    @UITGEVOERD_DOOR = 'Testpersoon',
-    @EINDVERANTWOORDELIJKE = 'Testpersoon 2',
-    @DATUM_GEREED_GEPLAND = '12-12-2017',
-    @PBM ='Dit is een PBM',
-    @VOORLICHTING = 'Voorlichting etc.',
-    @WERKINSTRUCTIE_PROCEDURE = 'Werkinstructies',
-    @TRA = 'Taak risico analyse',
-    @CONTRACT_LIJST_  = 'Controlelijst e.d.'
-	ROLLBACK TRANSACTION
-	EXEC _result 'SP_INSERT_PLAN_VAN_AANPAK', 0, 'Pva is toegevoegd', ''
-END TRY
-BEGIN CATCH
-	ROLLBACK TRANSACTION
-	DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-	EXEC _result 'SP_INSERT_PLAN_VAN_AANPAK', 1, 'Geen rechten om deze EXEC uit te voeren',@msg
-END CATCH
-REVERT
-EXEC _end 0
-GO
 
   -- UPDATE PLAN VAN AANPAK test
 EXEC _begin
@@ -1672,7 +1576,7 @@ EXEC SP_UPDATE_PLAN_VAN_AANPAK
 	@TRA = 'Task risk analysing',
 	@CONTRACT_LIJST_ = 'Checklist'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_PLAN_VAN_AANPAK', 1, 'Pva is geüpdatet', ''
+EXEC _result 'SP_UPDATE_PLAN_VAN_AANPAK', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1707,7 +1611,7 @@ EXEC SP_INSERT_PERIODIEKE_BEOORDELING
 	@STAND_VAN_ZAKEN = 'Het pva is nog niet toegepast',
 	@SCORE = 10
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_PERIODIEKE_BEOORDELING', 1, 'Periodieke beoordeling is toegevoegd', ''
+EXEC _result 'SP_INSERT_PERIODIEKE_BEOORDELING', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
@@ -1738,7 +1642,7 @@ EXEC SP_UPDATE_PERIODIEKE_BEOORDELING
 	@STAND_VAN_ZAKEN = 'Het pva is nog niet toegepast',
 	@SCORE = 10
 ROLLBACK TRANSACTION
-EXEC _result 'SP_UPDATE_PERIODIEKE_BEOORDELING', 1, 'Periodieke beoordeling is geüpdatet', ''
+EXEC _result 'SP_UPDATE_PERIODIEKE_BEOORDELING', 1, 'Rechten om deze EXEC uit te voeren als beheerder', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
