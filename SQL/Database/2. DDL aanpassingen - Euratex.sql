@@ -1,6 +1,13 @@
 use Euratex
 
 /*==============================================================*/
+/* CHECKS							                            */
+/*==============================================================*/
+-- Controleert of minimaal één van de drie visuele beoordeling kolommen is ingevuld
+ALTER TABLE VISUELE_BEOORDELING
+ADD CONSTRAINT CHK_EEN_VAN_DRIE_INGEVULD CHECK (LEN(PROCES) > 0 OR LEN(MACHINE_ONDERDEEL_) > 0 OR LEN(AFDELING) > 0)
+
+/*==============================================================*/
 /* HISTORY TABELLEN					                            */
 /*==============================================================*/
 -- RISCOREGEL
@@ -135,15 +142,15 @@ CREATE FUNCTION dbo.FN_GET_NEW_REGELNUMMER (
 END
 GO
 
--- Geeft het versienummer voor risicoregel history
+-- Geeft een nieuw versienummer voor de history tabel
 GO
-CREATE FUNCTION dbo.FN_GET_RISICOREGEL_VERSIENUMMER (
+CREATE FUNCTION dbo.FN_GET_NEW_VERSIENUMMER (
 	@PROJECTNUMMER INT,
 	@RAPPORTNUMMER INT,
 	@REGELNUMMER INT
 ) RETURNS INT AS BEGIN
 	RETURN (
-		SELECT ISNULL(COUNT(*), 0) + 1
+		SELECT ISNULL(MAX(VERSIENUMMER), 0) + 1
 		FROM RISICOREGEL_HISTORY
 		WHERE PROJECTNUMMER = @PROJECTNUMMER
 		AND RAPPORTNUMMER = @RAPPORTNUMMER
@@ -152,33 +159,16 @@ CREATE FUNCTION dbo.FN_GET_RISICOREGEL_VERSIENUMMER (
 END
 GO
 
--- Geeft het versienummer voor visuele beoordeling history
+-- Geeft een bestaand versienummer voor de history tabel
 GO
-CREATE FUNCTION dbo.FN_GET_VISUELE_BEOORDELING_VERSIENUMMER (
+CREATE FUNCTION dbo.FN_GET_VERSIENUMMER (
 	@PROJECTNUMMER INT,
 	@RAPPORTNUMMER INT,
 	@REGELNUMMER INT
 ) RETURNS INT AS BEGIN
 	RETURN (
-		SELECT ISNULL(COUNT(*), 0) + 1
-		FROM VISUELE_BEOORDELING_HISTORY
-		WHERE PROJECTNUMMER = @PROJECTNUMMER
-		AND RAPPORTNUMMER = @RAPPORTNUMMER
-		AND REGELNUMMER = @REGELNUMMER
-	)
-END
-GO
-
--- Geeft het versienummer voor machineveiligheid history
-GO
-CREATE FUNCTION dbo.FN_GET_MACHINEVEILIGHEID_VERSIENUMMER (
-	@PROJECTNUMMER INT,
-	@RAPPORTNUMMER INT,
-	@REGELNUMMER INT
-) RETURNS INT AS BEGIN
-	RETURN (
-		SELECT ISNULL(COUNT(*), 0) + 1
-		FROM MACHINEVEILIGHEID_HISTORY
+		SELECT MAX(VERSIENUMMER)
+		FROM RISICOREGEL_HISTORY
 		WHERE PROJECTNUMMER = @PROJECTNUMMER
 		AND RAPPORTNUMMER = @RAPPORTNUMMER
 		AND REGELNUMMER = @REGELNUMMER

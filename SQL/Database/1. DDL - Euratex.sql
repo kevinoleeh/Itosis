@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2014                    */
-/* Created on:     7-6-2017 12:26:29                            */
+/* Created on:     14-6-2017 11:00:41                           */
 /*==============================================================*/
 
 use master
@@ -1295,12 +1295,9 @@ create table VISUELE_BEOORDELING (
    PROJECTNUMMER        PROJECTNUMMER        not null,
    RAPPORTNUMMER        RAPPORTNUMMER        not null,
    REGELNUMMER          REGELNUMMER          not null,
-   PROCES               PROCES               null 
-      constraint CKC_PROCES_VISUELE_ check (PROCES is null or (PROCES >= '1')),
-   MACHINE_ONDERDEEL_   MACHINE_ONDERDEEL    null 
-      constraint CKC_MACHINE_ONDERDEEL_VISUELE_ check (MACHINE_ONDERDEEL_ is null or (MACHINE_ONDERDEEL_ >= '1')),
-   AFDELING             AFDELING             null 
-      constraint CKC_AFDELING_VISUELE_ check (AFDELING is null or (AFDELING >= '1')),
+   PROCES               PROCES               null,
+   MACHINE_ONDERDEEL_   MACHINE_ONDERDEEL    null,
+   AFDELING             AFDELING             null,
    constraint PK_VISUELE_BEOORDELING primary key (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
 )
 go
@@ -1370,4 +1367,3 @@ alter table VISUELE_BEOORDELING
       references RISICOREGEL (PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER)
          on update cascade on delete cascade
 go
-
