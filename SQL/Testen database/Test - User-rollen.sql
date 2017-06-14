@@ -182,12 +182,12 @@ EXEC SP_INSERT_ASPECT_EFFECT_EFFECT
 	'Test aspect',
 	'Test effect 1231232'
 ROLLBACK TRANSACTION
-EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 1, 'Rechten om deze EXEC uit te voeren als stagiair', ''
+EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 0, 'Rechten om deze EXEC uit te voeren als stagiair', ''
 END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 0, 'Juiste insert', @msg
+EXEC _result 'SP_INSERT_ASPECT_EFFECT_EFFECT', 1, 'Geen rechten om deze EXEC uit te voeren als stagiair', @msg
 END CATCH
 REVERT
 EXEC _end 0
@@ -586,7 +586,7 @@ END TRY
 BEGIN CATCH
 ROLLBACK TRANSACTION
 DECLARE @msg VARCHAR(200) = ERROR_MESSAGE()
-EXEC _result 'SP_DELETE_BEDRIJF', 1, 'Geen rechten om deze EXEC uit te voeren', @msg
+EXEC _result 'SP_DELETE_BEDRIJF', 1, 'Geen rechten om deze EXEC uit te voeren als gebruiker', @msg
 END CATCH
 REVERT
 EXEC _end 0
