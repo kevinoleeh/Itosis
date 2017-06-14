@@ -1,6 +1,13 @@
 use Euratex
 
 /*==============================================================*/
+/* CHECKS							                            */
+/*==============================================================*/
+-- Controleert of minimaal één van de drie visuele beoordeling kolommen is ingevuld
+ALTER TABLE VISUELE_BEOORDELING
+ADD CONSTRAINT CHK_EEN_VAN_DRIE_INGEVULD CHECK (LEN(PROCES) > 0 OR LEN(MACHINE_ONDERDEEL_) > 0 OR LEN(AFDELING) > 0)
+
+/*==============================================================*/
 /* HISTORY TABELLEN					                            */
 /*==============================================================*/
 -- RISCOREGEL
