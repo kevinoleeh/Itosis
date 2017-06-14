@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                            echo $result['STAND_VAN_ZAKEN'];
                        } ?>">
             </div>
-            <div class="form-group">k
+            <div class="form-group">
                 <label for="SCORE">Score</label>
                 <input type="number" class="form-control" name="SCORE"
                        value="<?php if (isset($result['SCORE'])) {

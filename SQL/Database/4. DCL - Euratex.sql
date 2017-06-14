@@ -76,7 +76,7 @@ EXEC sp_addrolemember 'STAGIAIR', 'StagiairLogin'
 GRANT EXECUTE TO BEHEERDER
 
 /*================================*/
-/* Tabel BEDRIJF		        		  */
+/* Tabel BEDRIJF		          */
 /*================================*/
 GRANT SELECT ON BEDRIJF TO BEHEERDER
 GRANT INSERT ON BEDRIJF TO BEHEERDER
@@ -99,13 +99,20 @@ GRANT UPDATE ON RAPPORT TO BEHEERDER
 GRANT DELETE ON RAPPORT TO BEHEERDER
 
 /*================================*/
-/* Tabel RISICOREGEL		      	  */
+/* Tabel RISICOREGEL		      */
 /*================================*/
 GRANT SELECT ON RISICOREGEL TO BEHEERDER
 GRANT INSERT ON RISICOREGEL TO BEHEERDER
 GRANT UPDATE ON RISICOREGEL TO BEHEERDER
 GRANT DELETE ON RISICOREGEL TO BEHEERDER
 
+/*================================*/
+/* Tabel VISUELE_BEOORDELING      */
+/*================================*/
+GRANT SELECT ON VISUELE_BEOORDELING TO BEHEERDER
+GRANT INSERT ON VISUELE_BEOORDELING TO BEHEERDER
+GRANT UPDATE ON VISUELE_BEOORDELING TO BEHEERDER
+GRANT DELETE ON VISUELE_BEOORDELING TO BEHEERDER
 
 /*================================*/
 /* Tabel ASPECT			 		  */

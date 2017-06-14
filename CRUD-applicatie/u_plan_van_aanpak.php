@@ -90,7 +90,8 @@ $query = "SELECT PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, UITGEVOERD_DOOR, EIN
           FROM PLAN_VAN_AANPAK_HISTORY
           WHERE PROJECTNUMMER = :PROJECTNUMMER
           AND RAPPORTNUMMER = :RAPPORTNUMMER
-          AND REGELNUMMER = :REGELNUMMER";
+          AND REGELNUMMER = :REGELNUMMER
+          ORDER BY DATUM DESC";
           $stmt = $dbh->prepare($query);
           $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
           $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
@@ -122,7 +123,7 @@ $query = "SELECT PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, UITGEVOERD_DOOR, EIN
                 <form action="u_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?> " method="post">
                     <h3>Plan van aanpak</h3>
                     <div class="form-group">
-                        <label for="UITGEVOERD_DOOR">Uitgevoerd door:</label>
+                        <label for="UITGEVOERD_DOOR">Uitgevoerd door</label>
                         <input type="text" class="form-control" name="UITGEVOERD_DOOR" value="<?php if (isset($result['UITGEVOERD_DOOR'])) {
                            echo $result['UITGEVOERD_DOOR'];
                        } ?>">
@@ -243,9 +244,6 @@ $query = "SELECT PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, UITGEVOERD_DOOR, EIN
                                       <th>Datum</th>
                                       <th>Gebruiker</th>
                                       <th>Actie</th>
-                                      <th>Projectnummer</th>
-                                      <th>Rapportnummer</th>
-                                      <th>Regelnummer</th>
                                       <th>Uitgevoerd door</th>
                                       <th>Eindverantwoordelijke</th>
                                       <th>Datum gereed gepland</th>
@@ -265,15 +263,6 @@ $query = "SELECT PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, UITGEVOERD_DOOR, EIN
                                       </td>
                                       <td>
                                           <?= $value['ACTIE'] ?>
-                                      </td>
-                                      <td>
-                                          <?= $value['PROJECTNUMMER'] ?>
-                                      </td>
-                                      <td>
-                                          <?= $value['RAPPORTNUMMER'] ?>
-                                      </td>
-                                      <td>
-                                          <?= $value['REGELNUMMER'] ?>
                                       </td>
                                       <td>
                                           <?= $value['UITGEVOERD_DOOR'] ?>

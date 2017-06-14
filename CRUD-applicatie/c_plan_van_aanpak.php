@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form action="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?>" method="post">
                     <h3>Plan van aanpak</h3>
                     <div class="form-group">
-                        <label for="UITGEVOERD_DOOR">Uitgevoerd door:</label>
+                        <label for="UITGEVOERD_DOOR">Uitgevoerd door</label>
                         <input type="text" class="form-control" name="UITGEVOERD_DOOR" value="<?php if (isset($result['UITGEVOERD_DOOR'])) {
                            echo $result['UITGEVOERD_DOOR'];
                        } ?>">
