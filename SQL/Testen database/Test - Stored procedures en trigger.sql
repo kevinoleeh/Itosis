@@ -1893,7 +1893,7 @@ EXEC _begin
 BEGIN TRY
 BEGIN TRANSACTION test
 	 DELETE FROM PLAN_VAN_AANPAK WHERE rapportnummer = 1 and regelnummer = 6 AND UITGEVOERD_DOOR = 'Testpersoon'
-	 IF NOT EXISTS(select * from PLAN_VAN_AANPAK_HISTORY where rapportnummer = 1 and regelnummer = 6)
+	 IF NOT EXISTS(select * from PLAN_VAN_AANPAK_HISTORY where rapportnummer = 111 and regelnummer = 6)
 	 RAISERROR ('', -- Message text.
                16, -- Severity.
                1 -- State.

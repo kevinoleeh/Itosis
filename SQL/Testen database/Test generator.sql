@@ -135,13 +135,19 @@ CREATE PROCEDURE _result @name VARCHAR(50), @success BIT, @reden VARCHAR(200), @
 	        IIF(@msg = '', IIF(@success = 0, 'ERROR - Transactie geslaagd terwijl hij zou moeten falen!', @msg), @msg),
 	        @reden);
 	IF (@success = 1)
-		INSERT testCount (TOTAAL, GOED) VALUES ((SELECT COUNT(Totaal) + 1
-		                                         FROM testCount), (SELECT COUNT(Goed) + 1
-		                                                           FROM testCount))
+		BEGIN
+			INSERT testCount (TOTAAL, GOED, FOUT) VALUES ((SELECT TOP 1 Totaal + 1
+			                                               FROM testCount ORDER BY Totaal DESC), (SELECT TOP 1 Goed + 1
+			                                                                 FROM testCount ORDER BY Totaal DESC), (SELECT TOP 1 Fout
+			                                                                                   FROM testCount ORDER BY Totaal DESC))
+		END
 	IF (@success = 0)
-		INSERT testCount (TOTAAL, FOUT) VALUES ((SELECT COUNT(Totaal) + 1
-		                                         FROM testCount), (SELECT COUNT(Fout) + 1
-		                                                           FROM testCount))
+		BEGIN
+			INSERT testCount (TOTAAL, GOED, FOUT) VALUES ((SELECT TOP 1 Totaal + 1
+			                                               FROM testCount ORDER BY Totaal DESC), (SELECT TOP 1 Goed
+			                                                                 FROM testCount ORDER BY Totaal DESC), (SELECT TOP 1 FOUT + 1
+			                                                                                   FROM testCount ORDER BY Totaal DESC))
+		END
 	SET NOCOUNT OFF
 END
 GO
@@ -224,7 +230,7 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 	BEGIN CATCH
 	RAISERROR ('Fout bij verwijderen van testdata in tabel %s!', 16, 1, @tabel)
 	END CATCH
-			IF @stop = 0
+	IF @stop = 0
 		RETURN
 	--IF EXISTS(SELECT 'Error occurred' FROM testData WHERE Success = 0)
 	SELECT
@@ -238,7 +244,7 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 		Totaal                AS Totaal_aantal_tests,
 		Goed                  AS Geslaagde_tests,
 		Fout                  AS Gefaalde_tests,
-		(Goed / Totaal) * 100 AS Percentage_geslaagde_tests,
+		(CONVERT(FLOAT,Goed) / CONVERT(FLOAT,Totaal)) * 100 AS Percentage_geslaagde_tests,
 		GETDATE()             AS Datum_getest
 	FROM testCount
 	WHERE Totaal = (SELECT max(totaal)
