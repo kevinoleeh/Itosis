@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $meldingStatus = true;
         $melding = "Plan van aanpak opgeslagen.";
-        header('location:rd_risicoregels.php?projectnummer=' . $_GET['projectnummer'] . '&rapportnummer=' . $_GET['rapportnummer'] );
+        header('location:rd_regels.php?projectnummer=' . $_GET['projectnummer'] . '&rapportnummer=' . $_GET['rapportnummer']);
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Plan van aanpak niet opgeslagen. Foutmelding: " . $e->getMessage();
@@ -112,11 +112,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         echo $result['CONTRACT_LIJST_'];
                     } ?></textarea>
                     </div>
-                    <?php if ($_SERVER['REQUEST_METHOD'] === 'POST') { ?>
 
-                    <?php } else { ?>
                     <button href class="btn btn-block btn-primary" name="submit" type="submit">Aanmaken</button>
-                    <?php } ?>
+
                 </form>
 
             </div>

@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <label for="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">Is de actie uitgevoerd?</label>
             <div class="form-group">
-                <input type="checkbox" style="outline: 2px solid" rel="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">
+                <input type="checkbox" style="width: 34px; height: 34px;" rel="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">
             </div>
 
             <div class="form-group">
@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                            echo $result['STAND_VAN_ZAKEN'];
                        } ?>">
             </div>
-            <div class="form-group">
+            <div class="form-group">k
                 <label for="SCORE">Score</label>
                 <input type="number" class="form-control" name="SCORE"
                        value="<?php if (isset($result['SCORE'])) {

@@ -142,7 +142,9 @@ try {
                             </div>
                         <?php } ?>
                         </td>
-                        <td width="1px"><a href="rd_risicoregels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>&delete=1"><span class="glyphicon glyphicon-remove widintable red"></span></a></td>
+                        <td width="1px"><a
+                                    href="rd_regels.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $value['REGELNUMMER'] ?>&delete=1"><span
+                                        class="glyphicon glyphicon-remove widintable red"></span></a></td>
                     </tr>
                     <?php } ?>
                 </tbody>
