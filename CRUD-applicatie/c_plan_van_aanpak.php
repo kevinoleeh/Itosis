@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $meldingStatus = true;
         $melding = "Plan van aanpak opgeslagen.";
-        header('location:rd_risicoregels.php?projectnummer=' . $_GET['projectnummer'] . '&rapportnummer=' . $_GET['rapportnummer'] );
+        header('location:rd_regels.php?projectnummer=' . $_GET['projectnummer'] . '&rapportnummer=' . $_GET['rapportnummer']);
     } catch (PDOException $e) {
         $meldingStatus = false;
         $melding = "Plan van aanpak niet opgeslagen. Foutmelding: " . $e->getMessage();
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form action="c_plan_van_aanpak.php?projectnummer=<?= $_GET['projectnummer'] ?>&rapportnummer=<?= $_GET['rapportnummer'] ?>&regelnummer=<?= $_GET['regelnummer'] ?>" method="post">
                     <h3>Plan van aanpak</h3>
                     <div class="form-group">
-                        <label for="UITGEVOERD_DOOR">Uitgevoerd door:</label>
+                        <label for="UITGEVOERD_DOOR">Uitgevoerd door</label>
                         <input type="text" class="form-control" name="UITGEVOERD_DOOR" value="<?php if (isset($result['UITGEVOERD_DOOR'])) {
                            echo $result['UITGEVOERD_DOOR'];
                        } ?>">
@@ -112,11 +112,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         echo $result['CONTRACT_LIJST_'];
                     } ?></textarea>
                     </div>
-                    <?php if ($_SERVER['REQUEST_METHOD'] === 'POST') { ?>
 
-                    <?php } else { ?>
                     <button href class="btn btn-block btn-primary" name="submit" type="submit">Aanmaken</button>
-                    <?php } ?>
+
                 </form>
 
             </div>

@@ -67,7 +67,8 @@ $query = "SELECT PROJECTNUMMER, RAPPORTNUMMER, REGELNUMMER, DATUM_BEOORDELING, I
           WHERE PROJECTNUMMER = :PROJECTNUMMER
           AND RAPPORTNUMMER = :RAPPORTNUMMER
           AND REGELNUMMER = :REGELNUMMER
-          AND DATUM_BEOORDELING = :DATUM_BEOORDELING";
+          AND DATUM_BEOORDELING = :DATUM_BEOORDELING
+          ORDER BY DATUM DESC";
 $stmt = $dbh->prepare($query);
 $stmt->bindParam(':PROJECTNUMMER', $_GET['projectnummer']);
 $stmt->bindParam(':RAPPORTNUMMER', $_GET['rapportnummer']);
@@ -106,7 +107,7 @@ try {
             </div>
 
 
-            <label for="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">Is de actie uitgevoerd?</label><br>
+            <label for="INSPECTIE_IS_DE_ACTIE_UITGEVOERD">Actie uitgevoerd</label><br>
             <div class="form-group">
                 <input type="checkbox" style="width: 34px; height: 34px;" rel="INSPECTIE_IS_DE_ACTIE_UITGEVOERD" <?php if(strcmp($result['INSPECTIE_IS_DE_ACTIE_UITGEVOERD'], '1') == 0) { echo 'checked'; } ?>>
             </div>
@@ -148,11 +149,8 @@ try {
                             <th>Datum</th>
                             <th>Gebruiker</th>
                             <th>Actie</th>
-                            <th>Projectnummer</th>
-                            <th>Rapportnummer</th>
-                            <th>Regelnummer</th>
                             <th>Datum beoordeling</th>
-                            <th>Inspectie is de actie uitgevoerd</th>
+                            <th>Actie uitgevoerd</th>
                             <th>Opmerking stand van zaken</th>
                             <th>Stand van zaken</th>
                             <th>Score</th>
@@ -169,22 +167,16 @@ try {
                                     <?= $value['ACTIE'] ?>
                                 </td>
                                 <td>
-                                    <?= $value['PROJECTNUMMER'] ?>
-                                </td>
-                                <td>
-                                    <?= $value['RAPPORTNUMMER'] ?>
-                                </td>
-                                <td>
-                                    <?= $value['REGELNUMMER'] ?>
-                                </td>
-                                <td>
                                     <?= $value['DATUM_BEOORDELING'] ?>
                                 </td>
                                 <td>
-                                    <?= $value['INSPECTIE_IS_DE_ACTIE_UITGEVOERD'] ?>
+                                    <?= ($value['INSPECTIE_IS_DE_ACTIE_UITGEVOERD'] == '1' ? 'Ja' : 'Nee')?>
                                 </td>
                                 <td>
                                     <?= $value['OPMERKING_STAND_VAN_ZAKEN'] ?>
+                                </td>
+                                <td>
+                                    <?= $value['STAND_VAN_ZAKEN'] ?>
                                 </td>
                                 <td>
                                     <?= $value['SCORE'] ?>
