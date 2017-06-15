@@ -50,8 +50,14 @@ CREATE PROCEDURE _begin AS BEGIN
 		                              BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
 
 	--rapport type
-	SET @tabel = 'RAPPORT_TYPE'
-	INSERT INTO RAPPORT_TYPE VALUES('Organisatie'), ('Visuele beoordeling'), ('Machineveiligheid')
+	IF (NOT EXISTS(SELECT RAPPORT_TYPE
+	               FROM RAPPORT_TYPE
+	               WHERE RAPPORT_TYPE = 'Organisatie' OR RAPPORT_TYPE = 'Visuele beoordeling' OR
+	                     RAPPORT_TYPE = 'Machineveiligheid'))
+		BEGIN
+			SET @tabel = 'RAPPORT_TYPE'
+			INSERT INTO RAPPORT_TYPE VALUES ('Organisatie'), ('Visuele beoordeling'), ('Machineveiligheid')
+		END
 	--rapport
 	SET @tabel = 'RAPPORT'
 	INSERT INTO RAPPORT (PROJECTNUMMER, RAPPORTNUMMER, RAPPORT_TYPE)
@@ -141,16 +147,24 @@ CREATE PROCEDURE _result @name VARCHAR(50), @success BIT, @reden VARCHAR(200), @
 	IF (@success = 1)
 		BEGIN
 			INSERT testCount (TOTAAL, GOED, FOUT) VALUES ((SELECT TOP 1 Totaal + 1
-			                                               FROM testCount ORDER BY Totaal DESC), (SELECT TOP 1 Goed + 1
-			                                                                 FROM testCount ORDER BY Totaal DESC), (SELECT TOP 1 Fout
-			                                                                                   FROM testCount ORDER BY Totaal DESC))
+			                                               FROM testCount
+			                                               ORDER BY Totaal DESC), (SELECT TOP 1 Goed + 1
+			                                                                       FROM testCount
+			                                                                       ORDER BY Totaal DESC),
+			                                              (SELECT TOP 1 Fout
+			                                               FROM testCount
+			                                               ORDER BY Totaal DESC))
 		END
 	IF (@success = 0)
 		BEGIN
 			INSERT testCount (TOTAAL, GOED, FOUT) VALUES ((SELECT TOP 1 Totaal + 1
-			                                               FROM testCount ORDER BY Totaal DESC), (SELECT TOP 1 Goed
-			                                                                 FROM testCount ORDER BY Totaal DESC), (SELECT TOP 1 FOUT + 1
-			                                                                                   FROM testCount ORDER BY Totaal DESC))
+			                                               FROM testCount
+			                                               ORDER BY Totaal DESC), (SELECT TOP 1 Goed
+			                                                                       FROM testCount
+			                                                                       ORDER BY Totaal DESC),
+			                                              (SELECT TOP 1 FOUT + 1
+			                                               FROM testCount
+			                                               ORDER BY Totaal DESC))
 		END
 	SET NOCOUNT OFF
 END
@@ -230,16 +244,6 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 	DELETE FROM MACHINEVEILIGHEID
 	WHERE PROJECTNUMMER = 99999999
 
-	SET @tabel = 'RAPPORT_TYPE'
-	DELETE FROM RAPPORT_TYPE
-	WHERE RAPPORT_TYPE = 'Organisatie'
-
-	DELETE FROM RAPPORT_TYPE
-	WHERE RAPPORT_TYPE = 'Visuele beoordeling'
-
-	DELETE FROM RAPPORT_TYPE
-	WHERE RAPPORT_TYPE = 'Machineveiligheid'
-
 	END TRY
 	BEGIN CATCH
 	RAISERROR ('Fout bij verwijderen van testdata in tabel %s!', 16, 1, @tabel)
@@ -255,11 +259,11 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 	FROM testData
 	ORDER BY Success, id, Number
 	SELECT
-		Totaal                AS Totaal_aantal_tests,
-		Goed                  AS Geslaagde_tests,
-		Fout                  AS Gefaalde_tests,
-		(CONVERT(FLOAT,Goed) / CONVERT(FLOAT,Totaal)) * 100 AS Percentage_geslaagde_tests,
-		GETDATE()             AS Datum_getest
+		Totaal                                                AS Totaal_aantal_tests,
+		Goed                                                  AS Geslaagde_tests,
+		Fout                                                  AS Gefaalde_tests,
+		(CONVERT(FLOAT, Goed) / CONVERT(FLOAT, Totaal)) * 100 AS Percentage_geslaagde_tests,
+		GETDATE()                                             AS Datum_getest
 	FROM testCount
 	WHERE Totaal = (SELECT max(totaal)
 	                FROM testCount)
