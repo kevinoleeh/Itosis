@@ -48,6 +48,10 @@ CREATE PROCEDURE _begin AS BEGIN
 	                              FROM PROJECT
 	                              WHERE
 		                              BEDRIJFSNAAM = 'EURATEX' AND LOCATIE = 'Duiven' AND PROJECTOMSCHRIJVING = 'Test')
+
+	--rapport type
+	SET @tabel = 'RAPPORT_TYPE'
+	INSERT INTO RAPPORT_TYPE VALUES('Organisatie'), ('Visuele beoordeling'), ('Machineveiligheid')
 	--rapport
 	SET @tabel = 'RAPPORT'
 	INSERT INTO RAPPORT (PROJECTNUMMER, RAPPORTNUMMER, RAPPORT_TYPE)
@@ -225,6 +229,16 @@ CREATE PROCEDURE _end @stop BIT AS BEGIN
 	SET @tabel = 'MACHINEVEILIGHEID'
 	DELETE FROM MACHINEVEILIGHEID
 	WHERE PROJECTNUMMER = 99999999
+
+	SET @tabel = 'RAPPORT_TYPE'
+	DELETE FROM RAPPORT_TYPE
+	WHERE RAPPORT_TYPE = 'Organisatie'
+
+	DELETE FROM RAPPORT_TYPE
+	WHERE RAPPORT_TYPE = 'Visuele beoordeling'
+
+	DELETE FROM RAPPORT_TYPE
+	WHERE RAPPORT_TYPE = 'Machineveiligheid'
 
 	END TRY
 	BEGIN CATCH
